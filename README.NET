@@ -1,0 +1,38 @@
+In order to build GNAT for .NET from sources, you need to follow these steps:
+
+- You need a unix-like environment (e.g. cygwin)
+
+- Make sure you have installed the .NET run-time and SDK from Microsoft:
+  dotnetfx.exe
+  setup.exe
+
+- Add the following directories (or similar) in your PATH:
+  $ PATH="/windows/microsoft.net/framework/v2.0.50727:$PATH"
+
+- Then copy/move the src/ada directory from GNAT sources under this directory:
+  $ gzip -dc [...]/gnat-xxx-src.tgz | tar xf -
+  $ mv gnat*src/src/ada gnat_src
+  $ rm -rf gnat-*src
+
+- Then apply the following patch:
+
+  $ (cd gnat_src && patch < ../cil/frontend.difs)
+
+- Make sure you have a native version of GNAT which matches this package in
+  your PATH
+
+- Finally build:
+  $ make -C cil
+
+  This will create a "ready to use" set of directories "bin" and "lib" under    
+  cil which you can put in your PATH:
+
+  PATH=`pwd`/cil/bin:$PATH
+
+- To optionally build the visual studio integration:
+  $ make -C cil/vs_integration all install
+
+- To optionally build the run-time for the compact framework:
+  $ make -C cil compactlib
+
+  Then use dotnet-gnatmake --RTS=compact to use it

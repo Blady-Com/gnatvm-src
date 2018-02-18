@@ -1,0 +1,5 @@
+.assembly AdaLib {
+  .ver 1:0:0:0
+}
+.mresource public AdaLib.Properties.Resources.resources {}
+.subsystem 0x0002       // WINDOWS_GUI

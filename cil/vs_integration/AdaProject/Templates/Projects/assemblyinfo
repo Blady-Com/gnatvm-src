@@ -1,0 +1,3 @@
+.assembly $safeprojectname$ {
+  .ver 1:0:0:0
+}

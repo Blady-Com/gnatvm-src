@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{100EBF5E-DC65-4100-8574-7E950E755C1C}") = "Hello", "Hello.adaproj", "{979FEC1D-1F49-46A2-BD0E-A69956017CEA}"
+EndProject
+Global
+	GlobalSection(TextTemplating) = postSolution
+		TextTemplating = 1
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{979FEC1D-1F49-46A2-BD0E-A69956017CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{979FEC1D-1F49-46A2-BD0E-A69956017CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{979FEC1D-1F49-46A2-BD0E-A69956017CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{979FEC1D-1F49-46A2-BD0E-A69956017CEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

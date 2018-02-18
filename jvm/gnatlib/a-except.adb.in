@@ -1,0 +1,201 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                         GNAT RUN-TIME COMPONENTS                         --
+--                                                                          --
+--                       A D A . E X C E P T I O N S                        --
+--                                                                          --
+--                                 B o d y                                  --
+--                                                                          --
+--                     Copyright (C) 1999-2007, AdaCore                     --
+--                                                                          --
+-- GNAT is free software;  you can  redistribute it  and/or modify it under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 2,  or (at your option) any later ver- --
+-- sion.  GNAT is distributed in the hope that it will be useful, but WITH- --
+-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
+-- or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License --
+-- for  more details.  You should have  received  a copy of the GNU General --
+-- Public License  distributed with GNAT;  see file COPYING.  If not, write --
+-- to  the Free Software Foundation,  59 Temple Place - Suite 330,  Boston, --
+-- MA 02111-1307, USA.                                                      --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+-- The GNAT Ada tool chain for the JVM and .NET platforms is  maintained by --
+-- AdaCore - http://www.adacore.com                                         --
+--                                                                          --
+------------------------------------------------------------------------------
+
+--  This is the JGNAT specific version of Ada.Exceptions body
+
+package body Ada.Exceptions is
+
+   subtype EO  is Exception_Occurrence;
+   subtype EOA is Exception_Occurrence_Access;
+
+   type String_Access is access all String;
+
+   ---------------------------
+   -- Exception_Information --
+   ---------------------------
+
+   function Exception_Information (X : EO) return String is
+      function E_Info (X : EO) return String_Access;
+      pragma Import (Java, E_Info, "jgnat.adalib.GNAT_libc.e_information");
+   begin
+      return E_Info (X).all;
+   end Exception_Information;
+
+   -----------------------
+   -- Exception_Message --
+   -----------------------
+
+   function Exception_Message (X : EO) return String is
+      function E_Message (X : EO) return String_Access;
+      pragma Import (Java, E_Message, "jgnat.adalib.GNAT_libc.e_message");
+   begin
+      return E_Message (X).all;
+   end Exception_Message;
+
+   --------------------
+   -- Exception_Name --
+   --------------------
+
+   function Exception_Name (Id : Exception_Id) return String is
+      function Ada_Name (Id : Exception_Id) return String_Access;
+      pragma Import (Java, Ada_Name, "jgnat.adalib.GNAT_libc.ada_name");
+   begin
+      return Ada_Name (Id).all;
+   end Exception_Name;
+
+   function Exception_Name (X : EO) return String is
+   begin
+      return Exception_Name (Exception_Identity (X));
+   end Exception_Name;
+
+   ---------------------------
+   -- Exception_Name_Simple --
+   ---------------------------
+
+   function Exception_Name_Simple (X : Exception_Occurrence) return String is
+      Name : constant String := Exception_Name (X);
+      P    : Natural;
+   begin
+      P := Name'Length;
+      while P > 1 loop
+         exit when Name (P - 1) = '.';
+         P := P - 1;
+      end loop;
+
+      --  Return result making sure lower bound is 1
+
+      declare
+         subtype Rname is String (1 .. Name'Length - P + 1);
+      begin
+         return Rname (Name (P .. Name'Length));
+      end;
+   end Exception_Name_Simple;
+
+   ----------
+   -- Poll --
+   ----------
+
+   procedure Poll is separate;
+
+   ---------------------
+   -- Raise_Exception --
+   ---------------------
+
+   procedure Raise_Exception
+     (E       : Exception_Id;
+      Message : String := "")
+   is
+      function Create_EO (E : Exception_Id; M : String) return EO;
+      pragma Import (Java, Create_EO, "jgnat.adalib.GNAT_libc.create_EO");
+      --  Creates an EO corresponding to E containing Message
+
+   begin
+      if E /= Null_Id then
+         Reraise_Occurrence_Always (Create_EO (E, Message));
+      end if;
+   end Raise_Exception;
+
+   ----------------------------
+   -- Raise_Exception_Always --
+   ----------------------------
+
+   procedure Raise_Exception_Always
+     (E       : Exception_Id;
+      Message : String := "")
+   is
+      function Create_EO (E : Exception_Id; M : String) return EO;
+      pragma Import (Java, Create_EO, "jgnat.adalib.GNAT_libc.create_EO");
+      --  Creates an EO corresponding to E containing Message
+
+   begin
+      Reraise_Occurrence_Always (Create_EO (E, Message));
+   end Raise_Exception_Always;
+
+   ------------------------
+   -- Reraise_Occurrence --
+   ------------------------
+
+   procedure Reraise_Occurrence (X : EO) is
+   begin
+      if X /= Null_Occurrence then
+         Reraise_Occurrence_No_Defer (X);
+      end if;
+   end Reraise_Occurrence;
+
+   -------------------------------
+   -- Reraise_Occurrence_Always --
+   -------------------------------
+
+   procedure Reraise_Occurrence_Always (X : EO) is
+   begin
+      Reraise_Occurrence_No_Defer (X);
+   end Reraise_Occurrence_Always;
+
+   ---------------------
+   -- Save_Occurrence --
+   ---------------------
+
+   procedure Save_Occurrence (Target : out EO; Source : EO) is
+   begin
+      Target := Source;
+   end Save_Occurrence;
+
+   function Save_Occurrence (Source : EO) return EOA is
+      Target : constant EOA := new EO;
+   begin
+      Save_Occurrence (Target.all, Source);
+      return Target;
+   end Save_Occurrence;
+
+   -------------------------
+   -- Raise_XXX_Error_Msg --
+   -------------------------
+
+   procedure Raise_Constraint_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma No_Return (Raise_Constraint_Error_Msg);
+   pragma Import
+     (C, Raise_Constraint_Error_Msg, "__gnat_raise_constraint_error_msg");
+
+   procedure Raise_Program_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma No_Return (Raise_Program_Error_Msg);
+   pragma Import
+     (C, Raise_Program_Error_Msg, "__gnat_raise_program_error_msg");
+
+   procedure Raise_Storage_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma No_Return (Raise_Storage_Error_Msg);
+   pragma Import
+     (C, Raise_Storage_Error_Msg, "__gnat_raise_storage_error_msg");
+

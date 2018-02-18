@@ -1,0 +1,3919 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+
+@c oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+@c                                                                            o
+@c                        GNAT for the JVM DOCUMENTATION                      o
+@c                                                                            o
+@c                             J G N A T _ U G                                o
+@c                                                                            o
+@c                     Copyright (C) 1998-2008, AdaCore                       o
+@c                                                                            o
+@c  GNAT is free software;  you can  redistribute it  and/or modify it under  o
+@c  terms of the  GNU General Public License as published  by the Free Soft-  o
+@c  ware  Foundation;  either version 2,  or (at your option) any later ver-  o
+@c  sion.  GNAT is distributed in the hope that it will be useful, but WITH-  o
+@c  OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY  o
+@c  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License  o
+@c  for  more details.  You should have  received  a copy of the GNU General  o
+@c  Public License  distributed with GNAT;  see file COPYING.  If not, write  o
+@c  to  the Free Software Foundation,  59 Temple Place - Suite 330,  Boston,  o
+@c  MA 02111-1307, USA.                                                       o
+@c                                                                            o
+@c  The GNAT Ada tool chain for the JVM platform is maintained by AdaCore -   o
+@c  http://www.adacore.com                                                    o
+@c                                                                            o
+@c oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
+@setfilename jgnat_ug.info
+@settitle GNAT User's Guide Supplement for the JVM Platform
+@setchapternewpage odd
+@syncodeindex fn cp
+
+@set version 2013
+
+@titlepage
+
+@title GNAT User's Guide
+
+@flushright
+@titlefont{@i{Supplement for the JVM Platform}}
+@end flushright
+@sp 2
+
+@subtitle The GNU Ada Environment
+@subtitle GNAT Version @value{version}
+@author AdaCore
+
+@page
+@vskip 0pt plus 1filll
+
+@copyright{} Copyright 1998-2008, AdaCore
+
+Permission is granted to make and distribute verbatim copies of this manual
+provided the copyright notice and this permission notice are preserved on
+all copies.
+
+Java is a trademark of Sun Microsystems, Inc.
+
+@end titlepage
+
+@node Top, About This Guide, (dir), (dir)
+@ifinfo
+@top GNAT for the JVM User's Guide
+
+GNAT User's Guide@*
+Supplement for the JVM Platform
+
+@noindent
+The GNU Ada Environment
+
+@noindent
+GNAT Version @value{version}
+
+@noindent
+AdaCore
+
+@noindent
+@copyright{} Copyright 1998-2008, AdaCore
+
+@noindent
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+Java is a trademark of Sun Microsystems, Inc.
+
+@menu
+* About This Guide::
+* Getting Started with GNAT for the JVM::
+* Ada & Java Interoperability::
+* Viewing Class Files with jvmlist::
+* Stripping Debug Info with jvmstrip::
+* Building Archives with jarmake::
+* Using the Java API with jvm2ada::
+* Java-Specific Pragmas::
+* Mapping Java into Ada::
+* Creating Gnapplets with GNAT::
+* Debugging Ada Programs::
+* Limitations::
+* Index::
+
+ --- The Detailed Node Listing ---
+
+About This Guide
+
+* What This Guide Contains::
+* What you should know before reading this guide::
+* Related Information::
+* Conventions::
+
+Getting Started with GNAT for the JVM
+
+* Overview::
+* GNAT Tools::
+* Java Development Kits that you can use with GNAT::
+* Compiling Your First Application with GNAT for the JVM::
+
+Ada & Java Interoperability
+
+* Importing Java Services to Ada::
+* Exporting Ada Services to Java::
+
+Viewing Class Files with jvmlist
+
+* Running jvmlist::
+* Switches for jvmlist::
+
+Stripping Debug Info with jvmstrip
+
+* Running jvmstrip::
+* Switches for jvmstrip::
+
+Building Archives with jarmake
+
+* Running jarmake::
+* Switches for jarmake::
+
+Using the Java API with jvm2ada
+
+* Running jvm2ada::
+* Switches for jvm2ada::
+* Running jvm2ada on the Java API::
+* Parameter Names and Source Search Paths::
+* Class File Search Paths::
+* Identifier Mangling::
+
+Java-Specific Pragmas
+
+* Creating Java Interfaces with Pragma Java_Interface::
+* Using Java Interfaces::
+* The Java_Constructor Pragma::
+* Pragma Import Java::
+* Pragma Export Java::
+
+Mapping Java into Ada
+
+* Identifiers::
+* Scalar Types::
+* Java References and java.lang.Object::
+* Array Types::
+* The Ada Package Java::
+* Use of Limited-With Clauses by jvm2ada::
+* Java Packages::
+* Java Classes::
+* Abstract Classes::
+* Final Classes and Final Methods::
+* Nested Classes::
+* Java Interface::
+* Java Class Implementing Interfaces::
+* Java Exceptions::
+* Static Fields::
+* Final Static Fields::
+* Instance Fields::
+* Volatile and Transient Fields::
+* Static Methods::
+* Instance Methods::
+* Abstract Methods::
+* Native Methods::
+* Visibility Issues::
+* Java Implicit Upcasting in Ada::
+* Mixing Ada Strings and Java Strings::
+* An Example::
+
+Creating Gnapplets with GNAT
+
+* Extending java.applet.Applet.Typ::
+* Initializing and Finalizing the GNAT Runtime::
+* Compiling the Gnapplet::
+* Creating the HTML file::
+
+Debugging Ada Programs
+
+* Ada Compilation Units and JVM Class Files::
+* Lexical Elements::
+* Enumeration Types::
+* Integer Types::
+* Floating Point Types::
+
+@end menu
+@end ifinfo
+
+
+
+@node About This Guide, Getting Started with GNAT for the JVM, Top, (dir)
+@unnumbered About This Guide
+@c ===========================================================================
+
+@noindent
+This guide describes the features and the use of GNAT for the JVM, the Ada
+development environment for the Java platform. This guide also explains
+how to use the Java API from Ada and how to interface Ada and the Java
+programming language.
+
+Before reading this manual you should be familiar with the @cite{GNAT
+User Guide} as a thorough understanding of the concepts and notions
+explained there is needed to use GNAT effectively.
+
+@menu
+* What This Guide Contains::
+* What you should know before reading this guide::
+* Related Information::
+* Conventions::
+@end menu
+
+
+@node What This Guide Contains, What you should know before reading this guide, About This Guide, About This Guide
+@unnumberedsec What This Guide Contains
+@c ---------------------------------------------------------------------------
+
+@noindent
+This guide contains the following chapters:
+
+@itemize @bullet
+@item
+@ref{Getting Started with GNAT for the JVM}, gives an overview of GNAT and its
+tools and explains how to compile and run your first Ada program for the
+Java platform.
+
+@item
+@ref{Ada & Java Interoperability} explains how the Java API and the
+services of any JVM class can be used from Ada. This section also explains
+how Ada services can be exported to Java programmers.
+
+@item
+@ref{Viewing Class Files with jvmlist}, describes @code{jvmlist}, a
+utility to disassemble a JVM @code{.class} file to view its contents:
+bytecode, contant pool (i.e. symbol table), debugging info, etc. This
+utility can also embed the original source code into the assembly listing.
+
+@item
+@ref{Stripping Debug Info with jvmstrip}, describes @code{jvmstrip} a
+utility that strips a @code{.class} file, removing all of its debugging
+info to reduce the file size.
+
+@item
+@ref{Building Archives with jarmake}, describes the @code{jarmake} tool to
+make a single @file{.jar} file for an application built with GNAT. This is
+useful when you want to ship a self-contained application built with GNAT
+to someone who does not have GNAT installed. This tool is very useful
+useful when creating "gnapplets" (GNAT applets, @pxref{Creating Gnapplets
+with GNAT}).
+
+@item
+@ref{Using the Java API with jvm2ada}, describes the @code{jvm2ada}
+interfacing tool that takes any JVM @file{.class}, @file{.zip} or
+@file{.jar} files as input and generates Ada package specs as output. The
+resulting Ada specs can be used by Ada programs to interface to Java.
+
+@item
+@ref{Java-Specific Pragmas} explains some special pragmas that have been
+introduced to support certain aspects of interfacing between Ada and Java.
+
+@item
+@ref{Mapping Java into Ada} gives details on how the Java API and, in
+general, any Java class spec is mapped into an Ada package specification by
+the @code{jvm2ada} tool.
+
+@item
+@ref{Creating Gnapplets with GNAT}, explains how you can create
+``gnapplets'' (GNAT applets).
+
+@item
+@ref{Debugging Ada Programs}, describes how to run and
+debug Ada programs.
+
+@item
+@ref{Limitations}, describes the language constructs, libraries and switches
+that are not supported by GNAT for the JVM.
+@end itemize
+
+
+@node What you should know before reading this guide, Related Information, What This Guide Contains, About This Guide
+@unnumberedsec What You Should Know Before Reading This Guide
+@c ---------------------------------------------------------------------------
+
+@noindent
+Before reading this document readers should be familiar with the
+@cite{GNAT User Guide} and have a conceptual understanding of the Java
+technology.
+
+
+
+@node Related Information, Conventions, What you should know before reading this guide, About This Guide
+@unnumberedsec Related Information
+@c ---------------------------------------------------------------------------
+
+@noindent
+For further information about GNAT, Ada, and the Java technology,
+we recommend consulting the following documents:
+
+@itemize @bullet
+@item
+@cite{GNAT User Guide}, contains introductory and reference material
+for the GNAT development environemnt.
+
+
+@item
+@cite{Ada 2005 Language Reference Manual}, contains all reference material
+for the Ada programming language.
+
+@item
+@cite{The Java Tutorial: Object-Oriented Programming for the Internet},
+2nd edition, by Mary Campione and Kathy Walrath, published by Addison
+Wesley.
+
+@item
+@cite{The Java Virtual Machine Specification}, by Tim Lindholm and Frank
+Yellin, published by Addison Wesley.
+@end itemize
+
+
+
+@node Conventions,, Related Information, About This Guide
+@unnumberedsec Conventions
+@c ---------------------------------------------------------------------------
+@cindex Conventions
+@cindex Typographical conventions
+
+@noindent
+Following are examples of the typographical and graphic conventions used
+in this guide:
+
+@itemize @bullet
+@item
+@code{source code}, and @code{utility program names}.
+
+@item
+@samp{Option flags}.
+
+@item
+@file{File Names}.
+
+@item
+@var{Variables}.
+
+@item
+@emph{Emphasis}.
+
+@item
+[optional information or parameters]
+
+@item
+Examples are described by text
+@smallexample
+and then shown this way.
+@end smallexample
+@end itemize
+
+@noindent
+Commands that are entered by the user are preceded in this manual by the
+"@code{$ }" characters (dollar sign followed by space). If your system uses
+this sequence as a prompt, then the commands will appear exactly as you see
+them in the manual. If your system uses some other prompt, then the command
+will appear with the @code{$} replaced by whatever prompt character you are
+using.
+
+
+
+
+@node Getting Started with GNAT for the JVM, Ada & Java Interoperability, About This Guide, (dir)
+@chapter Getting Started with GNAT for the JVM
+@c ===========================================================================
+
+@menu
+* Overview::
+* GNAT Tools::
+* Java Development Kits that you can use with GNAT::
+* Compiling Your First Application with GNAT for the JVM::
+@end menu
+
+
+@node Overview, GNAT Tools, Getting Started with GNAT for the JVM, Getting Started with GNAT for the JVM
+@section Overview
+@c ---------------------------------------------------------------------------
+
+@noindent
+The Java(TM) technology, introduced by Sun Microsystems, is a paradigm
+whose goal is to add platform-independent programming flexibility to
+Internet, Intranet and Extranet applications, embedded devices such as
+Internet appliances, consumer electronics, smart cards, etc.
+
+The Java technology comprises, a simple object-oriented programming
+language (Java), a comprehensive set of libraries (Java API), and
+a virtual machine (JVM) offering the same object code interface on
+all platforms (bytecode).
+
+Although the Java environment comes with a default programming language,
+this language is not a fundamental component of the technology. Any
+programming language that can be mapped onto the JVM can be used to
+develop Java applications.
+
+The GNAT system offers an Ada 2005 programming environment for
+the Java platform. In addition to a bytecode compiler, binder and
+linker, GNAT comprises a Java-to-Ada binding generator which produces
+the Ada 2005 specs of the services contained in any Java @file{.class}
+file or API.  In addition to all of the conventional GNAT tools, a
+bytecode disassembler and a @file{.class} file stripper are also
+provided with GNAT for the JVM.
+
+Furthermore, because the @file{.class} files generated by the GNAT
+compiler are fully compliant with Sun's standard, the user can employ
+any JVM to run Ada applications, any JVM debugger to debug Ada
+code, and can use any of the Java tools that operate on @file{.class}
+files (e.g. @code{jar}, @code{javap}, etc.).
+
+As a side note, the GNAT system is implemented in Ada and its sources
+are available under the GPL.
+
+
+
+@node GNAT Tools, Java Development Kits that you can use with GNAT, Overview, Getting Started with GNAT for the JVM
+@section GNAT Tools
+@c ---------------------------------------------------------------------------
+
+@noindent
+Most tools are regular GNAT tools that have been slightly adapted
+for use with GNAT for the JVM. They are used in the same fashion as their
+corresponding GNAT equivalent. These tools are:
+
+@itemize @bullet
+@item
+@code{jvm-gnatcompile}: the compiler, compiles an Ada unit into one or more JVM
+@file{.class} files.
+
+@item
+@code{jvm-gnatbind}: the binder, generates an Ada source file
+containing the elaboration code for the Ada application to run.
+
+@item
+@code{jvm-gnatlink}: the linker, compiles the source file generated
+by @code{jvm-gnatbind}. @code{jvm-gnatlink} provides no linking capabilities
+since the linker is directly embedded into the JVM.  To gather the
+@file{.class} files of an application into a single file, one can use
+the @code{zip} or @code{jar} commands provided with your Java Development
+Kit.
+
+@item
+@code{jvm-gnatmake}: the automatic make program, automatically
+determines the set of sources needed by an Ada compilation unit, and
+executes the necessary compilations, binding, and link.
+
+@item
+@code{jvm-gnatls}: the library browser, displays information about
+compiled units, including dependences on the corresponding sources
+files, and consistency of compilations.
+
+@item
+@code{jvm-gnatfind}: the find utility, provides an easy way to locate
+the declaration and references for an Ada entity.
+
+@item
+@code{jvm-gnatxref}: the cross-referencer, allows you to generate a
+full report of all cross-references in a given set of Ada units.
+
+@end itemize
+
+@noindent
+
+The GNAT tools which have been specifically developed for the JVM are:
+
+@itemize @bullet
+@item
+@code{jvmlist}: The GNAT disassembler, (@pxref{Viewing Class Files with
+jvmlist}) disassembles a JVM @code{.class} file to view its contents:
+bytecode, constant pool (i.e., symbol table), debugging info, etc. This
+utility will also embed the original source code into the assembly listing.
+This utility is independent of the original programming language and works
+equally well on programs containing a mixture of Ada and Java code.
+
+@item
+@code{jvmstrip}: The GNAT strip utility, (@pxref{Stripping Debug Info
+with jvmstrip}) is a utility that strips a @code{.class} file, removing all
+of its debugging info to reduce file size. This tool is also
+programming-language independent.
+
+@item
+@code{jarmake}: The GNAT archiver tool, (@pxref{Building Archives with
+jarmake}) takes @file{.class} files as input and recursively collects into
+an uncompressed zip archive all the @file{.class} files needed by the
+@file{.class} files specified on the command line. This tool can be used to
+prepare self-standing applications or gnapplets that you can ship.  This
+tool is programming-language independent.
+
+@item
+@code{jvm2ada}: The GNAT interfacing tool, (@pxref{Using the Java API with
+jvm2ada}) takes @file{.class} files, or zip archives as input and generates
+Ada package specifications as output. The resulting Ada package specs can be
+@code{with}-ed by Ada programs to interface to Java services.
+@end itemize
+
+
+
+@node Java Development Kits that you can use with GNAT, Compiling Your First Application with GNAT for the JVM, GNAT Tools, Getting Started with GNAT for the JVM
+@section Java Development Kits that you can use with GNAT
+@c ---------------------------------------------------------------------------
+
+@noindent
+Because GNAT generates class files that are fully compliant with Sun's JVM
+standard, you can use any Java Virtual Machine and bytecode tools that meet
+the Sun Java platform standard.
+
+
+
+@node Compiling Your First Application with GNAT for the JVM,, Java Development Kits that you can use with GNAT, Getting Started with GNAT for the JVM
+@section Compiling Your First Application with GNAT
+@c ---------------------------------------------------------------------------
+
+@noindent
+To compile the following ``@code{Hello GNAT for the JVM}'' program put the
+following in file @file{hello.adb}:
+
+@smallexample
+with Ada.Text_IO; use Ada.Text_IO;
+procedure Hello is
+begin
+   Put_Line ("Hello GNAT for the JVM.");
+end Hello;
+@end smallexample
+
+@noindent
+then type:
+
+@smallexample
+$ jvm-gnatmake hello
+@end smallexample
+
+@noindent
+This command will generate file @file{hello.class}. To run it,
+assuming you are using Sun's JDK (Java Development Kit), you can
+just type
+
+@smallexample
+$ java hello
+@end smallexample
+
+@noindent
+It's as simple as that. To compile more complex Ada applications use
+@code{jvm-gnatmake} as usual. If you want to use the GNAT compiler, binder,
+and linker separately, you will need to individually invoke the appropriate
+@code{jvm-gnatcompile}, @code{jvm-gnatbind} and @code{jvm-gnatlink} commands.
+
+
+
+
+@node Ada & Java Interoperability, Viewing Class Files with jvmlist, Getting Started with GNAT for the JVM, (dir)
+@chapter Ada & Java Interoperability
+@c ===========================================================================
+
+@noindent
+One aspect of Java that makes it an interesting platform is its growing
+set of API classes. It is therefore fundamental that the API be made
+available to the Ada programmer transparently. It is also important that
+the Ada programmer be able to write libraries or APIs for the Java platform
+in Ada, and that these libraries be easily usable in any Java application.
+GNAT guarantees full interoperability between Ada and Java.
+
+To achieve this goal, constructs that can appear in a Java class at the
+specification level are mapped to Ada either by means of a corresponding
+Ada feature or by using an implementation-defined Ada pragma.
+
+In addition we have taken great care that the mapping from Java to Ada is
+completely automatic. This means that GNAT comes with no Ada bindings
+for the Java API, but instead provides a tool (@pxref{Using the Java API
+with jvm2ada}) which is able to produce Ada specifications from any set
+of JVM @file{.class} files.
+
+@menu
+* Importing Java Services to Ada::
+* Exporting Ada Services to Java::
+@end menu
+
+
+@node Importing Java Services to Ada, Exporting Ada Services to Java, Ada & Java Interoperability, Ada & Java Interoperability
+@section Importing Java Services to Ada
+@c ---------------------------------------------------------------------------
+
+@noindent
+To access the services provided by the Java API or by any set of
+JVM @file{.class} files, you should proceed as follows:
+
+@enumerate
+@item
+If your Java code is in source form, compile it using any Java compiler.
+
+@item
+If you just want to import a variable or a subprogram from a Java class
+use @code{pragma Import} (@pxref{Pragma Import Java}) in the Ada code
+where you want to import the Java service.
+
+@item
+More generally, you can use the @code{jvm2ada} utility to produce the Ada
+specs (containing the appropriate Java-specific pragmas) for the @file{.class},
+@file{.zip}, or @file{.jar} files containing the Java services you would
+like to use from Ada (@pxref{Using the Java API with jvm2ada}). Note that
+@code{jvm2ada} preserves, in the generated Ada specs, the names of the
+original Java services (for a detailed explanation of the Java to Ada
+mapping @pxref{Mapping Java into Ada}).
+
+@item
+@code{with} the needed Ada specs and use their services as usual.
+@end enumerate
+
+@noindent
+It's as simple as that.
+
+
+
+@node Exporting Ada Services to Java,, Importing Java Services to Ada, Ada & Java Interoperability
+@section Exporting Ada Services to Java
+@c ---------------------------------------------------------------------------
+
+@noindent
+To export a set of Ada services to Java you should:
+
+@enumerate
+@item
+Use @code{pragma Export} and other Java interfacing pragmas inside the Ada
+code (@pxref{Java-Specific Pragmas}). This gives you complete control of
+what is being generated and allows you to decide very precisely what the
+exported services look like on the Java side.
+
+@item
+Compile your Ada code with the GNAT compiler.
+
+@item
+Use @code{javap} to display the spec of the @file{.class} files generated
+by GNAT whose services you would like to use in your Java code.
+@end enumerate
+
+
+
+
+@node Viewing Class Files with jvmlist, Stripping Debug Info with jvmstrip, Ada & Java Interoperability, (dir)
+@chapter Viewing Class Files with @code{jvmlist}
+@c ===========================================================================
+@cindex jvmlist
+
+@noindent
+The @code{jvmlist} tool takes JVM @file{.class} files as input (directly or
+regrouped in an uncompressed @file{.zip} or @file{.jar} file) and
+disassembles it to view its contents: bytecode, constant pool (i.e., symbol
+table), debugging info, etc. This utility can also embed the original source
+code in the assembly listing.  @code{jvmlist} is independent of the original
+programming language and works equally well on programs containing a mixture
+of Ada and Java code.
+
+@menu
+* Running jvmlist::
+* Switches for jvmlist::
+@end menu
+
+
+@node Running jvmlist, Switches for jvmlist, Viewing Class Files with jvmlist, Viewing Class Files with jvmlist
+@section Running jvmlist
+@c ----------------------------------------------------------------------------
+
+@noindent
+The form of the @code{jvmlist} command is
+
+@smallexample
+jvmlist [@var{switches}] @var{file} [@var{file} ... @var{file}]
+@end smallexample
+
+@noindent
+where @var{file} can be one of the following:
+
+@itemize @minus
+@item
+the name of a @file{.class} file (possibly without the @file{.class} suffix);
+
+@item
+the name of an uncompressed zip archive (in this case the @code{jvmlist}
+command applies to all @file{.class} files within the archive);
+
+@item
+the name of a @file{.class} file within an uncompressed zip archive @*
+(e.g. @file{rt.jar/java/lang/Object.class}).
+@end itemize
+
+@noindent
+File names can be prefixed with directory information.
+
+The output of @code{jvmlist} contains a listing of all the fields and methods
+declared inside the @file{.class} file, in addition to various other class
+information such as the class it extends, the interfaces it implements, etc.
+
+If you select switch @samp{-c}, then @code{jvmlist} will also print the
+bytecode for each method. The bytecode mnemonics used by @code{jvmlist}
+are the same as those documented in Sun's JVM book @i{The Java Virtual
+Machine Specification} by Lindholm and Yellin. If you select switch @samp{-c},
+@code{jvmlist} will also embed the original source code in the bytecode.
+For now, @code{jvmlist} only looks for source files in the current directory.
+
+
+
+@node Switches for jvmlist,, Running jvmlist, Viewing Class Files with jvmlist
+@section Switches for jvmlist
+@c ----------------------------------------------------------------------------
+
+@noindent
+The following switches are available with the @code{jvmlist} utility:
+
+@table @code
+@item -c
+@cindex @code{-c} (@code{jvm2ada})
+Display bytecode. By default @code{jvmlist} does not display the bytecode
+of each method. This switch specifies that bytecode should be displayed.
+
+@item -g
+@cindex @code{-q} (@code{jvm2ada})
+Embed source code. This switch implies @samp{-c} and embeds the original
+source code within the disassembled bytecode. If the input @file{.class}
+file does not contain source file information, or if the source file cannot
+be located in the current directory (the one where @code{jvmlist} was
+invoked), then this switch is equivalent to @samp{-c}.
+
+@item -l
+@cindex @code{-q} (@code{jvm2ada})
+Display line number tables.
+
+@item -p
+@cindex @code{-q} (@code{jvm2ada})
+Display the constant pool.
+
+@item -t
+@cindex @code{-q} (@code{jvm2ada})
+Display local variable tables.
+
+@item -v
+@cindex @code{-q} (@code{jvm2ada})
+Verbose. Outputs the name of each class file for which an Ada spec is
+generated.
+
+@item -V
+@cindex @code{-q} (@code{jvm2ada})
+Very verbose. Implies -v. Each item that is encountered in a zip or jar
+file is listed on the screen. Class files are preceded with a @code{->},
+other items are listed with a message saying that the item is skipped.
+Only class files whose name is listed twice (one preceded with a
+@code{->} and the following one without the @code{->}) have a
+corresponding Ada spec generated for them, other class files are ignored
+(because for instance they are not public classes).
+@end table
+
+
+
+
+@node Stripping Debug Info with jvmstrip, Building Archives with jarmake, Viewing Class Files with jvmlist, (dir)
+@chapter Stripping Debug Info with @code{jvmstrip}
+@c ============================================================================
+@cindex jvmstrip
+
+@noindent
+The @code{jvmstrip} tool takes a @file{.class} files as input (directly or
+packaged in an uncompressed @file{.zip} or @file{.jar} file) and strips
+off all of its debugging info to reduce its size. This utility is independent
+of the original programming language and works equally well on programs
+containing a mixture of Ada and Java code.
+
+@menu
+* Running jvmstrip::
+* Switches for jvmstrip::
+@end menu
+
+
+@node Running jvmstrip, Switches for jvmstrip, Stripping Debug Info with jvmstrip, Stripping Debug Info with jvmstrip
+@section Running jvmstrip
+@c ----------------------------------------------------------------------------
+
+@noindent
+The form of the @code{jvmstrip} command is
+
+@smallexample
+jvmstrip [@var{switches}] @var{file} [@var{file} ... @var{file}]
+@end smallexample
+
+@noindent
+where @var{file} can be one of the following:
+
+@itemize @minus
+@item
+the name of a @file{.class} file
+
+@item
+the name of an uncompressed zip archive (in this case the @code{jvmstrip}
+command applies to all @file{.class} files within the archive);
+@end itemize
+
+@noindent
+File names can be prefixed with directory information.
+
+The output of @code{jvmstrip} is a stripped @file{.class} file which
+replaces the original input file. If the input is an archive, then all of
+the @file{.class} files within the archive are stripped and the updated
+archive replaces the input file.
+
+
+
+@node Switches for jvmstrip,, Running jvmstrip, Stripping Debug Info with jvmstrip
+@section Switches for jvmstrip
+@c ----------------------------------------------------------------------------
+
+@noindent
+The following switches are available with the @code{jvmstrip} utility:
+
+@table @code
+@item -v
+@cindex @code{-q} (@code{jvm2ada})
+Verbose.
+@end table
+
+
+
+@node Building Archives with jarmake, Using the Java API with jvm2ada, Stripping Debug Info with jvmstrip, (dir)
+@chapter Building Archives with @code{jarmake}
+@c ===========================================================================
+@cindex jarmake
+
+@noindent
+When building an Ada application with GNAT, a number of JVM @file{.class}
+files are generated. In addition to potentially being numerous, the
+generated classes depend on the library @file{jgnat.jar} which is
+installed with GNAT.
+
+If you need to ship your Ada application or gnapplet to people who do not
+have GNAT installed this can be cumbersome as you would need to ship the
+@file{.class} files of your application along with @file{jgnat.jar}.
+
+To automate such process we have provided @code{jarmake}, the GNAT archiver
+tool. @code{jarmake} takes @file{.class} files as input and recursively
+collects into an uncompressed zip archive all the @file{.class} files needed
+by the @file{.class} files specified on the command line. This tool can be
+used to prepare self-standing applications or gnapplets.
+
+This utility is independent of the original programming language and works
+equally well on programs containing a mixture of Ada and Java code.
+
+
+@menu
+* Running jarmake::
+* Switches for jarmake::
+@end menu
+
+
+@node Running jarmake, Switches for jarmake, Building Archives with jarmake, Building Archives with jarmake
+@section Running jarmake
+@c ----------------------------------------------------------------------------
+
+
+@noindent
+The form of the @code{jarmake} command is
+
+@smallexample
+jarmake [@var{switches}] @var{file} [@var{file} ... @var{file}]
+@end smallexample
+
+@noindent
+where @var{file} can be one of the following:
+
+@itemize @minus
+@item
+the name of a @file{.class} file
+
+@item
+the name of an image, sound or any other file that you want to bundle with
+your application.
+@end itemize
+
+@noindent
+File names can be prefixed with directory information.
+
+The output of @code{jarmake} is an uncompressed zip archive containing the
+files specified on the command line along with the @file{.class} files they
+recursively reference.
+
+
+@node Switches for jarmake,, Running jarmake, Building Archives with jarmake
+@section Switches for @code{jarmake}
+@c ---------------------------------------------------------------------------
+
+@noindent
+The following switches are available with the @code{jarmake} utility:
+
+@table @code
+@item -L@var{zip-archive}
+@cindex @code{-L} (@code{jarmake})
+When searching for @file{.class} files, look in the uncompressed zip archive
+@var{zip-archive}.
+
+@item -j
+@cindex @code{-j} (@code{jarmake})
+Do not skip @file{.class} files in the Java API. By default @code{jarmake}
+skips all the @file{.class} files in the Java API. By using this switch you
+are asking @code{jarmake} to include Java API classes in the output zip
+archive. If you set this flag you should also provide a @code{-L} flag
+giving the location of the Java API zip archive.
+
+@item -k
+@cindex @code{-k} (@code{jarmake})
+Keep going even if not all of the @file{.class} files are found. By default,
+@code{jarmake} will stop if it cannot find all the needed @file{.class}
+files. By setting this switch @code{jarmake} will emit a warning message
+when it cannot find a @file{.class} file it is looking for and will continue.
+
+@item -m
+@cindex @code{-m} (@code{jarmake})
+Add a @code{Main-Class} attribute to the manifest for the first class encountered
+that has a main method.
+
+@item -n
+@cindex @code{-n} (@code{jarmake})
+Do not include the @file{.class} files of the library @file{jgnat.jar}
+in the output archive. By default these files are included in the output
+archive so that the the archive is autonomous.
+
+@item -o @var{zip-archive}
+@cindex @code{-o} (@code{jarmake})
+Name of the output uncompressed zip archive. If this switch is not specified,
+then the default name is @file{gnapplet.jar}.
+
+@item -q
+@cindex @code{-q} (@code{jarmake})
+Quiet.
+
+@item -v
+@cindex @code{-v} (@code{jarmake})
+Verbose.
+@end table
+
+
+
+
+@node Using the Java API with jvm2ada, Java-Specific Pragmas, Building Archives with jarmake, (dir)
+@chapter Using the Java API with @code{jvm2ada}
+@c ===========================================================================
+@cindex jvm2ada
+
+@noindent
+The @code{jvm2ada} tool takes JVM @file{.class} files as input (directly
+or regrouped in an uncompressed @file{.zip} or @file{.jar} file) and
+generates Ada specs as output.
+
+@menu
+* Running jvm2ada::
+* Switches for jvm2ada::
+* Running jvm2ada on the Java API::
+* Parameter Names and Source Search Paths::
+* Class File Search Paths::
+* Identifier Mangling::
+@end menu
+
+
+@node Running jvm2ada, Switches for jvm2ada, Using the Java API with jvm2ada, Using the Java API with jvm2ada
+@section Running @code{jvm2ada}
+@c ---------------------------------------------------------------------------
+
+@noindent
+The form of the @code{jvm2ada} command is
+
+@smallexample
+jvm2ada [@var{switches}] @var{file} [@var{file} ... @var{file}]
+@end smallexample
+
+@noindent
+where @var{file} can be any of the following:
+
+@itemize @minus
+@item
+the name of a @file{.class} file (possibly without the @file{.class} suffix);
+
+@item
+the name of an uncompressed zip archive (in this case the @code{jvm2ada}
+command applies to all @file{.class} files within the archive);
+
+@item
+the name of a @file{.class} file within an uncompressed zip or jar archive @*
+(e.g. @file{rt.jar/java/lang/Object.class}).
+@end itemize
+
+@noindent
+File names can be prefixed with directory information.
+
+The output of @code{jvm2ada} is an Ada source file for each @file{.class}
+file processed. The Ada source file contains a package spec giving the Ada
+declaration for the services exported by the corresponding @file{.class}
+file.  The name of the Ada package is obtained by concatenating the name of
+the Java class to the name of the Java package containing the class. As an
+example, a Java class @code{someName} occurring within Java package
+@code{some.pack} yields the Ada package @code{some.pack.someName} and
+is in a file named @file{some-pack-somename.ads}.
+
+Unless switch @samp{-o} is used (@pxref{Switches for jvm2ada}), the Ada files
+generated are placed in the directory where the @code{jvm2ada} command is
+invoked.
+
+
+@node Switches for jvm2ada, Running jvm2ada on the Java API, Running jvm2ada, Using the Java API with jvm2ada
+@section Switches for @code{jvm2ada}
+@c ---------------------------------------------------------------------------
+
+@noindent
+The following switches are available with the @code{jvm2ada} utility:
+
+@table @code
+@item -I@var{zip-archive}
+@cindex @code{-I} (@code{jvm2ada})
+When looking for a source file (to find the parameter names of a Java method),
+search the uncompressed zip archive @var{zip-archive}.  @xref{Parameter
+Names and Source Search Paths}, for details. (This switch is not yet
+supported.)
+
+@item -L@var{zip-archive}
+@cindex @code{-L} (@code{jvm2ada})
+When searching for @file{.class} files, look in the uncompressed zip archive
+@var{zip-archive}. @xref{Class File Search Paths}, for details.
+
+@item -k
+@cindex @code{-k} (@code{jvm2ada})
+Keep original JVM identifiers. By default, identifiers encountered in a
+JVM .class file are mangled whenever needed to turn them into proper Ada
+identifiers. When this switch is set, identifiers are left as is in the
+generated Ada package spec. @xref{Identifier Mangling}, for details.
+
+@item -o @var{dir}
+@cindex @code{-o} (@code{jvm2ada})
+Output to @var{dir}. Put all generated Ada source files into directory @var{dir}
+rather than the current directory.
+
+@item -q
+@cindex @code{-q} (@code{jvm2ada})
+Quiet.
+
+@item -s
+@cindex @code{-s} (@code{jvm2ada})
+Map Sun-specific classes into Ada specs. By default, Sun's classes are
+not mapped into Ada even if they are public, because they are typically not
+part of the API at hand (certainly they are not part of the Java API, even
+though the corresponding jar file contains them). Sun's classes are the classes
+in packages @code{sun}, @code{sunw}, and @code{com.sun}.
+
+@item -v
+@cindex @code{-v} (@code{jvm2ada})
+Verbose.
+
+@item -w
+@cindex @code{-w} (@code{jvm2ada})
+Overwrite existing file names. Normally @code{jvm2ada} regards it as a fatal
+error if there is already a file with the same name as a file it would
+otherwise output. This switch bypasses this check, and any such existing
+files will be silently overwritten.
+@end table
+
+
+
+@node Running jvm2ada on the Java API, Parameter Names and Source Search Paths, Switches for jvm2ada, Using the Java API with jvm2ada
+@section Running jvm2ada on the Java API
+@c ---------------------------------------------------------------------------
+
+@noindent
+In this section, we'll assume that the environment variable @code{JAVA_SDK}
+points to the root installation of your java SDK (e.g. /jdk-1.5.0/). 
+
+@noindent
+To be able to access the Java API you need to process it to generate an Ada
+package spec for each public class in the API. In order to manually do that, 
+you will need first to create a uncompressed version of the jce.jar file: 
+
+@smallexample
+$ jar -xf "$JAVA_SDK/jre/lib/jce.jar"
+$ jar -0cf uncompressed_jce.jar javax META-IN
+@end smallexample
+
+@noindent
+then, run jvm2ada on the Java library archives (rt.jar, uncompressed_jce.jar,
+charsets.jar and jsse.jar).
+
+@smallexample
+$ jvm2ada -jgnat "$JAVA_SDK/jre/lib/rt.jar" \
+   "-Luncompressed_jce.jar" \
+   "-L$JAVA_SDK/jre/lib/charsets.jar" \
+   "-L$JAVA_SDK/jre/lib/jsse.jar"
+@end smallexample
+
+@noindent
+This will create, in the current directory, an Ada package spec
+for each public Java class. If you would like to output the Ada specs in some
+other directory use @code{jvm2ada} switch @code{-o}.
+
+@noindent
+It's possible peform this operation automatically, in a single command, using 
+the script @code{bind_jre.sh}  (or @code{bind_jre.cmd} on windows):
+
+@smallexample
+$ bind_jre.sh $JAVA_SDK
+@end smallexample
+
+@noindent
+Please note that because of some jvm2ada limitations, you may have compilation
+errors with some of the generated packages. The most common one is a name clash,
+for example:
+
+@smallexample
+java-util-concurrent-locks-reentrantreadwritelock.ads:54:13: "WriteLock" 
+conflicts with declaration at 
+java-util-concurrent-locks-reentrantreadwritelock-writelock.ads:9
+@end smallexample
+
+@noindent
+In order to fix this kind of conflict, you will need to edit the Ada generated 
+code and fix manually the name clash, for example by adding a suffix @code{"_C"}
+to the declaration of @code{WriteLock} at line 54.
+
+@noindent
+In case of a more complex problem, the generic workaround is to manually wrap
+the class into a simpler interface, and then use the resulting binding of this
+interface. This occurs on very rare cases, the large majority of the generated
+binding from the API being usable without any change.
+
+@node Parameter Names and Source Search Paths, Class File Search Paths, Running jvm2ada on the Java API, Using the Java API with jvm2ada
+@section Parameter Names and Source Search Paths
+@c ---------------------------------------------------------------------------
+
+@noindent
+Note: Only point 2. below is implemented.
+
+@noindent
+When generating the Ada spec for a @file{.class} file, @code{jvm2ada} tries
+to preserve the original names of method parameters.  If the @file{.class}
+file was compiled enabling the generation of debugging tables (switch
+@samp{-g} in Sun's JDK @code{javac} compiler), parameter names are stored in
+the @code{.class} file. If not @code{jvm2ada}
+proceeds as follows:
+
+@enumerate
+@item
+If the name of the original source file is present in the @file{.class}
+file, @code{jvm2ada} tries to locate this source by looking at the
+uncompressed zip archives specified by the @code{-I@var{zip-archive}}
+switches, in the order in which these switches occur.  Once found,
+@code{jvm2ada} uses the source file to locate parameter names. If the
+original source is not around you can always communicate parameter names by
+creating a Java source file containing the appropriate method specs. For
+instance to give the names of the parameters of method @code{someMethod} in
+class @code{someClass} in package @code{some_package} you could create the
+following source file:
+
+@smallexample
+package some_package;
+@i{//  You must provide the appropriate Java package for} someClass
+
+public class someClass @{
+   public int someMethod (int someName, float anotherName) @{@}
+   @i{//  The methods for which you want to name the parameters must have the}
+   @i{//  same signature as the methods found in the .class file. The body}
+   @i{//  can be empty.}
+@}
+@end smallexample
+
+@item
+If the appropriate source file cannot be located @code{jvm2ada} assigns
+arbitrary parameter names of the form @code{P1_}@i{type},
+@code{P2_}@i{type}, etc. where @i{type} denotes the flattened type name
+for the corresponding parameter. The reason for appending @i{type} to
+the parameter name is to allow the Ada programmer to resolve possible
+overloading resolution conflicts of the following kind
+
+@smallexample
+public class Base @{ @}
+public class Deriv extends Base @{
+   public static void p (Base  obj) @{ ... @}
+   public static void p (Deriv obj) @{ ... @}
+@}
+@end smallexample
+
+@noindent
+The overloaded procedure @code{p} above are translated by @code{jvm2ada}
+to the following Ada specs:
+
+@smallexample
+procedure p (P1_Base  : access Base.Typ'Class);
+procedure p (P1_Deriv : access Deriv.Typ'Class);
+@end smallexample
+
+@noindent
+The problem that arises is shown by the following example:
+
+@smallexample
+type Deriv_Ref is access all Deriv.Typ'Class;
+Obj : Deriv_Ref := ...;
+procedure p (Obj);              --  Ambiguos call
+procedure p (P1_Base  => Obj);  --  OK
+procedure p (P1_Deriv => Obj);  --  OK
+@end smallexample
+
+@end enumerate
+
+
+
+@node Class File Search Paths, Identifier Mangling, Parameter Names and Source Search Paths, Using the Java API with jvm2ada
+@section Class File Search Paths
+@c ---------------------------------------------------------------------------
+
+@noindent
+When processing a @file{.class} file, @code{jvm2ada} may need to locate other
+@file{.class} files.  For instance, to know whether the JVM class being
+processed is a Java exception, @code{jvm2ada} must traverse the inheritance
+tree and must therefore locate the @file{.class} files of the ancestor
+classes.
+
+If @code{jvm2ada} does not find the @file{.class} file it is looking for,
+then a warning message is emitted. The order in which @code{jvm2ada} searches
+@file{.class} files is given below.
+
+@enumerate
+@item
+If the @file{.class} file being processed belongs to an uncompressed zip
+archive, @code{jvm2ada} will look there first.
+
+@item
+The uncompressed zip archives specified by a @code{-L@var{zip-archive}}
+switch are searched next, in the order in which the @samp{-L} switches occur.
+@end enumerate
+
+
+
+@node Identifier Mangling,, Class File Search Paths, Using the Java API with jvm2ada
+@section Identifier Mangling
+@c ---------------------------------------------------------------------------
+
+@noindent
+@code{jvm2ada} retains, whenever possible, the identifiers it finds in the
+@file{.class} files it processes. This is not always possible, however,
+because Java's set of legal identifiers is bigger than Ada's. To address
+these issues @code{jvm2ada} proceeds as follows: If switch @code{-k} is set,
+the original identifiers found in the JVM .class are left unchanged. You
+will have to change these yourself in the generated packages if these are
+illegal Ada identifiers. If switch @code{-k} is not set then:
+
+@itemize @bullet
+@item
+Every identifier which is an Ada reserved word or any of the words
+``@code{Standard}'', ``@code{Ref}'', ``@code{Typ}'', ``@code{Arr}'',
+``@code{Arr_2}'', ``@code{Arr_3}'', is suffixed with @code{_K}. For instance,
+@code{Abort} is mapped to @code{Abort_K}.
+
+@item
+A single underscore is replaced by ``@code{U}''.
+
+@item
+A leading underscore is replaced by ``@code{U_}''.
+
+@item
+A trailing underscore is replaced by ``@code{_U}''.
+
+@item
+A letter ``@code{U}'' is placed between every two consecutive underscores.
+
+@item
+If two or more identifiers generated in an Ada spec lead to an Ada name
+conflict, then @code{jvm2ada} will add a trailing @code{_K} at the end
+of the second occurrence, a trailing @code{_K2} at the end of the third
+occurrence, a trailing @code{_K3} at the end of the fourth occurrence, etc.
+The cases currently caught are: identical variable names, identical variable
+and subprogram names, identical variable and child package name.  More complex
+cases are not yet handled. In particular, we do not yet detect the case where
+we have two identical field names in a record @code{B} and a record @code{D}
+derived from @code{B}. In these cases you will have to revise the generated
+Ada spec to allow it to compile.
+@end itemize
+
+
+
+
+@node Java-Specific Pragmas, Mapping Java into Ada, Using the Java API with jvm2ada, (dir)
+@chapter Java-Specific Pragmas
+@c ===========================================================================
+
+@noindent
+The typical way to import services from Java classes is to use the
+@code{jvm2ada} tool to automatically generate the specification of the
+corresponding @file{.class} file. This specification contains the
+appropriate Java-specific pragmas.
+
+In some cases you may wish to import just one routine to your Ada code
+or you may prefer to group certain services from multiple @file{.class}
+files into a single Ada spec (for instance if you are trying to provide
+a simplified view of the Java API).
+
+In such cases it is useful to understand how the various Java-specific
+pragmas work. Another situation where you may have to use these pragmas
+explicitly is when exporting Ada services to Java.
+
+This chapter introduces the features and pragmas that are needed for full
+support of interfacing between Java and Ada.
+
+@menu
+* Creating Java Interfaces with Pragma Java_Interface::
+* Using Java Interfaces::
+* The Java_Constructor Pragma::
+* Pragma Import Java::
+* Pragma Export Java::
+@end menu
+
+
+@node Creating Java Interfaces with Pragma Java_Interface, Using Java Interfaces, Java-Specific Pragmas, Java-Specific Pragmas
+@section Creating Java Interfaces: Pragma @code{Java_Interface}
+@c ---------------------------------------------------------------------------
+
+@noindent
+Java offers a special kind of class called an interface. Interfaces
+provide a limited but useful form of multiple inheritance. A Java
+interface is basically an abstract class with no fields and whose methods
+are all abstract. Instead of inheriting from an interface, a Java class
+@code{C} is said to implement the interface, which means that @code{C}
+must provide an implementation for all of the abstract methods declared
+in the interface.
+
+The key point to note about interfaces is that a class @code{C} can
+implement several interfaces at the same time, and this mechanism is
+orthogonal to the fact that @code{C} may be extending some other class.
+
+To make a Java interface available to an Ada program we have
+provided the pragma @code{Java_Interface}. Its syntax is:
+
+@smallexample
+pragma Java_Interface (@var{type-name});
+@end smallexample
+
+@noindent
+where @var{type-name} is the name of a type @var{T} declared earlier,
+immediately within the same declarative part where the pragma occurs, and
+where the type has the following characteristics that reflect the restrictions
+on Java interfaces:
+
+@enumerate
+@item
+@var{T} must be an abstract tagged type with a null record extension.
+
+@item
+@var{T} must be derived from @code{java.lang.Object.Typ}
+(@pxref{Java References and java.lang.Object}).
+
+@item
+@var{T} must have an access discriminant named @code{Self} with
+@code{java.lang.Object.Typ'Class} as its designated type.
+
+@item
+All of @var{T}'s primitive operations must be abstract.
+
+@item
+@var{T} must have Java @code{Convention}.
+@end enumerate
+
+@noindent
+Here is an example of using pragma @code{Java_Interface}:
+
+@smallexample
+with java.lang.Object;
+package Foo is
+   type Typ (Self : access java.lang.Object.Typ'Class)
+     is abstract new java.lang.Object.Typ with null record;
+   pragma Java_Interface (Typ);
+
+   type Ref is access all Typ'Class;
+
+   procedure Proc (This : access Typ; Val : Integer) is abstract;
+   function  Func (This : access Typ) return Integer is abstract;
+
+private
+   pragma Convention (Java, Typ);
+end Foo;
+@end smallexample
+
+@page
+
+
+
+@node Using Java Interfaces, The Java_Constructor Pragma, Creating Java Interfaces with Pragma Java_Interface, Java-Specific Pragmas
+@section Using Java Interfaces
+@c ---------------------------------------------------------------------------
+
+@noindent
+In order to declare an Ada type that implements one or more Java interfaces
+it is necessary to use a simple programming idiom that is specially
+recognized by the compiler. This mechanism is not restricted for use only
+with types imported from Java, but can be applied to any Ada tagged type
+@var{T}.
+
+The idiom consists in specifying a discriminant @var{D} for each Java
+interface @var{Interf} that type @var{T} implements. The type of @var{D} must
+be some access type whose designated type is @var{Interf}.  Discriminants such
+as @var{D} are not represented by an actual field in the object, but rather
+serve as a symbolic shorthand to indicate the special characteristics of
+type @var{T} to the compiler.
+
+As an example, the following package spec declares a type @code{Bar.Typ}
+which implements interface @code{Foo.Typ}:
+
+@smallexample
+with Foo;
+package Bar is
+   type Typ (Foo_I : Foo.Ref) is tagged record
+      Field : Integer;
+   end record;
+   --  @i{Discriminant} Foo_I @i{above signals that} Bar.Typ @i{implements the}
+   --  Foo.Typ @i{interface (}Foo_I @i{stands for} Foo @i{Interface). The}
+   --  @i{compiler does not create a field for} Foo_I @i{but marks the}
+   --  @i{generated .class file as implementing interface} Foo.Typ.
+
+   procedure Proc (This : access Typ; Val : Integer);
+   function  Func (This : access Typ) return Integer;
+   --  @i{Unless} Bar.Typ @i{is itself marked abstract,} Bar.Typ @i{must}
+   --  @i{provide an implementation for subprograms} Proc @i{and} Func.
+   --  @i{Right now if you omit these subprograms the GNAT compiler will not}
+   --  @i{complain, but when loading the .class file corresponding to} Bar.Typ
+   --  @i{the JVM will halt execution with a verifier error}.
+end Bar;
+@end smallexample
+
+@noindent
+As mentioned in the example, unless @var{T} is abstract, @var{T} must
+provide an implementation for each of the abstract operations of the
+@var{Interf} interface (currently this check is not done by the GNAT
+compiler but is caught later on by the JVM).
+
+A second use of these special interface discriminants is to enable
+conversions between pointers to type @var{T} and pointers of its
+implemented interface types as the example below demostrates.
+
+@smallexample
+with Foo;
+with Bar;
+package Client is
+   X : Bar.Ref := new Bar.Typ (null);
+   --  @i{Create an object of type} Bar.Typ. @i{To satisfy Ada's semantic rules}
+   --  @i{we must provide a value for} Foo_I@i{, but this value is ignored.}
+
+   Y : Foo.Ref := X.Foo_I;
+   --  @i{OK, upward conversion allowed, no checks.}
+   --  @i{Referencing discriminant} Foo_I @i{is a convenient way to convert} X
+   --  @i{to a} Foo.Ref@i{. The compiler transorms all references to} Foo_I
+   --  @i{into references to the selector itself, in this case} X.
+
+   Val : Integer := Foo.Func (Y);
+   --  @i{Dispatching call}
+end Client;
+@end smallexample
+
+A conversion can also be made from an object of the class-wide interface
+reference type to an implementing reference type, by selecting the
+@code{Self} field (which is of type @code{java.lang.Object.Typ'Class}), and
+then applying a downward tagged type conversion (assuming that @var{T}
+derives directly or indirectly from @code{java.lang.Object}). Such a
+downward conversion will involve a run-time check, to ensure that the
+source object belongs to the target type's class. The package spec below
+illustrates one such downward conversion.
+
+@smallexample
+with Foo;
+with java.lang.Object;
+package Zar is
+   type Typ (Foo_I : Foo.Ref) is new java.lang.Object.Typ with record
+      Field : Integer;
+   end record;
+
+   type Ref is access all Typ'Class;
+
+   procedure Proc (This : access Typ; Val : Integer);
+   function  Func (This : access Typ) return Integer;
+
+   X : Zar.Ref := new Zar.Typ (null);
+   Y : Foo.Ref := X.Foo_I;
+
+   Z : Zar.Ref := Zar.Ref (Y.Self);
+   --  @i{OK, downward conversion, run-time check that} Y @i{designates an}
+   --  @i{object in} Zar.Obj'Class.
+   --  @i{Again the compiler ignores the special discriminant} Self @i{and}
+   --  @i{returns the selector itself, in this case} Y.
+end Zar;
+@end smallexample
+
+@noindent
+In both of the cases shown above, the compiler recognizes the special
+idiom of selecting the interface or @code{Self} discriminant as meaning
+a reference to the object itself, reinterpreting the type of the
+object appropriately.
+
+The above mechanism can also be used within another @code{Java_Interface}
+type as illustrated by the following example:
+
+@smallexample
+with java.lang.Object;
+package Zoo is
+   type Typ (Self : access java.lang.Object.Typ'Class) is
+     new abstract java.lang.Object.Typ with null record;
+   pragma Java_Interface (Typ);
+
+   type Ref is access all Typ'Class;
+
+   procedure Interface_Op (This : access Typ) is abstract;
+private
+   pragma Convention (Java, Typ);
+end Zoo;
+
+with java.lang.Object; use java.lang.Object;
+with Foo;
+with Zoo;
+package Woo is
+   type Typ (Foo_I : Foo.Ref;
+             Zoo_I : Zoo.Ref)
+     is new abstract java.lang.Object.Typ with null record;
+   pragma Java_Interface (Typ);
+
+   type Ref is access all Typ'Class;
+
+   --  @i{Woo must list all of the abstract operations of interfaces}
+   --  @i{Foo and Zoo.}
+
+   procedure Proc (This : access Typ; Val : Integer) is abstract;
+   function  Func (This : access Typ) return Integer is abstract;
+   procedure Interface_Op (This : access Typ) is abstract;
+
+   procedure New_Op (This : access Typ) is abstract;
+   --  @i{A new operation of the interface}
+private
+   pragma Convention (Java, Typ);
+end Woo;
+@end smallexample
+
+@noindent
+Another interesting example is the declaration of a type @code{Bar.Child.Typ}
+that derives from @code{Bar.Typ} and implements interface @code{Woo.Typ},
+as shown below:
+
+@smallexample
+with Foo;
+with Woo;
+package Bar.Child is
+   type Typ (Foo_I : Foo.Ref;
+             Woo_I : Woo.ref)
+     is new Bar.Typ (Foo_I) with null record;
+   --  @i{Note how} Foo_I @i{is used to constrain} Bar.Typ@i{. This is just to}
+   --  @i{satisfy Ada semantics requirements and has no other implications.}
+
+   type Ref is access all Typ'Class;
+
+   procedure Proc (This : access Typ; Val : Integer);
+   function  Func (This : access Typ) return Integer;
+   procedure Interface_Op (This : access Typ);
+   procedure New_Op (This : access Typ);
+end Woo;
+
+@end smallexample
+
+@noindent
+An interesting point to note is when an Ada tagged type @code{Deriv} derives
+from an Ada tagged type @code{Base} which implements a number of
+interfaces. If @code{Deriv} does not implement any additional interface
+there is no need to specify interface discriminants for @code{Deriv}, since
+it can simply inherit those of @code{Base}.
+
+@page
+
+
+
+@node The Java_Constructor Pragma, Pragma Import Java, Using Java Interfaces, Java-Specific Pragmas
+@section The @code{Java_Constructor} Pragma
+@c ---------------------------------------------------------------------------
+
+@menu
+* Background on Java Constructors::
+* Using Java Constructors in Ada::
+* Java Constructors and Ada Allocators::
+@end menu
+
+
+@node Background on Java Constructors, Using Java Constructors in Ada, The Java_Constructor Pragma, The Java_Constructor Pragma
+@subsection Background on Java Constructors
+@c ...........................................................................
+
+@noindent
+A Java constructor is a special method that must be invoked immediately
+after allocating an object, in order to initialize the object. Given
+the following Java class:
+
+@smallexample
+public class C @{
+   public int field;
+   public C ()      @{ field = 3; @}
+   public C (int i) @{ field = i; @}
+@}
+@end smallexample
+
+@noindent
+then the statement @code{C obj = new C (3)} accomplishes two things:
+
+@enumerate
+@item
+It allocates a new instance of class @code{C} in the Java heap and sets
+@code{obj} to point to this object;
+
+@item
+It then calls the constructor that takes an @code{int} parameter, passing
+@code{obj} to it as a hidden parameter and the value 3 for its @code{int}
+parameter.
+@end enumerate
+
+@noindent
+If no constructor is provided, as in the following class:
+
+@smallexample
+class D extends C @{
+   float f;
+@}
+@end smallexample
+
+@noindent
+then a default constructor
+
+@smallexample
+public D () @{
+   super ();
+@}
+@end smallexample
+
+@noindent
+is automatically generated for class @code{D}. The call of @code{super()}
+inside this default constructor (known as a @emph{no-arg} constructor)
+invokes the no-arg constructor of the superclass of @code{D}, that is, the
+constructor of class @code{C}.
+
+Generally speaking, the first statement of every constructor must either be
+a call to another constructor of the class, or a call to a constructor of
+the superclass. For instance, given a constructor
+
+@smallexample
+public C (int i, int j) @{ this (i + j); @}
+@end smallexample
+
+@noindent
+The call @code{this (...)} invokes another constructor in the same class
+whose profile matches the parameters specified in @code{(...)}. As another
+example, consider:
+
+@smallexample
+public D (int k) @{ super (k); @}
+@end smallexample
+
+@noindent
+where again @code{super (...)} invokes a constructor in the superclass
+whose profile matches the parameters specified in @code{(...)}.
+
+The observant reader will note that in both of the original constructors of
+class C, there are no calls to either @code{this (...)} or @code{super
+(...)}. When no such call is explicitly given, the Java compiler
+automatically inserts calls to the no-arg constructor in the superclass. If
+the superclass does not have a no-arg constructor (more on this below),
+then you must explicitly insert calls to @code{super (...)}  or @code{this
+(...)}.
+
+As noted above, a class might not have a no-arg constructor. This can occur
+only when explicit constructors are defined in the class.  In this case,
+the no-arg constructor is not automatically generated for the class, and if
+a no-arg constructor is desired, you must add it yourself. For instance, in
+the following class:
+
+@smallexample
+public class A @{
+   int ival;
+   public A (int i) @{ ival = i; @}
+@}
+
+public class B extends A @{
+   float fval;
+   public B (float f) @{ fval = f; @}
+@}
+@end smallexample
+
+@noindent
+the Java compiler will issue a compile-time error reporting that no
+constructor matching @code{A ()} was found in class @code{A}, because the
+compiler tries to insert such a call at the beginning of @code{B}. To
+correct this problem the Java programmer must either add a no-arg
+constructor @code{A ()} in class @code{A}, or else change the definition of
+@code{B}'s constructor to contain an explicit constructor, e.g., as
+follows:
+
+@smallexample
+public B (float f) @{
+  super (0);
+  fval = f;
+@}
+@end smallexample
+
+
+@node Using Java Constructors in Ada, Java Constructors and Ada Allocators, Background on Java Constructors, The Java_Constructor Pragma
+@subsection Using Java Constructors in Ada
+@c ..........................................................................
+
+@noindent
+To assert that an Ada function @var{function-name} should be mapped to a
+Java constructor of some Ada @var{tagged-type}, we have introduced the
+@code{Java_Constructor} pragma. Its syntax is as follows:
+
+@smallexample
+pragma Java_Constructor (@var{function-name});
+@end smallexample
+
+@noindent
+where @var{function-name} is the name of a function declared immediately
+within the same declarative part where the pragma occurs, and the function
+must have the following characteristics:
+
+@enumerate
+@item
+The function's result type is an access type designating a class-wide
+type with convention Java declared at the same declarative level as the
+function (@code{access @var{tagged-type}'Class});
+
+@item
+The first function parameter is named @code{This}, and its type is a
+named access type designating @var{tagged-type}@code{'Class} which may
+have a @code{null} default value;
+
+@item
+If the constructor invokes other constructor then the first declaration
+in the function body should contain an object declaration with a default
+initial expression of the form @code{@var{constructor-func} (..., This)},
+where the @var{constructor-func} is a @code{Java_Constructor} function which
+belongs either to @var{tagged-type} or to the parent type of @var{tagged-type};
+@end enumerate
+
+@noindent
+The effect of a @code{Java_Constructor} pragma is to compile
+@var{function-name} into a constructor for the class corresponding to
+@var{tagged-type}.  In addition, whenever @var{function-name} is invoked
+with a @code{null} value for parameter @code{This}, the compiler calls the
+@code{tagged-type} object allocator and passes in the pointer to the newly
+allocated object in lieu of the value @code{null}.
+
+A @code{Java_Constructor} pragma is a program unit pragma. It can appear in
+the same places where an @code{Inline} pragma for @var{function-name} can
+appear. The @code{Java_Constructor} pragma applies to all the overloaded
+@var{function-name} subprograms declared immediately within the declarative
+region containing the pragma.
+
+As an example, the following Java code:
+
+@smallexample
+public class C @{
+   public int field;
+   public C ()             @{ field = 3; @}
+   public C (int i)        @{ field = i; @}
+   public C (int i, int j) @{ this (i + j); @}
+@}
+@end smallexample
+
+@noindent
+is equivalent to the following Ada:
+
+@page
+
+@smallexample
+with java.lang.Object;  --  @i{more on this package in the coming sections}
+use  java.lang.Object;
+package C is
+   use java.lang;
+
+   type Typ is new java.lang.Object.Typ with record
+      Field : Integer;
+   end record;
+
+   type Ref is access all Typ'Class;
+
+   function new_C (This : Ref := null) return Ref;
+   function new_C (I : Integer; This : Ref := null) return Ref;
+   function new_C (I, J : Integer; This : Ref := null) return Ref;
+
+private
+   pragma Java_Constructor (new_C);
+end C;
+
+package body C is
+   function new_C (This : Ref := null) return Ref is
+      Super : Object.Ref := Object.new_Object (Object.Ref (This));
+   begin
+      This.Field := 3;
+      return This;
+   end new_C;
+
+   function new_C (I : Integer; This : Ref := null) return Ref is
+      Super : Object.Ref := Object.new_Object (Object.Ref (This));
+   begin
+      This.Field := I;
+      return This;
+   end new_C;
+
+   function new_C (I, J : Integer; This : Ref := null) return Ref is
+      Ignore : Ref := new_C (I + J, This);
+   begin
+      return This;
+   end new_C;
+end C;
+@end smallexample
+
+
+@node Java Constructors and Ada Allocators,, Using Java Constructors in Ada, The Java_Constructor Pragma
+@subsection Java Constructors and Ada Allocators
+@c ..........................................................................
+
+@noindent
+An interesting question raised by the @code{Java_Constructor} pragma is
+the interaction between Ada allocators and constructors.
+For instance a client of package @code{C} given in the previous section
+could write:
+
+@smallexample
+with C;
+procedure Client is
+   Obj_1 : C.Ref := new_C;
+   Obj_2 : C.Ref := new C.Typ;  -- @i{what happens here ???}
+@end smallexample
+
+@noindent
+What GNAT does in the allocator case is to call the no-arg constructor if
+present (in the example @code{new_C (This : Ref := null)}). If there is no
+no-arg constructor then an error is emitted by the GNAT compiler (this last
+check is currently not yet supported, and there will be an exception at
+run time).
+
+@page
+
+
+@node Pragma Import Java, Pragma Export Java, The Java_Constructor Pragma, Java-Specific Pragmas
+@section Pragma Import Java
+@c ---------------------------------------------------------------------------
+
+@noindent
+For convention Java, pragma @code{Import} has the following syntax:
+
+@smallexample
+pragma Import ([Convention    =>] Java,
+               [Entity        =>] @var{Local_Name}
+             [,[External_Name =>] @var{String_Expression}]);
+@end smallexample
+
+@noindent
+where @var{Local_Name} is the name of an object, subprogram, record
+component, exception, or package, while @var{String_Expression} is a string
+giving the Java name of the imported entity. If @var{String_Expression} is
+missing it is taken to be the @var{Local_Name}, all in lower-case letters.
+
+@menu
+* Importing Packages::
+* Importing Exceptions::
+* Importing Record Components::
+* Importing Dispatching Subprograms::
+* Importing Objects::
+* Importing Non-Dispatching Subprograms::
+@end menu
+
+
+@node Importing Packages, Importing Exceptions, Pragma Import Java, Pragma Import Java
+@subsection Importing Packages
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of a package
+spec @var{P}, then all the entities declared in @var{P} must be
+explicitly imported from Java. The @var{String_Expression} of such an
+@code{Import} pragma gives the name of the Java class corresponding to
+@var{P} and can be a simple class name or it can have the form
+@var{java_package_name}@code{.}@var{class_name}, which indicates that the
+class @var{class_name} corresponding to @var{P} belongs to Java package
+@var{java_package_name}. If @var{java_package_name} is missing, the class
+belongs to the anonymous Java package.
+
+The precise rules when importing a package @var{P} are:
+
+@itemize @bullet
+@item
+All the entities declared inside @var{P} must be imported either by means
+of the @code{Import} pragma or by using other Java-specific pragmas.
+
+@item
+@var{P} should contain at most one tagged or untagged record type whose
+name must be @code{Typ}. @code{Typ} models the record part of the class
+corresponding to @var{P}.
+
+@item
+@var{P} can contain at most one exception, whose @code{Import} pragma
+must have exactly the same @var{String_Expression} as for @var{P}. (In
+@code{jvm2ada} such an exception is present only if the class
+corresponing to @var{P} derives, directly or indirectly, from class
+@code{java.lang.Throwable}. The name we have selected for such an
+exception is @code{Except}.)
+
+@item
+@var{P} should not contain task types or protected types.
+
+@item
+The @var{String_Expression} of the @code{Import} pragma for an object,
+subprogram, or record component declared in @var{P} must be a simple
+name (it cannot contain any ``@code{.}'' characters).
+
+@item
+If @var{P} contains nested packages, these must themselves contain an
+@code{Import} pragma (and the above rules apply recursively).
+@end itemize
+
+@noindent
+As a first example consider the following package:
+
+@smallexample
+with java.lang.Object; --  @i{more on this package in the coming sections}
+package root.outer.Child is
+   type Typ is new java.lang.Object.Typ with record
+      x : Integer;
+      pragma Import (Java, x, "x");
+
+      Y : Integer;
+      pragma Import (Java, Y, "Y");
+   end record;
+
+   type Ref is access all Typ'Class;
+
+   procedure Dispatching_Op (This : access Typ; I : Integer);
+   function Non_Dispatching_Op (F : Float) return Integer;
+
+   function New_Child (This : Ref := null) return Ref;
+   Global : Integer;
+
+private
+   pragma Import (Java, Dispatching_Op, "someProcedure");
+   pragma Import (Java, Non_Dispatching_Op, "someFunction");
+   pragma Java_Constructor (New_Child);
+   pragma Import (Java, Global);
+end root.outer.Child;
+pragma Import (Java, Outer.Child, "root.outer.CHILD");
+
+@end smallexample
+
+@noindent
+This package imports into Ada the services of a class whose spec in
+Java looks like:
+
+@smallexample
+
+package root.outer;
+public class CHILD extends java.lang.Object @{
+   public int x;
+   public int Y;
+
+   public void someProcedure (int i);
+   public static int someFunction (float f);
+
+   public CHILD ();
+
+   public static int global;
+@}
+@end smallexample
+
+@noindent
+Note that in the Ada spec, the Java methods
+@code{someProcedure} and @code{someFunction} have been named
+@code{Dispatching_Op} and @code{Non_Dispatching_Op}.
+
+
+@node Importing Exceptions, Importing Record Components, Importing Packages, Pragma Import Java
+@subsection Importing Exceptions
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of an
+exception @var{E}, the @var{String_Expression} of such an @code{Import}
+pragma gives the name of the JVM class corresponding to @var{E} and can be
+a simple class name or it can have the form
+@var{java_package_name}@code{.}@var{class_name} which says that the JVM
+class @var{class_name} corresponding to @var{E} belongs to Java package
+@var{java_package_name}. If @var{java_package_name} is missing, the JVM
+class belongs to the anonymous Java package.
+
+When importing an exception you should make sure that the imported JVM
+class is indeed a Java exception, i.e. it derives from
+@code{java.lang.Throwable}.
+
+As an example here is an excerpt of the spec of class
+@code{java.lang.Throwable} generated by @code{jvm2ada}:
+
+@smallexample
+package java.lang.Throwable is
+   type Typ ...;
+   type Ref is access all Typ'Class;
+
+   Except : Exception;
+   ...
+private
+   pragma Import (Java, Except, "java.lang.Throwable);
+   ...
+end java.lang.Throwable;
+pragma Import (Java, java.lang.Throwable, "java.lang.Throwable");
+@end smallexample
+
+
+@node Importing Record Components, Importing Dispatching Subprograms, Importing Exceptions, Pragma Import Java
+@subsection Importing Record Components
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of a record
+field, then the record field must be declared in a record whose convention
+is Java and the record must be declared in a package specification which is
+itself imported.  In this case @var{String_Expression} must be a simple name
+(i.e. contains no dots) giving the name of the imported field.
+
+
+
+@node Importing Dispatching Subprograms, Importing Objects, Importing Record Components, Pragma Import Java
+@subsection Importing Dispatching Subprograms
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of a dispatching
+subprogram (i.e., a primitive operation of a tagged type), then the subprogram
+must be declared in a package specification which is itself imported.
+In this case @var{String_Expression} must be a simple name (i.e. contains
+no dots) giving the name of the imported subprogram.
+
+
+
+@node Importing Objects, Importing Non-Dispatching Subprograms, Importing Dispatching Subprograms, Pragma Import Java
+@subsection Importing Objects
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of an object
+and the object is declared in a package specification which is itself
+imported the @var{String_Expression} must be a simple name (i.e. contains no
+dots) giving the name of the imported Java static field.
+
+An @code{Import} pragma for an object can be given even though such an
+entity does not occur in a package spec with an @code{Import} pragma. In
+this case the @var{String_Expression} of the @code{Import} pragma must give
+the complete Java name of the imported as shown in the following example:
+
+@smallexample
+procedure Foo is
+   Var : Integer;
+   pragma Import (Java, Var, "pack.Foo.the_var");
+begin
+   Var := 3;
+end Foo;
+@end smallexample
+
+
+
+@node Importing Non-Dispatching Subprograms,, Importing Objects, Pragma Import Java
+@subsection Importing Non-Dispatching Subprograms
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Import} pragma is the name of a
+non-dispatching subprogram and the subprogram is declared in a package
+specification which is itself imported the @var{String_Expression} must be a
+simple name (i.e. contains no dots) giving the name of the imported Java
+static method.
+
+An @code{Import} pragma for a non-dispatching subprogram can be given even
+though such an entity does not occur in a package spec with an @code{Import}
+pragma. In this case the @var{String_Expression} of the @code{Import} pragma
+must give the complete Java name of the imported as shown in the following
+example:
+
+@smallexample
+procedure Foo is
+   X : Integer;
+   function Compute (I : Integer) return Integer;
+   pragma Import (Java, Compute, "pack.Bar.calc");
+begin
+   X := Compute (3);
+end Foo;
+@end smallexample
+
+
+
+@node Pragma Export Java,, Pragma Import Java, Java-Specific Pragmas
+@section Pragma Export Java
+@c ---------------------------------------------------------------------------
+
+@noindent
+In the absence of pragma @code{Export}, the name of any Ada object,
+field, or subprogram compiled into a class file is the name of the
+corresponding Ada entity in lower-case letters.
+
+For exceptions, record types and packages, the names of the generated class
+files are all in lower case.
+
+By using pragma @code{Export} the user can change the default name that
+is generated by the GNAT compiler. In addition, for Ada packages
+it can also specify which Java package they belong to. For convention
+Java, the pragma @code{Export} has the following syntax:
+
+@smallexample
+pragma Export ([Convention    =>] Java,
+               [Entity        =>] @var{Local_Name}
+             [,[External_Name =>] @var{String_Expression}]);
+@end smallexample
+
+@noindent
+where @var{Local_Name} is the name of an object, subprogram, record
+component, record type, exception, or package, and @var{String_Expression}
+is a string giving the Java name of the exported entity. If
+@var{String_Expression} is missing it is taken to be the @var{Local_Name},
+all in lower-case letters.
+
+@menu
+* Exporting Objects Subprograms and Record Components::
+* Exporting Exceptions::
+* Exporting Packages or Record Types::
+@end menu
+
+
+@node Exporting Objects Subprograms and Record Components, Exporting Exceptions, Pragma Export Java,  Pragma Export Java
+@subsection Exporting Objects, Subprograms, and Record Components
+@c ...........................................................................
+
+@noindent
+NOTE: Exporting of record components is not yet supported. @*
+
+@noindent
+If the @var{Local_Name} of an @code{Export} pragma is the name of an
+object, record component, or subprogram (but not a top-level subprogram),
+@var{String_Expression} must be a simple name (i.e., it contains no
+@code{.} characters), giving the name of the corresponding entity at the
+JVM level. As an example, when compiling the following package specification:
+
+@smallexample
+package C is
+   type Typ is tagged record
+      Field : Integer;
+      pragma Export(Java, Field, "THE_FIELD");
+   end record;
+
+   function Instance_Op (This : access Typ; I : Integer) return Integer;
+
+   Var : Integer;
+   function Op (J : Integer) return Integer;
+
+private
+   pragma Export (Java, Instance_Op, "dispatch_op");
+   pragma Export (Java, Var, "the_var");
+end C;
+@end smallexample
+
+@noindent
+this is interpreted as the following two class specification at the JVM
+level:
+
+@smallexample
+public class c @{
+   public static int the_var;
+   public static int op (int j);
+@}
+public class c$typ @{
+   public int THE_FIELD;
+   public int dispatch_op (int i) @{...@}
+@}
+@end smallexample
+
+@noindent
+Note that when exporting an object, subprogram, or record component you
+cannot specify its JVM class, as this is determined by the compiler.
+
+
+@node Exporting Exceptions, Exporting Packages or Record Types, Exporting Objects Subprograms and Record Components,  Pragma Export Java
+@subsection Exporting Exceptions
+@c ...........................................................................
+
+@noindent
+If the @var{Local_Name} of an @code{Export} pragma is the name of an
+exception @var{E}, then the @var{String_Expression} of such an
+@code{Export} pragma gives the name of the generated JVM class for the Ada
+exception, overriding the name that would have been given by the
+compiler. @var{String_Expression} can be a simple class name, or it can
+have the form
+
+@smallexample
+@var{java_package_name}@code{.}@var{class_name}
+@end smallexample
+
+@noindent
+indicating that the generated class belongs to Java package
+@var{java_package_name}.  If the name @var{java_package_name} is missing,
+the class is defined to belong to the anonymous Java package.
+
+Care must be taken not to use the same class name for two Ada exceptions,
+packages or record types when they belong to different source files located
+in the same directory, since one @file{.class} file would overwrite the
+other.
+
+
+@node Exporting Packages or Record Types,, Exporting Exceptions,  Pragma Export Java
+@subsection Exporting Packages or Record Types
+@c ...........................................................................
+
+@noindent
+NOTE: Exporting of packages is not yet supported. @*
+
+@noindent
+If the @var{Local_Name} of an @code{Export} pragma is the name of a package
+spec or record type @var{P}, then the @var{String_Expression} of such an
+@code{Export} pragma gives the name of the generated JVM class, overriding
+the name that would have been given by the
+compiler. @var{String_Expression} can be a simple class name, or it can
+have the form @var{java_package_name}@code{.}@var{class_name} indicating
+that the generated JVM class belongs to Java package
+@var{java_package_name}. If @var{java_package_name} is missing, the JVM
+class belongs to the anonymous Java package.
+
+Care must be taken not to use the same class name for two Ada exceptions,
+packages or record types when they belong to different source files located
+in the same directory, since one @file{.class} file would overwrite the
+other.
+
+If the same @code{Export} pragma is specified for a package spec and a
+record type contained inside it, then the GNAT compiler will map both of
+these in the same JVM class. For instance without @code{Export} pragmas the
+following code generates 2 JVM @file{.class} files:
+@file{outer$child.class} and @file{outer$child$rec.class}.
+
+@smallexample
+package Outer.Child is
+   type Rec is tagged record
+     F : Float;
+   end record;
+   procedure Proc (This : Rec);
+   --  @i{This always goes in the same .class file as type} Rec
+
+   function Global (I : Integer) return Rec;
+   --  @i{This always goes in the same .class file as the package}
+end Outer.Child;
+@end smallexample
+
+@noindent
+If the same @code{Export} pragma is used a single class file is generated
+(@file{CHILD.class} in JVM package @code{root.outer}).
+
+@smallexample
+package Outer.Child is
+   type Rec is record
+     X : Float;
+   end record;
+   pragma Export (Java, Rec, "root.outer.CHILD");
+
+   procedure Proc (This : Rec);
+   function Global (I : Integer) return Rec;
+   --  @i{Both subprograms are generated in the same .class file}
+end Outer.Child;
+pragma Export (Java, Outer.Child, "root.outer.CHILD");
+@end smallexample
+
+
+
+
+@node Mapping Java into Ada, Creating Gnapplets with GNAT, Java-Specific Pragmas, (dir)
+@chapter Mapping Java into Ada
+@c ===========================================================================
+
+@noindent
+This chapter details the mapping used by @code{jvm2ada} to map Java
+@file{.class} files into Ada package specs. It is assumed that the reader
+is familiar with the Java language.
+
+@menu
+* Identifiers::
+* Scalar Types::
+* Java References and java.lang.Object::
+* Array Types::
+* The Ada Package Java::
+* Use of Limited-With Clauses by jvm2ada::
+* Java Packages::
+* Java Classes::
+* Abstract Classes::
+* Final Classes and Final Methods::
+* Nested Classes::
+* Java Interface::
+* Java Class Implementing Interfaces::
+* Java Exceptions::
+* Static Fields::
+* Final Static Fields::
+* Instance Fields::
+* Volatile and Transient Fields::
+* Static Methods::
+* Instance Methods::
+* Abstract Methods::
+* Native Methods::
+* Visibility Issues::
+* Java Implicit Upcasting in Ada::
+* Mixing Ada Strings and Java Strings::
+* An Example::
+@end menu
+
+
+@node Identifiers, Scalar Types, Mapping Java into Ada, Mapping Java into Ada
+@section Identifiers
+@c ---------------------------------------------------------------------------
+
+@noindent
+@xref{Identifier Mangling}.
+
+
+
+@node Scalar Types, Java References and java.lang.Object, Identifiers, Mapping Java into Ada
+@section Scalar Types
+@c ---------------------------------------------------------------------------
+
+@noindent
+Java scalar tpes are mapped into Ada scalar types as follows:
+
+@smallexample
+          boolean @i{(1 byte)  maps into} Standard.Boolean
+          char    @i{(2 bytes)  "    "  } Standard.Wide_Character
+
+          byte    @i{(1 byte)   "    "  } Standard.Short_Short_Integer
+          short   @i{(2 bytes)  "    "  } Standard.Short_Integer
+          int     @i{(4 bytes)  "    "  } Standard.Integer
+          long    @i{(8 bytes)  "    "  } Standard.Long_Integer
+
+          float   @i{(4 bytes)  "    "  } Standard.Float
+          double  @i{(8 bytes)  "    "  } Standard.Long_Float
+@end smallexample
+
+@noindent
+As a convenience for the Ada programmer subtypes are used to express the
+correspondence between primitive numeric Java types and the Ada scalar
+types defined in package @code{Standard}.
+
+We have chosen to place these subtypes at the root of the Ada version of
+the Java API, i.e., in package @code{Java}. Thus these subtypes are directly
+available in the Ada version of the API and at hand for users of the API.
+The code excerpt below gives the beginning of package
+@code{java}:
+
+@smallexample
+package java is
+   pragma Preelaborate;
+
+   subtype boolean is Standard.Boolean;
+   subtype char    is Standard.Wide_Character;
+   subtype byte    is Standard.Short_Short_Integer;
+   subtype short   is Standard.Short_Integer;
+   subtype int     is Standard.Integer;
+   subtype long    is Standard.Long_Integer;
+   subtype float   is Standard.Float;
+   subtype double  is Standard.Long_Float;
+   ...
+end java;
+@end smallexample
+
+
+
+@node Java References and java.lang.Object, Array Types, Scalar Types, Mapping Java into Ada
+@section Java References and @code{java.lang.Object}
+@c ---------------------------------------------------------------------------
+
+@noindent
+When it comes to composite objects such as arrays and records, Java differs
+from Ada in the fact that it only has reference semantics. More precisely, in
+Java you can only allocate an object in the garbage-collected heap and
+obtain a reference to such object. All object reads and writes are done
+via this reference.  In addition, you cannot copy an object as a whole into
+another object: there is no default deep-copy operation in Java.
+
+In mapping Java services to Ada, we have preserved its reference semantics,
+as shown in the code excerpt below which shows the salient part of how
+class @code{java.lang.Object} is mapped into Ada:
+
+@smallexample
+package java.lang.Object is
+   pragma Preelaborate;
+
+   type Typ is tagged limited private;
+   type Ref is access all Typ'Class;
+
+   function new_Object (This : Ref := null) return Ref;
+   --  @i{The constructor}
+   ...
+private
+
+   type Typ is tagged limited null record;
+   ...
+end java.lang.Object;
+@end smallexample
+
+@noindent
+As a first remark, tagged types imported from Java should be limited
+since, as mentioned before, no object assignment operation exists on the JVM.
+Second, unlike Java, in Ada we need to define two types: one for the actual
+tagged type (type @code{Typ}) and one for the actual refernces (type
+@code{Ref}). This means that while in Java you can write something like:
+
+@smallexample
+import java.lang.Object;
+class client @{
+   void foo () @{
+      Object obj = new Object ();
+   @}
+@}
+@end smallexample
+
+@noindent
+in Ada you have to write:
+
+@smallexample
+with java.lang.Object; use java.lang.Object;
+procedure Foo is
+   obj : Object.Ref = new_Object;
+begin
+   null;
+end Foo;
+@end smallexample
+
+@noindent
+Furthermore, for now we impose some restrictions on types that
+extend types that are declared in packages imported from Java.
+
+Since the parent type of such a type extension has convention Java,
+the extended type inherits convention Java (even though declared
+within a normal Ada package). This means that the extended type
+should not contain any component declarations that would not
+be appropriate in an equivalent Java class.
+
+In particular, a type that extends from a Java-convention parent
+type should not have any components of the following kinds:
+
+@itemize @bullet
+@item
+components with default initialization (excepting access components
+that are initialized by null)
+@item
+components of composite types (arrays, records, tasks, protected types)
+@item
+components of private types whose full type is a composite type
+@end itemize
+
+@noindent
+The reason for these restrictions is that each of the above formsu
+of components requires some kind of run-time initialization at the
+time an object of the containing type is created. Such initialization
+needs to happen before any user code can reference the components.
+However, in the presence of user-defined constructors, which are
+executed immediately after object creation (as required by the JVM),
+this is difficult for the compiler to support.
+
+The workaround for cases where composite components are desired
+is instead to declare components of access types that designate the types
+you want to use. The allocation and initialization of those access
+components can then be performed as part of the actions of your own
+user-defined constructor function (@pxref{The Java_Constructor Pragma}).
+
+If we were to allow such components, the consequences of failing to
+heed the above restrictions would include the creation of objects
+that are not fully allocated or initialized, with the potential
+for crashing the program.
+
+The GNAT compiler will reject the attempt to declare a Java-convention
+record type with any of the restricted forms of components by flagging
+each offending component. We plan to try relaxing these restrictions
+in a future release.
+
+
+@node Array Types, The Ada Package Java, Java References and java.lang.Object, Mapping Java into Ada
+@section Array Types
+@c ---------------------------------------------------------------------------
+
+@noindent
+Let's illustrate the mapping with an example. Assume you would like to map
+a Java array of @code{int} into Ada. For instance, in Java you might write:
+
+@smallexample
+int[] obj;
+//  obj @i{is a reference to an array of int}
+
+obj = new int [3];
+//  @i{Allocate an array-of-int object with 3 elements.}
+//  @i{The index of the first element is zero.}
+@end smallexample
+
+@noindent
+The above is mapped into the following Ada declarations:
+
+@smallexample
+type int_Arr_Obj is array (Natural range <>) of int;
+type int_Arr     is access all int_Arr_Obj;
+
+obj : int_Arr;
+--  int[] obj;
+
+obj := new int_Array_Obj (0 .. 2);
+--  obj = new int [3];
+@end smallexample
+
+@noindent
+Java does not have multidimensional arrays, it only has arrays of arrays. As
+a result
+
+@smallexample
+int[][] obj2 = new int [3][2];
+@end smallexample
+
+@noindent
+is mapped into
+
+@smallexample
+type int_Arr_2_Obj is array (Natural range <>) of int_Arr;
+type int_Arr_2     is access all int_Arr_2_Obj;
+
+Obj2 : int_Arr_2 := new int_Arr_2_Obj (0 .. 2, 0 .. 1);
+--  obj2 = new int [3][2];
+@end smallexample
+
+@noindent
+The final question that remains to answer is where are the various array type
+definitions located. Scalar array types have been placed in
+package @code{Java}, while array types associated with a given JVM class are
+placed in the Ada package spec for that class. Indeed
+when processing a JVM class @var{C}, @code{jvm2ada} generates the
+following at the beginning of the Ada package spec coresponding to @var{C}:
+
+@smallexample
+package @var{C} is
+   pragma Preelaborate;
+
+   type Typ is ...;
+   type Ref is access all Typ'Class;
+
+   type Arr_Obj is array (Natural range <>) of Ref;
+   type Arr     is access all Arr_Obj;
+
+   type Arr_2_Obj is array (Natural range <>) of Arr;
+   type Arr_2     is access all Arr_2_Obj;
+
+   ...
+end @var{C};
+@end smallexample
+
+@page
+
+
+@node The Ada Package Java, Use of Limited-With Clauses by jvm2ada, Array Types, Mapping Java into Ada
+@section The Ada Package @code{Java}
+@c ---------------------------------------------------------------------------
+
+@smallexample
+package java is
+   pragma Preelaborate;
+
+   subtype boolean is Standard.Boolean;
+   subtype char    is Standard.Wide_Character;
+   subtype byte    is Standard.Short_Short_Integer;
+   subtype short   is Standard.Short_Integer;
+   subtype int     is Standard.Integer;
+   subtype long    is Standard.Long_Integer;
+   subtype float   is Standard.Float;
+   subtype double  is Standard.Long_Float;
+
+   --  @i{boolean array types:} boolean [], boolean [][], boolean [][][]
+
+   type boolean_Arr_Obj   is array (Natural range <>) of boolean;
+   type boolean_Arr       is access all boolean_Arr_Obj;
+
+   type boolean_Arr_2_Obj is array (Natural range <>) of boolean_Arr;
+   type boolean_Arr_2     is access all boolean_Arr_2_Obj;
+
+   type boolean_Arr_3_Obj is array (Natural range <>) of boolean_Arr_2;
+   type boolean_Arr_3     is access all boolean_Arr_3_Obj;
+
+   --  @i{char array types:} char [], char [][], char [][][]
+
+   type char_Arr_Obj   is array (Natural range <>) of char;
+   type char_Arr       is access all char_Arr_Obj;
+
+   type char_Arr_2_Obj is array (Natural range <>) of char_Arr;
+   type char_Arr_2     is access all char_Arr_2_Obj;
+
+   type char_Arr_3_Obj is array (Natural range <>) of char_Arr_2;
+   type char_Arr_3     is access all char_Arr_3_Obj;
+
+   --  @i{byte array types:} byte [], byte [][], byte [][][]
+
+   type byte_Arr_Obj   is array (Natural range <>) of byte;
+   type byte_Arr       is access all byte_Arr_Obj;
+
+   type byte_Arr_2_Obj is array (Natural range <>) of byte_Arr;
+   type byte_Arr_2     is access all byte_Arr_2_Obj;
+
+   type byte_Arr_3_Obj is array (Natural range <>) of byte_Arr_2;
+   type byte_Arr_3     is access all byte_Arr_3_Obj;
+
+   --  @i{short array types:} short [], short [][], short [][][]
+
+   type short_Arr_Obj   is array (Natural range <>) of short;
+   type short_Arr       is access all short_Arr_Obj;
+
+   type short_Arr_2_Obj is array (Natural range <>) of short_Arr;
+   type short_Arr_2     is access all short_Arr_2_Obj;
+
+   type short_Arr_3_Obj is array (Natural range <>) of short_Arr_2;
+   type short_Arr_3     is access all short_Arr_3_Obj;
+
+   --  @i{int array types:} int [], int [][], int [][][]
+
+   type int_Arr_Obj   is array (Natural range <>) of int;
+   type int_Arr       is access all int_Arr_Obj;
+
+   type int_Arr_2_Obj is array (Natural range <>) of int_Arr;
+   type int_Arr_2     is access all int_Arr_2_Obj;
+
+   type int_Arr_3_Obj is array (Natural range <>) of int_Arr_2;
+   type int_Arr_3     is access all int_Arr_3_Obj;
+
+   --  @i{long array types:} long [], long [][], long [][][]
+
+   type long_Arr_Obj   is array (Natural range <>) of long;
+   type long_Arr       is access all long_Arr_Obj;
+
+   type long_Arr_2_Obj is array (Natural range <>) of long_Arr;
+   type long_Arr_2     is access all long_Arr_2_Obj;
+
+   type long_Arr_3_Obj is array (Natural range <>) of long_Arr_2;
+   type long_Arr_3     is access all long_Arr_3_Obj;
+
+   --  @i{float array types:} float [], float [][], float [][][]
+
+   type float_Arr_Obj   is array (Natural range <>) of float;
+   type float_Arr       is access all float_Arr_Obj;
+
+   type float_Arr_2_Obj is array (Natural range <>) of float_Arr;
+   type float_Arr_2     is access all float_Arr_2_Obj;
+
+   type float_Arr_3_Obj is array (Natural range <>) of float_Arr_2;
+   type float_Arr_3     is access all float_Arr_3_Obj;
+
+   --  @i{double array types:} double [], double [][], double [][][]
+
+   type double_Arr_Obj   is array (Natural range <>) of double;
+   type double_Arr       is access all double_Arr_Obj;
+
+   type double_Arr_2_Obj is array (Natural range <>) of double_Arr;
+   type double_Arr_2     is access all double_Arr_2_Obj;
+
+   type double_Arr_3_Obj is array (Natural range <>) of double_Arr_2;
+   type double_Arr_3     is access all double_Arr_3_Obj;
+
+end java;
+@end smallexample
+
+@page
+
+
+@node Use of Limited-With Clauses by jvm2ada, Java Packages, The Ada Package Java, Mapping Java into Ada
+@section Use of Limited-With Clauses by @code{jvm2ada}
+@c ..........................................................................
+
+@noindent
+Consider the following
+
+@smallexample
+public class C extends B implements I @{
+   public D link;
+   ...
+@}
+@end smallexample
+
+@noindent
+When @code{jvm2ada} is invoked to process @file{C.class} to create an Ada
+spec for @code{C}, it is difficult to know whether reference type @code{D}
+is involved in a circular dependency with class @code{C}. First of all,
+@code{D.class} may not even be available yet.  Even if it were, classes
+@code{C} and @code{D} could be involved in a complex circular relationship
+with other classes, some of which may not be available. In addition, in the
+presence of circular dependencies there is no good reason for using a
+@code{with type} clause in one package spec and a regular @code{with} clause
+in another.
+
+There are three cases in which a class @code{C} refers to another class
+@var{X}:
+
+@enumerate
+@item
+@code{C} extends @var{X}.
+
+@item
+@code{C} implements @var{X}.
+
+@item
+@var{X} is used as a reference (e.g., a reference to an object or array of
+objects of type @var{X}).
+@end enumerate
+
+@noindent
+In the first case, the Ada package spec corresponding to @code{C} needs to
+have a regular @code{with} clause for the package spec corresponding to
+@var{X}.  In all other cases a @code{with type} clause suffices.
+
+As a result, @code{jvm2ada} will generate the following @code{with} and
+@code{limited with} clauses for the class @code{C} above:
+
+@smallexample
+with B;
+limited with I;
+limited with D;
+@end smallexample
+
+
+
+@node Java Packages, Java Classes, Use of Limited-With Clauses by jvm2ada, Mapping Java into Ada
+@section Java Packages
+@c ---------------------------------------------------------------------------
+
+@noindent
+A Java package @var{pack} is mapped into an empty Ada package spec
+@var{pack}.  For instance, Java package @code{java.lang} is mapped into the
+following Ada spec:
+
+@smallexample
+package java.lang is
+   pragma Preelaborate;
+end java.lang;
+@end smallexample
+
+
+
+@node Java Classes, Abstract Classes, Java Packages, Mapping Java into Ada
+@section Java Classes
+@c ---------------------------------------------------------------------------
+
+@noindent
+A Java class @var{X.Y.D} extending a class @var{W.Z.B} is mapped into an Ada
+package @var{X.Y.D} containing a tagged type definition @code{Typ} that
+extends @var{W.Z.B}@code{.Typ} and a reference type definition @code{Ref} as
+shown below:
+
+@smallexample
+with Java; use Java;
+
+package @var{X.Y.D} is
+   pragma Preelaborate;
+
+   -----------------------
+   -- Type Declarations --
+   -----------------------
+
+   type Typ;
+   type Ref is access all Typ'Class;
+
+   --  @i{Array type declarations for X.Y.D}
+
+   type Arr_Obj is array (Natural range <>) of Ref;
+   type Arr     is access all Arr_Obj;
+
+   type Arr_2_Obj is array (Natural range <>) of Arr;
+   type Arr_2     is access all Arr_2_Obj;
+
+   type Arr_3_Obj is array (Natural range <>) of Arr_2;
+   type Arr_3     is access all Arr_3_Obj;
+
+   --  @i{The actual type declaration for X.Y.D}
+
+   type Typ is new @var{W.Z.B}.Typ
+      with record
+
+         ------------------------
+         -- Field Declarations --
+         ------------------------
+         ...
+      end record;
+
+   ------------------------------
+   -- Constructor Declarations --
+   ------------------------------
+   ...
+
+   -------------------------
+   -- Method Declarations --
+   -------------------------
+   ...
+
+   ---------------------------
+   -- Variable Declarations --
+   ---------------------------
+   ...
+
+private
+   pragma Convention (Java, Typ);
+   ...  --  @i{other pragmas are generated here}
+end @var{X.Y.D};
+pragma Import (Java, @var{X.Y.D}, "@var{W.Z.B}");
+@end smallexample
+
+@noindent
+In addition, all of the static variables of @var{X.Y.D} are mapped
+into variables of the Ada package and all static methods of @var{X.Y.D} are
+mapped into nondispatching subprograms in the Ada package.
+
+Each instance method of class @var{X.Y.D} is converted into a primitive
+operation of type @var{X.Y.D}@code{.Typ} whose first parameter is of type
+``@code{access Typ}'' and whose remaining parameters are as in the Java
+class.
+
+Constructors in class @var{X.Y.D} are mapped into subprograms in package
+@var{X.Y.D} as described in a previous section (@pxref{The Java_Constructor
+Pragma}).
+
+
+
+@node Abstract Classes, Nested Classes, Java Classes, Mapping Java into Ada
+@section Abstract Classes
+@c ---------------------------------------------------------------------------
+
+@noindent
+Java's abstract classes are exactly equivalent to Ada's abstract tagged
+types and are mapped into such types by @code{jvm2ada}.
+
+
+
+@node Nested Classes, Java Interface, Abstract Classes, Mapping Java into Ada
+@section Nested Classes
+@c ---------------------------------------------------------------------------
+
+@noindent
+A class @code{Inner} nested inside a class @code{Outer} is mapped into
+a child package named @*
+@code{Outer.Inner}.
+
+
+
+@node Java Interface, Java Class Implementing Interfaces, Nested Classes, Mapping Java into Ada
+@section Java Interface
+@c ---------------------------------------------------------------------------
+
+@noindent
+@xref{Creating Java Interfaces with Pragma Java_Interface}.
+
+
+
+@node Java Class Implementing Interfaces, Java Exceptions, Java Interface, Mapping Java into Ada
+@section Java Class Implementing Interfaces
+@c ---------------------------------------------------------------------------
+
+@noindent
+@xref{Using Java Interfaces}.
+
+
+
+@node Java Exceptions, Static Fields, Java Class Implementing Interfaces, Mapping Java into Ada
+@section Java Exceptions
+@c ---------------------------------------------------------------------------
+
+@noindent
+When processing a JVM class, @code{jvm2ada} must figure out whether this
+class is a Java exception, i.e. whether it derives, directly or
+indirectly from class @code{java.lang.Throwable}.
+
+To determine this, @code{jvm2ada} traverses the inheritance tree and
+must locate the @file{.class} files of the ancestor classes
+(@pxref{Class File Search Paths}). If the class is indeed a Java
+exception, an Ada exception is added to the generated Ada spec as shown
+in the following example:
+
+@smallexample
+package pack1.pack2;
+public class C extends java.lang.Throwable @{ ... @}
+@end smallexample
+
+@noindent
+is mapped into
+
+@smallexample
+package pack1.pack2.C is
+   ...
+   Except : Exception;
+   ...
+end pack1.pack2.C;
+@end smallexample
+
+
+
+@node Static Fields, Final Static Fields, Java Exceptions, Mapping Java into Ada
+@section Static Fields
+@c ---------------------------------------------------------------------------
+
+@noindent
+A static field in Java is equivalent to a regular variable in Ada and is
+mapped accordingly by @code{jvm2ada}.
+
+
+
+@node Final Static Fields, Instance Fields, Static Fields, Mapping Java into Ada
+@section Final Static Fields
+@c ---------------------------------------------------------------------------
+
+@noindent
+A Java @code{final} static field is equivalent to an Ada constant.
+When importing a final static field from Java, @code{jvm2ada}
+maps each such field to an Ada deferred constant with an associated
+pragma @code{Import} Java.
+
+
+
+@node Instance Fields, Volatile and Transient Fields, Final Static Fields, Mapping Java into Ada
+@section Instance Fields
+@c ---------------------------------------------------------------------------
+
+@noindent
+An instance field is mapped by @code{jvm2ada} into a field of its corresponding
+tagged type.
+
+
+
+@node Volatile and Transient Fields, Static Methods, Instance Fields, Mapping Java into Ada
+@section Volatile and Transient Fields
+@c ---------------------------------------------------------------------------
+
+@noindent
+The JVM @code{volatile} and @code{transient} attributes are currently ignored
+by @code{jvm2ada}.
+
+
+
+@node Static Methods, Instance Methods, Volatile and Transient Fields, Mapping Java into Ada
+@section Static Methods
+@c ---------------------------------------------------------------------------
+
+@noindent
+A Java static method is equivalent to a regular nondispatching subprogram
+in Ada and is mapped that way by @code{jvm2ada}.
+
+
+
+@node Instance Methods, Abstract Methods, Static Methods, Mapping Java into Ada
+@section Instance Methods
+@c ---------------------------------------------------------------------------
+
+@noindent
+Each instance method is converted into a primitive operation whose first
+parameter is of type ``@code{access Typ}'' and whose remaining parameters are
+as given for the Java method.
+
+
+
+@node Abstract Methods, Native Methods, Instance Methods, Mapping Java into Ada
+@section Abstract Methods
+@c ---------------------------------------------------------------------------
+
+@noindent
+Java's abstract methods are exactly equivalent to Ada's abstract
+primitive operations and are mapped accordingly by @code{jvm2ada}.
+
+
+
+@node Native Methods, Final Classes and Final Methods, Abstract Methods, Mapping Java into Ada
+@section Native Methods
+@c ---------------------------------------------------------------------------
+
+@noindent
+In Java one can assert that a certain method is @code{native}, i.e., that
+its implementation is provided in some native language such as C or Ada,
+external to the JVM.  The @code{jvm2ada} tool ignores the @code{native}
+attribute when mapping JVM methods into Ada, since JVM methods are invoked
+in exactly the same way regardless of whether they have a @code{native}
+attribute.
+
+
+
+@node Final Classes and Final Methods, Visibility Issues, Native Methods, Mapping Java into Ada
+@section Final Classes and Final Methods
+@c ---------------------------------------------------------------------------
+
+@noindent
+Java has a way to restrict further derivation from a class type or further
+overriding of a primitive operation. For instance, given
+
+@smallexample
+public class Base @{ ... @}
+public final class Deriv extends Base @{ ... @}
+@end smallexample
+
+@noindent
+it is possible to create subclasses of @code{Base} but not of
+@code{Deriv}, since @code{Deriv} is marked @code{final}. Likewise, given
+
+@example
+public class Base @{
+   public       int service_1 () @{ ... @}
+   public final int service_2 () @{ ... @}
+@}
+@end example
+
+@noindent
+it is possible to override method @code{service_1} in every
+subclass of @code{Base}, whereas @code{service_2} cannot be overriden.
+
+Limiting type derivation and primitive operation overriding is not directly
+possible in Ada. We have therefore chosen for the time being to ignore
+@code{final} classes and methods (a comment is emitted before them but nothing
+more). If a Java final class is extended or a final method overridden in Ada,
+an exception (or verifier error) will be emitted at execution time.
+
+
+
+@node Visibility Issues, Java Implicit Upcasting in Ada, Final Classes and Final Methods, Mapping Java into Ada
+@section Visibility Issues
+@c ---------------------------------------------------------------------------
+
+@itemize @bullet
+@item
+A @code{public} Java class is mapped into a public Ada package spec.
+
+@item
+A non-public Java class containing @code{public} nested classes is
+mapped into an empty Ada package (much in the same way Java packages are
+mapped into Ada packages). This ensures that the parent Ada package is
+defined for the child classes.
+
+@item
+A @code{public} Java member is mapped into an entity declared in the public
+part of the corresponding Ada package if all of its parameter and return
+types refer to a public Java class.
+
+@item
+A @code{protected} Java member is mapped into an entity declared in the
+public part of the corresponding Ada package and treated like a @code{public}
+Java member as described in the above bullet point. Because in Ada there is
+no concept similar to the @code{protected} qualifier in Java, if you use a
+protected entity from Ada in a way that is forbidden by the JVM a run-time
+exception will occur.
+
+@item
+A @code{private} Java member corresponds to an Ada entity declared in a
+package body. @code{jvm2ada} ignores all such entities.
+
+@item
+Java entities declared as non-public (i.e. with no Java access qualifiers)
+are visible only to Java classes belonging to the same Java package and are
+intended to be accessed only from classes in the same API as @code{C}.
+@code{jvm2ada} ignores all such entities.
+@end itemize
+
+
+
+@node Java Implicit Upcasting in Ada, Mixing Ada Strings and Java Strings, Visibility Issues, Mapping Java into Ada
+@section Java Implicit Upcasting in Ada
+@c ---------------------------------------------------------------------------
+
+@noindent
+Given the following two class definitions:
+
+@smallexample
+public class Base @{
+   public static void proc (Base p, Base q) @{...@}
+@}
+public class Derived extends Base @{...@}
+@end smallexample
+
+@noindent
+Java allows the following code to be written (and Java programmers
+take advantage of the following):
+
+@smallexample
+Base    obj1 = new Base ();
+Derived obj2 = new Derived ();
+proc (obj1, obj2);
+@end smallexample
+
+@noindent
+The implicit conversion from the pointer to the @code{Derived} type to the
+@code{Base} type is completely safe and is allowed in Java much as Ada allows
+implicit conversion between similar anonymous access types (in Java when you
+write "@code{Derived obj2}" you are really saying that @code{obj2} is a
+pointer to an object of type @code{Derived} whose pointer type is anonymous).
+If @code{jvm2ada} mapped class Base into:
+
+@smallexample
+package Base is
+   type Typ;
+   type Ref is access all Typ'class;
+   ...
+   procedure proc (P1 : Base.Ref; P2 : Base.Ref);
+   ...
+end Base;
+@end smallexample
+
+@noindent
+The call to @code{proc} in Ada would have to look like
+
+@smallexample
+   obj1 : Base.Ref    := new_Base;
+   obj2 : Derived.Ref := new_Derived;
+   proc (obj1, Base.Ref (obj2));
+@end smallexample
+
+@noindent
+which is verbose (especially when using real class names) without any
+fundamental reason (writing "@code{proc (obj1, obj2.all'access)}" would
+hardly be any terser). To address this inconvenience we have used access
+parameters when generating the Ada equivalent to @code{proc}:
+
+@smallexample
+procedure proc (P1 : access Base.Typ'Class;
+                P2 : access Base.Typ'Class);
+@end smallexample
+
+@noindent
+allowing us to write:
+
+@smallexample
+   obj1 : Base.Ref    := new_Base;
+   obj2 : Derived.Ref := new_Derived;
+   proc (obj1, obj2);
+@end smallexample
+
+@noindent
+The observant reader will notice that this new mapping into Ada of procedure
+@code{proc} is not equivalent to the first one since in the case of access
+parameters Ada checks that the parameters are not @code{null} (and an
+exception will be raised if they are).
+
+This problem is worked around by disabling the @code{null}
+access check in package specs imported from Java. Note that this is a
+temporary expedient until a solution to this problem is agreed upon by
+the ISO WG9-sponsored Ada Rapporteur Group (ARG).
+
+
+
+@node Mixing Ada Strings and Java Strings, An Example, Java Implicit Upcasting in Ada, Mapping Java into Ada
+@section Mixing Ada Strings and Java Strings
+@c ---------------------------------------------------------------------------
+
+@noindent
+To facilitate the use of regular Ada strings in Java routines we have added
+the following type definition and subprograms to the body of package
+@code{java.lang.String} generated by @code{jvm2ada}:
+
+@smallexample
+---------------------------------------------------
+-- Java String to Ada String Conversion Routines --
+---------------------------------------------------
+
+type String_Access is access all Standard.String;
+function "+" (S : java.lang.String.Ref) return String_Access;
+function "+" (S : Standard.String) return java.lang.String.Ref;
+
+@end smallexample
+
+@noindent
+With the above you can write:
+
+@smallexample
+
+procedure P (JS : java.lang.String.Ref);
+function  F return java.lang.String.Ref;
+
+S_Ptr String_Access := +F;
+P (+"hello GNAT for the JVM");
+@end smallexample
+
+@page
+
+
+@node An Example,, Mixing Ada Strings and Java Strings, Mapping Java into Ada
+@section An Example
+@c ---------------------------------------------------------------------------
+
+@noindent
+As an example consider the following Java class
+
+@smallexample
+package A.B;
+
+public class Foo
+  extends    java.awt.event.ComponentAdapter
+  implements java.io.Serializable
+@{
+   //  Instance Variables
+
+   public int   i_Field;
+   public float f_Filed;
+
+   //  Constructors
+
+   public Foo () @{@}
+   public Foo (java.lang.String s) @{@}
+
+   //  Instance Methods
+
+   public void first_op  (java.lang.Thread t) @{@}
+   public int  second_op () @{return 1;@}
+
+   //  Static Variables
+
+   public static int   i_Var;
+   public static float f_Var;
+
+   //  Static Methods
+
+   public static void proc  (Foo obj, int [] b) @{@}
+   public static int  funct (Foo [][] a, int l, int h) @{return 1;@}
+@}
+@end smallexample
+
+@noindent
+After processing this class using the following @code{jvm2ada} command
+(@var{java-dir} is the location of Sun's JDK 1.2 installation):
+
+@smallexample
+jvm2ada -L@var{java-dir}/jdk1.2.2/jre/lib/rt.jar Foo.class
+@end smallexample
+
+@noindent
+we obtain the following Ada spec (comments in italics have been added for
+explanatory purposes):
+
+@smallexample
+with Java; use Java;
+with java.awt.event.ComponentAdapter;
+with type java.awt.event.ComponentListener.Ref is access;
+with type java.io.Serializable.Ref is access;
+with type java.lang.String.Typ is tagged;
+with type java.lang.Thread.Typ is tagged;
+
+package A.B.Foo is
+   pragma Preelaborate;
+
+   -----------------------
+   -- Type Declarations --
+   -----------------------
+
+   type Typ;
+   type Ref is access all Typ'Class;
+
+   type Arr_Obj is array (Natural range <>) of Ref;
+   type Arr     is access all Arr_Obj;
+
+   type Arr_2_Obj is array (Natural range <>) of Arr;
+   type Arr_2     is access all Arr_2_Obj;
+
+   type Arr_3_Obj is array (Natural range <>) of Arr_2;
+   type Arr_3     is access all Arr_3_Obj;
+
+   type Typ
+      (ComponentListener_I : java.awt.event.ComponentListener.Ref;
+      --  @i{In the Ada mapping all implemented interfaces must appear}
+      --  @i{in the list of discriminants. The discriminats corresponding}
+      --  @i{to those inherited from the parent type (in this case}
+      --  Component_Listener@i{) must be used to constrain the parent}
+      --  @i{type in the Ada tagged type definition.}
+      Serializable_I : java.io.Serializable.Ref)
+      is new
+         java.awt.event.ComponentAdapter.Typ (ComponentListener_I)
+      with record
+
+         ------------------------
+         -- Field Declarations --
+         ------------------------
+
+         i_Field : java.Int;
+         pragma Import (Java, i_Field, "i_Field");
+
+         f_Filed : java.Float;
+         pragma Import (Java, f_Filed, "f_Filed");
+
+      end record;
+
+   ------------------------------
+   -- Constructor Declarations --
+   ------------------------------
+
+   function new_Foo (This : Ref := null)
+                     return Ref;
+
+   function new_Foo (P1 : access java.lang.String.Typ'Class;
+                     This : Ref := null)
+                     return Ref;
+
+   -------------------------
+   -- Method Declarations --
+   -------------------------
+
+   procedure first_op (This : access Typ;
+                       P1 : access java.lang.Thread.Typ'Class);
+
+   function funct (P1 : A.B.Foo.Arr_2;
+                   P2 : java.Int;
+                   P3 : java.Int)
+                   return java.Int;
+
+   procedure proc (P1 : access A.B.Foo.Typ'Class;
+                   P2 : java.Int_Arr);
+
+   function second_op (This : access Typ)
+                       return java.Int;
+
+   ---------------------------
+   -- Variable Declarations --
+   ---------------------------
+
+   i_Var : Java.Int;
+   f_Var : Java.Float;
+
+private
+
+   pragma Convention (Java, Typ);
+   pragma Java_Constructor (new_Foo);
+   pragma Import (Java, first_op, "first_op");
+   pragma Import (Java, funct, "funct");
+   pragma Import (Java, proc, "proc");
+   pragma Import (Java, second_op, "second_op");
+   pragma Import (Java, i_Var, "i_Var");
+   pragma Import (Java, f_Var, "f_Var");
+
+end A.B.Foo;
+pragma Import (Java, A.B.Foo, "A.B.Foo");
+
+@end smallexample
+
+@noindent
+The following code shows you how to use @code{Foo}'s services in your code.
+
+@smallexample
+
+with java.lang.String; use java.lang.String;
+with A.B.Foo; use A.B.Foo;
+use A.B;
+use Java;
+
+procedure Client is
+   O  : Foo.Ref      := new_Foo (+"hello there");
+   AO : Foo.Arr_2    :=
+      new Foo.Arr_2_Obj'
+             (0..9 =>
+                new Foo.Arr_Obj' (0..3 => new_Foo));
+
+   I  : int          := funct (AO, AO'Last, 7);
+   AI : Java.Int_Arr := new Java.Int_Arr_Obj (0..5);
+
+begin
+   proc (O, AI);
+end Client;
+@end smallexample
+
+
+@node Creating Gnapplets with GNAT, Debugging Ada Programs, Mapping Java into Ada, (dir)
+@chapter Creating Gnapplets with GNAT
+@c ===========================================================================
+
+@noindent
+This chapter explains how you can use GNAT to create
+a ``gnapplet'' (GNAT applet).
+
+@menu
+* Extending java.applet.Applet.Typ::
+* Initializing and Finalizing the GNAT Runtime::
+* Compiling the Gnapplet::
+* Creating the HTML file::
+@end menu
+
+@noindent
+The examples provided with your GNAT installation contain a couple of
+gnapplet examples. This chapter explains the steps that you need to take
+to create your own gnapplets.
+
+
+@node Extending java.applet.Applet.Typ, Initializing and Finalizing the GNAT Runtime, Creating Gnapplets with GNAT, Creating Gnapplets with GNAT
+@section Extending @code{java.applet.Applet.Typ}
+@c ---------------------------------------------------------------------------
+
+@noindent
+The first thing you need to do to create an applet is to extend
+@code{java.Applet.Applet.Typ} as shown in the followng example:
+
+@smallexample
+with java; use java;
+with java.applet.Applet;
+with java.awt.Graphics;
+
+package Animate is
+   --  Typ @i{implements the same interfaces as Applet.Typ and no}
+   --  @i{new interfaces, so we do not need to add discriminants to the}
+   --  @i{type definition below.}
+
+   type Typ is new java.applet.Applet.Typ with record
+      Count : Integer;
+   end record;
+   type Ref is access all Typ'Class;
+
+   procedure Init    (This : access Typ);
+   procedure Start   (This : access Typ);
+   procedure Stop    (This : access Typ);
+   procedure Destroy (This : access Typ);
+
+private
+   pragma Convention (Java, Typ);
+end Animate;
+@end smallexample
+
+@noindent
+In addition to extending @code{java.applet.Applet.Typ}, some functions from @*
+@code{java.applet.Applet} need to be overridden, namely:
+
+@smallexample
+   procedure Init (This : access Typ);
+   --  @i{This function is called the first time the JVM initializes the}
+   --  @i{the applet. This is where you should put your own initializations}
+   --  @i{as well as the call to the elaboration code for the Ada runtime}
+   --  @i{library, as shown in the next section.}
+
+   procedure Start (This : access Typ):
+   procedure Stop  (This : access Typ);
+   --  @i{These routines are called when your applet starts or stops}
+   --  @i{running (e.g., when it becomes visible to the user,}
+   --  @i{or when the user moves to another page)}
+
+   procedure Destroy (This : access Typ);
+   --  @i{Called by the browser or applet viewer to inform this applet}
+   --  @i{that it is being reclaimed and that it should destroy any}
+   --  @i{resources that it has allocated. The} stop @i{method will always}
+   --  @i{be called before} destroy.
+   --  @i{A subclass of} Applet @i{should override this method if it has}
+   --  @i{any operation that it wants to perform before it is destroyed.}
+@end smallexample
+
+@noindent
+In addition you may want to override the following two methods:
+
+@smallexample
+  procedure Paint (This     : access Typ;
+                   Graphics : access Java.Awt.Graphics.Typ'Class);
+  --  @i{Called every time the applet needs to be repainted.}
+  --  @i{Every drawing should be done on Graphics. See the Java API}
+  --  @i{documentation for more info.}
+
+  procedure Update (This : access Typ;
+                    G    : access java.awt.Graphics.Typ'Class);
+  --  @i{The AWT calls this method in response to a call to}
+  --  repaintupdate @i{or} paint. @i{See the Java API}
+  --  @i{documentation for more info.}
+@end smallexample
+
+
+@node Initializing and Finalizing the GNAT Runtime, Compiling the Gnapplet, Extending java.applet.Applet.Typ, Creating Gnapplets with GNAT
+@section Initializing and Finalizing the GNAT Runtime
+@c ---------------------------------------------------------------------------
+
+@noindent
+When writing the code for your gnapplet you must remeber to initialize
+the GNAT runtime upon startup of your applet. You must also remember to
+finalize the GNAT runtime upon destruction of your applet. This is easy
+to do: you just need to call the routine @code{Adainit} in method
+@code{Init} and the routine @code{Adafinal} in method @code{Destroy}.
+As usual @code{Adainit} and @code{Adafinal} have been generated by
+@code{jvm-gnatbind} if switch @code{-n} is selected.
+
+The only additional thing you need to know is the name of the class file
+where @code{jvm-gnatbind} generates these routines. The name of this class
+file is @code{ada_}@var{gnapplet-name}, where @var{gnapplet-name} is the
+name of the gnapplet package where @code{java.applet.Applet.Typ} was
+derived.
+
+As an example here is the body of methods @code{Init} and @code{Destroy}
+of the @code{Animate} gnapplet example given in the previous section:
+
+@smallexample
+package body Animate is
+   ...
+   procedure Init (This : access Typ) is
+      procedure Adainit;
+      pragma Import (Ada, Adainit, "ada_animate.adainit");
+   begin
+      Adainit;
+      --  @i{other initializations go here, after the call to} Adainit
+   end Init;
+
+   procedure Destroy (This : access Typ) is
+      procedure Adafinal;
+      pragma Import (Ada, Adafinal, "ada_animate.adafinal");
+   begin
+      --  @i{other finalizations go here, before the call to} Adafinal
+      Adafinal;
+   end Destroy;
+   ...
+end Animate
+@end smallexample
+
+
+@node Compiling the Gnapplet, Creating the HTML file, Initializing and Finalizing the GNAT Runtime, Creating Gnapplets with GNAT
+@section Compiling the Gnapplet
+@c ---------------------------------------------------------------------------
+
+@noindent
+Once you have written your gnapplet, you need to compile it.  This is done in
+the usual fashion, except for the fact that because there is no main
+program you need to call the binder and the linker by hand. As an example, to
+compile the gnapplet given in package @code{Animate} given in the previous
+example you can type:
+
+@smallexample
+    $ jvm-gnatmake animate
+    $ jvm-gnatbind -n animate.ali
+    $ jvm-gnatlink animate.ali
+    $ jarmake -o animate.jar animate$typ.class
+@end smallexample
+
+@noindent
+The @code{jarmake} command is particularly important for packaging all the
+@file{.class} files needed by your gnapplet in a single zip archive.
+
+
+
+@node Creating the HTML file,, Compiling the Gnapplet, Creating Gnapplets with GNAT
+@section Creating the HTML file
+@c ---------------------------------------------------------------------------
+
+@noindent
+The last step before running your gnapplet is to create an HTML file that
+will be loaded into your viewer or browser. This HTML file should include a
+special tag that indicates where you want to run your applet, and what size
+its allotted window should be. The @code{WIDTH} and @code{HEIGHT} parameters
+below are mandatory.  The @code{ARCHIVE} parameter is only required when you
+created a zip archive (as you did above with @code{jarmake}). As an example,
+a minimal html file for the previous example could be:
+
+@smallexample
+    <html><head></head></head>
+    <body>
+      <APPLET CODE="animate$typ.class"
+       ARCHIVE="animate.jar"
+       WIDTH=200 HEIGHT=200> </APPLET>
+    </body> </html>
+@end smallexample
+
+
+
+
+@node Debugging Ada Programs, Limitations, Creating Gnapplets with GNAT, (dir)
+@chapter Debugging Ada Programs
+@c ===========================================================================
+
+@noindent
+Because GNAT generates class files that are fully compliant with Sun's JVM
+standard, you can use any JVM debugger, such as Sun's @code{jdb}, with GNAT.
+
+The minor drawback of using a JVM debugger directly is that for those Ada
+constructs that are not directly available in the Java programming language
+(e.g. attributes), you need to know how GNAT compiles these into bytecode in
+order to retrieve their value.
+
+The purpose of this chapter is precisely to explain how the GNAT compiler
+compiles Ada contructs into bytecode so that you can use any Java debugger on
+your Ada application.
+
+Note that this chapter is not yet complete. If you need to understand what the
+GNAT compiler generates for a particular Ada construct which is not documented
+below, we suggest running the command @code{jvmlist -g} on the generated JVM
+@file{.class} files.
+
+@menu
+* Ada Compilation Units and JVM Class Files::
+* Lexical Elements::
+* Enumeration Types::
+* Integer Types::
+* Floating Point Types::
+@end menu
+
+
+@node Ada Compilation Units and JVM Class Files, Lexical Elements, Debugging Ada Programs, Debugging Ada Programs
+@section Ada Compilation Units and JVM Class Files
+@c ---------------------------------------------------------------------------
+
+@noindent
+Unless pragma @code{Export} is used (@pxref{Pragma Export Java}), lower-case
+letters are used for the names of all JVM class files generated from the
+compilation of an Ada unit. Likewise, the names of all of the entities
+generated inside a class file are lower-case.
+
+The compilation of a nongeneric Ada library unit @var{P} always generates
+a JVM class file (@file{p.class}). In addition to the class file
+@file{p.class}, separate class files are emitted for each nested
+exception, record type, and tagged type declared in unit @var{P}.
+More specifically:
+
+@itemize @bullet
+@item
+A subprogram library unit @code{P} is compiled into a JVM class file
+@file{p.class} containing all the objects and nondispatching operations
+defined inside @code{P}.
+
+@item
+The specification and body of a library package @code{P} are compiled
+into a single JVM class file @file{p.class} containing all of the objects
+and nondispatching operations defined in the spec or body of @code{P}.
+
+@item
+Any tagged or untagged record type @code{R} declared inside a package or
+subprogram @code{P} is treated like a static inner class in Java, that is,
+a new JVM class @file{p$r.class} is generated containing @code{R}'s fields
+as instance variables, and, if @code{R} is a tagged type, its associated
+dispatching operations.
+
+@item
+A package @code{Q} nested inside an Ada unit @code{P} does not result
+in a separate class. Entities declared within the nested package
+will generally be associated as members of the containing library
+package's class (except in the case of exceptions or type declarations
+that, as usual, result in their own class). However, the names of the
+corresponding fields and methods resulting from the nested package will
+be given expanded names that include the name of the outermost
+library package followed by the names of any enclosing nested
+packages, and where adjacent pairs of simple names in the expanded
+are separated by dollar sign characters (e.g., @file{p$q$proc}).
+
+@item
+A child unit @code{P.Q} is compiled into the JVM class file
+@file{p$q.class}. All the rules described here are applied recursively with
+respect to @code{Q}'s contents.
+
+@item
+A generic package instantiation @code{R} nested inside an Ada unit @code{P} is
+treated exactly like a nested package.
+
+@item
+A generic subprogram instantiation @code{S} nested inside an Ada unit @code{P}
+treated exacly like a nested subprogram.
+
+@item
+An Ada exception @code{E} declared inside an Ada unit @code{P} is treated like
+a member class in Java and is compiled into JVM class @file{p$e.class}.
+
+@item
+A task type or protected type @var{T} nested inside an Ada unit @code{P} is
+compiled into JVM class file @file{p$t.class}.
+
+@item
+A subprogram @code{N} nested inside another subprogram @code{P} will
+be treated as a static method of the enclosing library unit's class
+and will be given an expanded name that includes the names of any
+enclosing subprograms (e.g., @file{pkg$p$n}). In addition, a special
+class will be generated for the nested subprogram's enclosing
+subprogram to contain fields for any objects of the enclosing subprogram
+that are referenced by the nested subprogram. The name of this
+special Activation Record class is constructed by appending the prefix
+@file{__AR_} to the name of the enclosing subprogram (e.g., @file{__AR_pkg$p}).
+
+@item
+Any other Ada type or construct @code{X} occurring inside an Ada unit @code{P}
+that needs to generate a standalone JVM class will be compiled into
+@file{p$x.class}.
+@end itemize
+
+@noindent
+As an example, the compilation of the following package:
+
+@smallexample
+package Outer is
+   package Nested is
+      type Typ is tagged record
+         Field : Integer;
+      end record;
+
+      E : exception
+   end Nested;
+
+   type Rec is record
+     X : Float;
+   end record;
+end Outer;
+@end smallexample
+
+@noindent
+yields the following JVM class files: @file{outer.class},
+@file{outer$nested$typ.class}, @*
+@file{outer$nested$e.class}, @file{outer$rec.class}.
+
+
+
+@node Lexical Elements, Enumeration Types, Ada Compilation Units and JVM Class Files, Debugging Ada Programs
+@section Lexical Elements
+@c ---------------------------------------------------------------------------
+
+@noindent
+All Ada identifiers are mapped into the corresponding lower case identifiers
+when generating symbolic references for the JVM, unless @code{pragma Export} is
+used (but note that certain names corresponding to internal entities generated
+by the GNAT front end may inlude upper-case letters).
+
+
+
+@node Enumeration Types, Integer Types, Lexical Elements, Debugging Ada Programs
+@section Enumeration Types
+@c ---------------------------------------------------------------------------
+
+@noindent
+An Ada enumeration type is converted into a Java 1-byte, 2-byte, 4-byte or
+8-byte integer whose size best matches the value of the largest enumeration
+literal.
+
+Character types are treated like regular Ada enumeration types. More
+specifically, an Ada @code{Character} type is mapped into a Java @code{byte},
+whereas an Ada @code{Wide_Character} type is mapped onto the equivalent
+2-byte Java @code{char} type.
+
+An Ada boolean type is treated like a standard Ada enumeration type with 2
+values and is consequently mapped into a Java @code{byte}.
+
+
+
+@node Integer Types, Floating Point Types, Enumeration Types, Debugging Ada Programs
+@section Integer Types
+@c ---------------------------------------------------------------------------
+
+@noindent
+Each signed integer type is mapped into the smallest corresponding JVM integer
+type whose size is able to represent all required integer values:
+
+@smallexample
+      Short_Short_Integer  @i{is mapped into}  byte  @i{(1 byte)}
+      Short_Integer        @i{ "    "     " }  short @i{(2 bytes)}
+      Integer              @i{ "    "     " }  int   @i{(4 bytes)}
+      Long_Integer         @i{ "    "     " }  long  @i{(8 bytes)}
+      Long_Long_Integer    @i{ "    "     " }  long  @i{(8 bytes)}
+@end smallexample
+
+@noindent
+Each modular type is also mapped into the smallest corresponding Java integer
+type whose size is able to represent all required modular values.
+
+
+
+@node Floating Point Types, , Integer Types, Debugging Ada Programs
+@section Floating Point Types
+@c ----------------------------------------------------------------------------
+
+@noindent
+The Ada predefined floating point types map very naturally onto Java's
+IEEE 32-bit float and IEEE 64-bit double:
+
+@smallexample
+      Short_Float     @i{is mapped into}  float  @i{(4 bytes)}
+      Float           @i{ "    "     " }  float  @i{(4 bytes)}
+      Long_Float      @i{ "    "     " }  double @i{(8 bytes)}
+      Long_Long_Float @i{ "    "     " }  double @i{(8 bytes)}
+@end smallexample
+
+@noindent
+User-defined floating point types are mapped into @code{Float} where
+possible, and @code{Long_Float} otherwise.
+
+@node Limitations,Index, Debugging Ada Programs, (dir)
+@chapter Limitations
+@c ===========================================================================
+
+@noindent
+Due to constraints of the JVM environment, or to implementation limitations,
+GNAT only supports a subset of the Ada language and GNAT run-time.
+
+@noindent
+Language constructs not supported:
+
+@itemize @bullet
+@item Types imported from Java do not support enumeration attributes
+(e.g. @code{'Image})
+
+@item Exception streams and attributes
+
+@item Representation items  (13.1)
+
+@item pragma @code{Pack} (ignored) (13.2)
+
+@item Representation attributes (13.3)
+
+@item Record layout   (13.5)
+
+@item Machine Code Insertions  (13.8)
+
+@item @code{Unchecked_Conversion} between different non scalar types  (13.9)
+
+@item Limited support on Ada.Streams package  (13.13)
+
+@item @code{'Size} attribute on non scalar objects
+
+@item @code{'Storage_Size} attribute on non-task objects
+
+@item @code{'First_Bit}, @code{'Last_Bit}, @code{'Position} attributes
+
+@item @code{'External_Tag} attribute
+
+@item @code{'Pred}, @code{'Succ} attribute for modular types
+
+@item @code{'Version} and @code{'Body_Version} attributes
+
+@item Limited support of the @code{'Val} attribute
+
+@item Function returning unconstrained array will have wrong @code{'First}
+and @code{'Last}
+
+@item User-defined Storage_Pools
+
+@item Limited support for controlled types
+
+@item @code{'Address} on non-aliased, non-local objects
+
+@item @code{System.Address} comparisons, other than @code{"="} and
+@code{"/="}
+
+@item Some forms of scalar object renaming (e.g. renaming of dereferenced
+
+access value)
+
+@item Pragmas @code{Import}, @code{Export}, and @code{Convention} other than
+@code{Ada} and @code{Java}
+
+@item Pragma @code{Interrupt_Handler}, @code{Attach_Handler}
+
+@item Asynchronous abort of tasking constructs and tasks
+
+@item Access-to-protected-subprogram types
+
+@item Incomplete types completed in package bodies
+
+@item @code{Wide_String} and @code{Wide_Wide_String} (e.g. ACATS test c250001)
+
+@item Null arrays with multiple dimensions
+
+@end itemize
+
+@noindent
+Switches not supported:
+
+@itemize @bullet
+@item -gnatE (dynamic elaboration)
+@end itemize
+
+@noindent
+Run-time units not supported:
+
+@itemize @bullet
+@item Ada.Sequential_IO.C_Streams, Ada.Storage_IO,
+  Ada.Text_IO.C_Streams, Ada.Wide_Text_IO.C_Streams, Ada.Direct_IO.C_Streams
+@item Ada.Real_Time.Timing_Events
+
+@item Ada.Asynchronous_Task_Control
+@item Ada.Command_Line.Environment
+@item Ada.Directories
+@item Ada.Exceptions.Traceback
+@item Ada.Interrupts,
+@item Ada.Task_Attributes,
+@item Ada.Task_Termination,
+
+@item Interfaces.C.Extensions, Interfaces.Cobol, Interfaces.C.Pointers,
+  Interfaces.CPP, Interfaces.C.Strings, Interfaces.Fortran,
+  Interfaces.Packed_Decimal
+
+@item Machine_Code, System.Machine_Code
+
+@item GNAT.Altivec
+@item GNAT.Array_Split
+@item GNAT.Lock_Files, GNAT.Socket
+@item GNAT.Exceptions, GNAT.Expect, GNAT.AWK, GNAT.CGI, GNAT.CRC32, GNAT.MD5,
+  GNAT.SHA1, GNAT.Spitbol
+@item GNAT.Byte_Swapping
+@item GNAT.Calendar
+@item GNAT.Command_Line
+@item GNAT.Compiler_Version
+@item GNAT.Current_Exception, GNAT.Debug_Pools, GNAT.Debug_Utilities,
+  GNAT.Exception_Actions, GNAT.Exception_Traces, GNAT.Memory_Dump
+@item GNAT.Dynamic_Tables
+@item GNAT.Float_Control
+@item GNAT.IO
+@item GNAT.OS_Lib
+@item GNAT.Perfect_Hash_Generators
+@item GNAT.Secondary_Stack_Info
+@item GNAT.Table
+@item GNAT.Task_Stack_Usage
+@item GNAT.Time_Stamp
+@item GNAT.Thread, GNAT.Signal
+@item GNAT.String_Split, GNAT.Wide_String_Split, GNAT.Wide_Wide_String_Split
+  GNAT.Traceback
+
+@end itemize
+
+
+@node Index,, Limitations, (dir)
+@unnumbered Index
+
+@printindex cp
+
+@contents
+
+@bye

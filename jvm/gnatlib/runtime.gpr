@@ -1,0 +1,10 @@
+project Runtime is
+
+   for Source_Dirs use (".", "../../cil/gnatlib", "../../gnat_src");
+   for Object_Dir use "../lib/dotgnat/adalib";
+
+   package IDE is
+      for VCS_Kind use "CVS";
+   end IDE;
+
+end Runtime;

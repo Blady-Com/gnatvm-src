@@ -1,0 +1,10 @@
+--- system.ads	2008-10-24 14:27:43.987015700 +0200
++++ system_silverlight.ads	2009-05-04 21:06:46.308000000 +0200
+@@ -131,6 +131,7 @@
+    Machine_Rounds            : constant Boolean := True;
+    Preallocated_Stacks       : constant Boolean := False;
+    Signed_Zeros              : constant Boolean := False;
++   Silverlight               : constant Boolean := True;
+    Stack_Check_Default       : constant Boolean := False;
+    Stack_Check_Probes        : constant Boolean := False;
+    Support_64_Bit_Divides    : constant Boolean := True;

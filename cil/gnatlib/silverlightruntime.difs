@@ -1,0 +1,117 @@
+--- system.ads	2008-10-24 14:27:43.987015700 +0200
++++ system_silverlight.ads	2009-05-04 21:06:46.308000000 +0200
+@@ -131,6 +131,7 @@
+    Machine_Rounds            : constant Boolean := True;
+    Preallocated_Stacks       : constant Boolean := False;
+    Signed_Zeros              : constant Boolean := False;
++   Silverlight               : constant Boolean := True;
+    Stack_Check_Default       : constant Boolean := False;
+    Stack_Check_Probes        : constant Boolean := False;
+    Support_64_Bit_Divides    : constant Boolean := True;
+Index: s-taprop.ads
+===================================================================
+--- s-taprop.ads	(revision 155922)
++++ s-taprop.ads	(working copy)
+@@ -51,7 +51,7 @@
+
+    procedure Create_Task
+      (T          : ST.Task_Id;
+-      Wrapper    : System.Address;
++      Wrapper    : System.OS_Interface.Wrapper_Proc;
+       Stack_Size : System.Parameters.Size_Type;
+       Priority   : System.Any_Priority;
+       Succeeded  : out Boolean);
+Index: s-tassta.adb
+===================================================================
+--- s-tassta.adb	(revision 155922)
++++ s-tassta.adb	(working copy)
+@@ -38,6 +38,8 @@
+ with Ada.Exceptions;
+ with Ada.Unchecked_Deallocation;
+ 
++with Interfaces.CIL.Object;
++
+ with System.Interrupt_Management;
+ with System.Tasking.Debug;
+ with System.Address_Image;
+@@ -96,8 +98,8 @@
+    --  This procedure outputs the task specific message for exception
+    --  tracing purposes.
+ 
+-   procedure Task_Wrapper (Self_ID : Task_Id);
+-   pragma Convention (C, Task_Wrapper);
++   procedure Task_Wrapper (Self_ID_Obj : Interfaces.CIL.Object.Ref);
++   pragma Convention (CIL, Task_Wrapper);
+    --  This is the procedure that is called by the GNULL from the new context
+    --  when a task is created. It waits for activation and then calls the task
+    --  body procedure. When the task body procedure completes, it terminates
+@@ -291,7 +293,7 @@
+                else C.Common.Base_Priority);
+ 
+             System.Task_Primitives.Operations.Create_Task
+-              (C, Task_Wrapper'Address,
++              (C, Task_Wrapper'Access,
+                Parameters.Size_Type
+                  (C.Common.Compiler_Data.Pri_Stack_Info.Size),
+                Activate_Prio, Success);
+@@ -989,11 +991,15 @@
+    --  Task finalization is done by Complete_Task, which is called from an
+    --  at-end handler that the compiler generates.
+ 
+-   procedure Task_Wrapper (Self_ID : Task_Id) is
++   procedure Task_Wrapper (Self_ID_Obj : Interfaces.CIL.Object.Ref) is
++      function Convert is new Ada.Unchecked_Conversion
++        (Interfaces.CIL.Object.Ref, Task_Id);
+       use type SSE.Storage_Offset;
+       use System.Standard_Library;
+       use System.Stack_Usage;
+ 
++      Self_ID : Task_Id := Convert (Self_ID_Obj);
++
+       Bottom_Of_Stack : aliased Integer;
+ 
+       Task_Alternate_Stack :
+Index: s-tarest.adb
+===================================================================
+--- s-tarest.adb	(revision 155922)
++++ s-tarest.adb	(working copy)
+@@ -47,6 +47,8 @@
+ 
+ with Ada.Exceptions;
+ 
++with Interfaces.CIL.Object;
++
+ with System.Task_Primitives.Operations;
+ with System.Soft_Links.Tasking;
+ with System.Secondary_Stack;
+@@ -100,7 +102,8 @@
+    -- Local Subprograms --
+    -----------------------
+ 
+-   procedure Task_Wrapper (Self_ID : Task_Id);
++   procedure Task_Wrapper (Self_ID_Obj : Interfaces.CIL.Object.Ref);
++   pragma Convention (CIL, Task_Wrapper);
+    --  This is the procedure that is called by the GNULL from the
+    --  new context when a task is created. It waits for activation
+    --  and then calls the task body procedure. When the task body
+@@ -171,7 +174,10 @@
+    --  of the current thread, since it should be at a fixed offset from the
+    --  stack base.
+ 
+-   procedure Task_Wrapper (Self_ID : Task_Id) is
++   procedure Task_Wrapper (Self_ID_Obj : Interfaces.CIL.Object.Ref) is
++      function Convert is new Ada.Unchecked_Conversion
++        (Interfaces.CIL.Object.Ref, Task_Id);
++      Self_ID : Task_Id := Convert (Self_ID_Obj);
+       ID : Task_Id := Self_ID;
+       pragma Volatile (ID);
+       pragma Warnings (Off, ID);
+@@ -348,7 +354,7 @@
+                else C.Common.Base_Priority);
+ 
+             STPO.Create_Task
+-              (C, Task_Wrapper'Address,
++              (C, Task_Wrapper'Access,
+                Parameters.Size_Type
+                  (C.Common.Compiler_Data.Pri_Stack_Info.Size),
+                Activate_Prio, Success);

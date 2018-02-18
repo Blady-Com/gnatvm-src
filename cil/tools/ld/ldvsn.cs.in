@@ -1,0 +1,53 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("dotnet-ld")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("AdaCore")]
+[assembly: AssemblyProduct("dotnet-ld")]
+[assembly: AssemblyCopyright("Copyright © AdaCore 2010-@CURRENT_YEAR@")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible
+// to COM components.  If you need to access a type in this assembly from
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version
+//      Build Number
+//      Revision
+//
+[assembly: AssemblyVersion("@LIBRARY_VERSION@.0.0")]
+[assembly: AssemblyFileVersion("@LIBRARY_VERSION@.0.0")]
+
+namespace dotnet_ld
+{
+  static class vsn
+  {
+    public static string Gnat_Static_Version_String = "@VERSION_STRING@";
+    public static string Gnat_Build_Type = "@BUILD_TYPE@";
+    public static string Gnat_Library_Version = "@LIBRARY_VERSION@";
+    public static string Current_Year = "@CURRENT_YEAR@";
+    public static string Version_String
+    {
+      get
+      {
+        if (Gnat_Build_Type == "Gnatpro")
+          return "PRO " + Gnat_Static_Version_String;
+        else if (Gnat_Build_Type == "GPL")
+          return "GPL " + Gnat_Static_Version_String;
+        else
+          return Gnat_Static_Version_String;
+      }
+    }
+  }
+}

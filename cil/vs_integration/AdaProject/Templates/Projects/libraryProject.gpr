@@ -1,0 +1,44 @@
+project $safeprojectname$ is
+   type ConfigurationType is ("Release", "Debug");
+   Configuration : ConfigurationType := external ("CONFIGURATION", "Release");
+
+   for Source_Dirs use (".");
+   for Main use ("$safeprojectname$");
+
+   for Object_Dir use "obj\" & Configuration;
+   for Exec_Dir use "bin\" & Configuration;
+   
+   package Builder is
+      for Executable_Suffix use ".dll";
+      for Default_Switches ("ada") use ("-z");
+   end Builder;
+
+   package Compiler is
+      case Configuration is
+         when "Release" => 
+            for Default_Switches ("ada") use ("-O2");
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-gnato");
+      end case;
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-n");
+   end Binder;
+
+   package Linker is
+      case Configuration is
+         when "Release" => 
+            for Default_Switches ("ada") use ("/DLL", "/OPTIMIZE");
+         when "Debug" =>
+            for Default_Switches ("ada") use ("/DLL", "/DEBUG");
+      end case;
+   end Linker;
+
+   package IDE is
+      for Compiler_Command ("ada") use "dotnet-gnatmake";
+      for Gnatlist use "dotnet-gnatls";
+      for Gnat use "dotnet-gnat";
+   end IDE;
+   
+end $safeprojectname$;

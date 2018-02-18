@@ -1,0 +1,29 @@
+<VSTemplate Version="2.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Console Application</Name>
+    <Description>A project for creating a command-line application</Description>
+    <Icon>__TemplateIcon.ico</Icon>
+    <ProjectType>Ada</ProjectType>
+    <SortOrder>50</SortOrder>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>ConsoleApplication</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="AdaApp_adaproj" 
+         TargetFileName="$safeprojectname$.adaproj"
+         ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName="$safeprojectname$.gpr"
+         OpenInEditor="false">applicationProject.gpr</ProjectItem>
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName ="assemblyinfo"
+         OpenInEditor="false">assemblyinfo</ProjectItem>
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName="$safeprojectname$.adb"
+         OpenInEditor="true">proc1.adb</ProjectItem>
+    </Project>
+
+  </TemplateContent>
+</VSTemplate>

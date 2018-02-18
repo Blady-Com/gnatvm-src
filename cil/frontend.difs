@@ -1,0 +1,84 @@
+	* make.adb (Scan_Make_Args): Remove unfriendly call to Executable_Name
+	to support DLL output
+
+	* s-soflin.ads (Current_Target_Exception): Fix import for CIL
+
+	* sem_prag.adb: Add special processing of pragma Import for CIL
+
+	* a-convec.ads: Remove the "=" abstract method as this leads to
+	errors at link time with CIL
+
+Index: make.adb
+===================================================================
+--- make.adb	(revision 175776)
++++ make.adb	(working copy)
+@@ -7331,7 +7331,7 @@
+ 
+          else
+             Add_Switch ("-o", Linker, And_Save => And_Save);
+-            Add_Switch (Executable_Name (Argv), Linker, And_Save => And_Save);
++            Add_Switch (Argv, Linker, And_Save => And_Save);
+          end if;
+ 
+       --  If the previous switch has set the Object_Directory_Present flag
+Index: sem_prag.adb
+===================================================================
+--- sem_prag.adb	(revision 175776)
++++ sem_prag.adb	(working copy)
+@@ -85,6 +85,7 @@
+ with Urealp;   use Urealp;
+ with Validsw;  use Validsw;
+ with Warnsw;   use Warnsw;
++with Jx_Decl;  use Jx_Decl;
+ 
+ package body Sem_Prag is
+ 
+@@ -14767,8 +14768,18 @@
+                  Expression => Make_Identifier (Sloc (N), Name_All_Checks)))));
+       end if;
+ 
+-      --  Nothing else to do at the current time!
+-
++      declare
++         PA : constant List_Id := Pragmas_After (Aux_Decls_Node (N));
++         P  : Node_Id;
++      begin
++         if Present (PA) then
++            P := First (PA);
++            while Present (P) loop
++               Jx_Decl.Handle_Pragma (P);
++               Next (P);
++            end loop;
++         end if;
++      end;
+    end Process_Compilation_Unit_Pragmas;
+ 
+    --------
+Index: s-soflin.ads
+===================================================================
+--- s-soflin.ads	(revision 175776)
++++ s-soflin.ads	(working copy)
+@@ -50,7 +50,7 @@
+ 
+    function Current_Target_Exception return EO;
+    pragma Import
+-     (Ada, Current_Target_Exception, "__gnat_current_target_exception");
++     (Assembler, Current_Target_Exception, "current_target_exception");
+    --  Import this subprogram from the private part of Ada.Exceptions
+ 
+    --  First we have the access subprogram types used to establish the links.
+Index: a-convec.ads
+===================================================================
+--- a-convec.ads	(revision 175776)
++++ a-convec.ads	(working copy)
+@@ -388,7 +388,9 @@
+    pragma Inline (Previous);
+ 
+    type Elements_Array is array (Index_Type range <>) of aliased Element_Type;
+-   function "=" (L, R : Elements_Array) return Boolean is abstract;
++--  Commented out as it is incompatible with the .NET compiler:
++--  This create an abstract method that leads to an abstract package.
++--   function "=" (L, R : Elements_Array) return Boolean is abstract;
+ 
+    type Elements_Type (Last : Index_Type) is limited record
+       EA : Elements_Array (Index_Type'First .. Last);

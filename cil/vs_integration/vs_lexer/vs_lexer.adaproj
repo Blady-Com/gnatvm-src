@@ -1,0 +1,108 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"vs_lexer"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{cb5b6795-db05-46f7-a959-e7b09ff3dc94}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>vs_lexer</RootNamespace>
+    <AssemblyName>vs_lexer</AssemblyName>
+    <TargetPlatform>v2</TargetPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <BuildOptions>-gnatp</BuildOptions>
+    <CompilerOptions>
+    </CompilerOptions>
+    <BinderOptions>
+    </BinderOptions>
+    <LinkerOptions>
+    </LinkerOptions>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="mgnat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src/vs_lexer.ads" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\assemblyinfo">
+      <SubType>Content</SubType>
+    </Content>
+    <Compile Include="src\declarations-arguments.adb" />
+    <Compile Include="src\declarations-arguments.ads" />
+    <Compile Include="src\declarations-parameters.adb" />
+    <Compile Include="src\declarations-parameters.ads" />
+    <Compile Include="src\declarations-subprograms.adb" />
+    <Compile Include="src\declarations-subprograms.ads" />
+    <Compile Include="src\declarations-types.adb" />
+    <Compile Include="src\declarations-types.ads" />
+    <Compile Include="src\declarations-variables.adb" />
+    <Compile Include="src\declarations-variables.ads" />
+    <Compile Include="src\declarations.adb" />
+    <Compile Include="src\declarations.ads" />
+    <Compile Include="src\decls.adb" />
+    <Compile Include="src\decls.ads" />
+    <Compile Include="src\file_helpers.adb" />
+    <Compile Include="src\file_helpers.ads" />
+    <Compile Include="src\krunch.adb" />
+    <Compile Include="src\krunch.ads" />
+    <Compile Include="src\lexer.adb" />
+    <Compile Include="src\lexer.ads" />
+    <Compile Include="src\list.adb" />
+    <Compile Include="src\list.ads" />
+    <Compile Include="src\lists_generic.adb" />
+    <Compile Include="src\lists_generic.ads" />
+    <Compile Include="src\mcc-gnat_tools-xref.adb" />
+    <Compile Include="src\mcc-gnat_tools-xref.ads" />
+    <Compile Include="src\mcc-gnat_tools.ads" />
+    <Compile Include="src\mcc.ads" />
+    <Compile Include="src\parm_modes.adb" />
+    <Compile Include="src\parm_modes.ads" />
+    <Compile Include="src\reformat_pkg-scope_changes.adb" />
+    <Compile Include="src\reformat_pkg-scope_changes.ads" />
+    <Compile Include="src\reformat_pkg.adb" />
+    <Compile Include="src\reformat_pkg.ads" />
+    <Compile Include="src\reformat_rtf.adb" />
+    <Compile Include="src\reformat_rtf.ads" />
+    <Compile Include="src\rtf.adb" />
+    <Compile Include="src\rtf.ads" />
+    <Compile Include="src\settings.adb" />
+    <Compile Include="src\settings.ads" />
+    <Compile Include="src\suggestions.adb" />
+    <Compile Include="src\suggestions.ads" />
+    <Compile Include="src\token_stack.adb" />
+    <Compile Include="src\token_stack.ads" />
+    <Compile Include="src\token_writer.adb" />
+    <Compile Include="src\token_writer.ads" />
+    <Compile Include="src\vs_lexer.adb" />
+    <Compile Include="src\writer.adb" />
+    <Compile Include="src\writer.ads" />
+    <Content Include="vs_lexer.gpr">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\AdaCore\DotGnat.targets" />
+  <Target Name="BeforeBuild">
+    <MakeDir Directories="bin\$(Configuration)" />
+    <MakeDir Directories="obj\$(Configuration)" />
+    <MakeDir Directories="lib" />
+    <Copy SourceFiles="Properties\assemblyinfo" DestinationFolder="obj\$(Configuration)" />
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="bin\$(Configuration)" />
+    <RemoveDir Directories="obj\$(Configuration)" />
+  </Target>
+</Project>

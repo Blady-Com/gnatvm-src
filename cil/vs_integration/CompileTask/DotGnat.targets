@@ -1,0 +1,89 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--Import the standards targets-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+
+  <!--Reference the assembly where our tasks are defined-->
+  <UsingTask
+    TaskName="CompileTask.CompileTask" 
+    AssemblyFile="@VS_INTEGRATION_INSTALL_DIR@\AdaCompileTask.dll" />
+  <UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+
+  <!--Compile target (this is the target that calls the compiler task)-->
+  <Target Name="GnatCompileTarget">
+    <Message Text="Building: @(IntermediateAssembly)" />
+    <CompileTask
+         OutputAssembly="@(IntermediateAssembly)"
+         SourceFiles="@(Compile)"
+         MainFile="$(AssemblyName)"
+         Project="$(AssemblyName).gpr"
+         Configuration="$(Configuration)" 
+	 TargetPlatform="$(TargetPlatform)"
+         BuildOptions="$(BuildOptions)"
+         CompilerOptions="$(CompilerOptions)"
+         BinderOptions="$(BinderOptions)"
+         LinkerOptions="$(LinkerOptions)"
+         WorkingDirectory="$(MSBuildProjectDirectory)"/>
+  </Target>
+
+  <!--This is an override of CoreCompile to have our IronPythonCompilerTarget be called at compile time-->
+  <Target
+      Name="CoreCompile"
+      Inputs="@(Compile);
+              @(ReferencePath)"
+      Outputs="@(IntermediateAssembly)" 
+      DependsOnTargets="$(CoreCompileDependsOn);GnatCompileTarget"
+    >
+  </Target>
+
+  <!--No need to copy files to output directory, as they are directly created there-->
+  <Target Name="CopyFilesToOutputDirectory"/>  
+
+  <PropertyGroup>
+    <CreateManifestResourceNamesDependsOn></CreateManifestResourceNamesDependsOn>
+  </PropertyGroup>
+
+  <Target
+      Name="CreateManifestResourceNames"
+      Condition="'@(ResxWithNoCulture)@(ResxWithCulture)@(NonResxWithNoCulture)@(NonResxWithCulture)'!=''"
+      DependsOnTargets="$(CreateManifestResourceNamesDependsOn)"
+        >
+
+    <!-- Create the target resource names for non-culture resx files. -->
+    <CreateCSharpManifestResourceName Condition="'@(ResxWithNoCulture)'!=''"
+          ResourceFiles="@(ResxWithNoCulture)"
+          RootNamespace="$(RootNamespace)">
+
+      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithNoCultureName"/>
+
+    </CreateCSharpManifestResourceName>
+
+    <!-- Create the target resource names for culture resx files. -->
+    <CreateCSharpManifestResourceName Condition="'@(ResxWithCulture)'!=''"
+          ResourceFiles="@(ResxWithCulture)"
+          RootNamespace="$(RootNamespace)">
+
+      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestResourceWithCultureName"/>
+
+    </CreateCSharpManifestResourceName>
+
+    <!-- Create the target resource names for non-culture non-resx files. -->
+    <CreateCSharpManifestResourceName Condition="'@(NonResxWithNoCulture)'!=''"
+          ResourceFiles="@(NonResxWithNoCulture)"
+          RootNamespace="$(RootNamespace)">
+
+      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithNoCulture"/>
+
+    </CreateCSharpManifestResourceName>
+
+    <!-- Create the target resource names for culture non-resx files. -->
+    <CreateCSharpManifestResourceName Condition="'@(NonResxWithCulture)'!=''"
+          ResourceFiles="@(NonResxWithCulture)"
+          RootNamespace="$(RootNamespace)">
+
+      <Output TaskParameter="ManifestResourceNames" ItemName="ManifestNonResxWithCulture"/>
+
+    </CreateCSharpManifestResourceName>
+  </Target>
+
+</Project>

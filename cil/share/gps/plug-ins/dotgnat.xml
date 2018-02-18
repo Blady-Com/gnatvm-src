@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<index>
+   <doc_path>share/doc/gnat/html</doc_path>
+   <documentation_file>
+      <name>dotgnat_ug.html</name>
+      <descr>GNAT for .NET User's Guide</descr>
+      <category>GNAT</category>
+      <menu>/Help/GNAT/GNAT for .NET User's Guide</menu>
+   </documentation_file>
+</index>

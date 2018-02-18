@@ -1,0 +1,1883 @@
+# -*- Makefile -*- for High Integrity run-times
+
+#############################
+# I. Environment and Prolog #
+#############################
+
+RTS=zfp
+GNAT_SRC_DIR=.
+PREFIX=.
+CC=gcc
+SHELL=/bin/bash
+RTS_SUBDIR=rts-$(RTS)/
+ALL_ADAFLAGS=-gnatpgn -nostdinc $(CFLAGS)
+INCLUDE_DIRS= -I$(RTS_SUBDIR) $(EXTRA_INCLUDE_DIRS)
+ALL_CFLAGS=-DIN_RTS  $(CFLAGS) $(EXTRA_CFLAGS)
+CFLAGS=-O1 -MMD -fcallgraph-info=su,da
+
+MAKE_FILE=$(firstword $(MAKEFILE_LIST))
+
+TARGET:=$(shell $(CC) -dumpmachine)
+GCC_VERSION:=$(shell $(CC) -dumpversion)
+
+NO_SIBLING_ADAFLAGS=-fno-optimize-sibling-calls
+NO_REORDER_ADAFLAGS=-fno-toplevel-reorder
+
+ifeq ($(HOST),$(TARGET))
+   IS_CROSS=false
+else
+   IS_CROSS=true
+endif
+
+ifeq ($(IS_CROSS),true)
+   AR=$(TARGET)-ar
+else
+   AR=ar
+endif
+
+targ:=$(subst -, ,$(TARGET))
+arch:=$(word 1,$(targ))
+
+ifeq ($(words $(targ)),1)
+  osys:=elf
+else
+ifeq ($(words $(targ)),2)
+  osys:=$(word 2,$(targ))
+else
+  osys:=$(word 3,$(targ))
+endif
+endif
+
+# Four variables are used to configure a given runtime:
+#
+# * LIBGNAT_SOURCES: list of sources that are compiled and go into libgnat.a
+#
+# * LIBGNAT_NON_COMPILABLE_SOURCES: list of sources that are not compilable.
+#     usually separates and .h files go into this category. Package specs
+#     should go into LIBGNAT_SOURCES along with their body.
+#
+# * LIBGNARL_SOURCES: list of sources that are compiled and go into libgnarl.a
+#
+# * TARGET_PAIRS: selects which implementation of each file is taken.
+#     TARGET_PAIRS elements have the following format:
+#          <target file>:<source file>[:<gnatprep args separated by commas>]
+#     Example:
+#          g-io.adb:g-io-zfp.adb
+#
+#     The target file should be in one of the source lists
+#
+# The variables RTS, arch and osys are used to compute the four variables.
+# Each variable is initialized in the per runtime sections, but will be
+# modified later based on osys and arch.
+
+#  The following are all possible values for the RTS, arch and osys variables:
+#  ravenscar-cert-rci is a temporary implementation for LynxOS-178 - its
+#  capabilities will be moved into all ravenscar-cert run-times (current
+#  plan is 7.2.1). Discuss with EF if you have questions
+all_rts=zfp cert ravenscar-sfp ravenscar-apex ravenscar-cert \
+   ravenscar-cert-rci ravenscar-cert-rtp ravenscar
+all_arch=%86 powerpc% e500v2 leon leon3 erc32 avr arm pentium x86_64 sparc
+all_osys=vxworks% elf eabispe eabi linux% mingw32% \
+   solaris% pikeos lynxos178
+
+########################################
+# II. Files common to all HIE runtimes #
+########################################
+
+# If you need to make changes, use the dump-all target before and after the
+# change to make sure all changes are as expected. This will output the
+# computed variables for each combination of rts, arch and osys.
+
+LIBGNAT_SOURCES=a-except.adb a-except.ads a-tags.adb a-tags.ads ada.ads \
+   g-io.adb g-io.ads g-souinf.ads gnat.ads i-c.ads interfac.ads machcode.ads \
+   s-assert.adb s-assert.ads s-maccod.ads s-secsta.adb s-secsta.ads \
+   s-stoele.adb s-stoele.ads s-unstyp.ads system.ads
+
+# Common sources using floating point. Could be cleared for runtimes
+# without floating point
+LIBGNAT_FP_SOURCES=s-fatflt.ads s-fatlfl.ads s-fatllf.ads s-fatsfl.ads
+
+LIBGNAT_NON_COMPILABLE_SOURCES=a-unccon.ads a-uncdea.ads s-atacco.adb \
+   s-atacco.ads unchconv.ads unchdeal.ads
+
+LIBGNAT_NON_COMPILABLE_FP_SOURCES=s-fatgen.adb s-fatgen.ads
+
+LIBGNARL_SOURCES=
+
+TARGET_PAIRS=
+
+#################################################
+# III. Files for specific libraries, untargeted #
+#################################################
+
+# These are in increasing order of complexity
+
+#############
+# III.A ZFP #
+#############
+
+# Runtime specific parts
+ifeq (zfp, $(RTS))
+  TARGET_PAIRS+= a-tags.adb:a-tags-hie.adb a-tags.ads:a-tags-hie.ads \
+     a-except.adb:a-except-zfp.adb a-except.ads:a-except-zfp.ads \
+     i-c.ads:i-c-hie.ads \
+     s-assert.adb:s-assert-xi.adb s-secsta.adb:s-secsta-zfp.adb \
+     s-secsta.ads:s-secsta-zfp.ads
+endif
+
+#######################
+# III.B Cert run-time #
+#######################
+
+# Used in VxWorks 653, MILS, LynxOS-178 and PikeOS
+
+ifeq (cert, $(RTS))
+  LIBGNAT_SOURCES+= a-calend.adb a-calend.ads a-elchha.adb \
+     a-elchha.ads a-exctra.adb a-exctra.ads a-ngelfu.adb a-ngelfu.ads \
+     a-nlelfu.ads a-nllefu.ads a-numeri.ads calendar.ads \
+     a-nuelfu.adb a-nuelfu.ads s-gcmain.adb s-gcmain.ads \
+     g-debuti.adb g-debuti.ads g-sestin.ads s-addope.adb s-addope.ads \
+     s-arit64.adb s-arit64.ads s-bitops.adb s-bitops.ads s-boarop.ads \
+     s-carsi8.adb s-carsi8.ads s-carun8.adb s-carun8.ads s-casi16.adb \
+     s-casi16.ads s-casi32.adb s-casi32.ads s-casi64.adb s-casi64.ads \
+     s-caun16.adb s-caun16.ads s-caun32.adb s-caun32.ads s-caun64.adb \
+     s-caun64.ads s-excdeb.adb s-excdeb.ads s-exnint.adb s-exnint.ads \
+     s-exnllf.adb s-exnllf.ads s-exnlli.adb s-exnlli.ads s-expint.adb \
+     s-expint.ads s-explli.adb s-explli.ads s-expllu.adb s-expllu.ads \
+     s-expmod.adb s-expmod.ads s-expuns.adb s-expuns.ads s-geveop.adb \
+     s-geveop.ads s-memory.adb s-memory.ads s-purexc.ads s-soflin.adb \
+     s-soflin.ads s-stalib.adb s-stalib.ads s-strops.adb s-strops.ads \
+     s-traceb.adb s-traceb.ads s-traent.adb s-traent.ads s-veboop.adb \
+     s-veboop.ads s-vector.ads
+
+  LIBGNAT_NON_COMPILABLE_SOURCES+= a-calclo.adb a-excach.adb
+
+  TARGET_PAIRS+= a-excach.adb:a-excach-cert.adb \
+     a-calend.adb:a-calend-cert.adb a-calend.ads:a-calend-cert.ads \
+     a-except.adb:a-except-cert.adb a-except.ads:a-except-cert.ads \
+     a-tags.adb:a-tags-hie.adb a-tags.ads:a-tags-hie.ads \
+     a-ngelfu.adb:a-ngelfu-cert.adb a-ngelfu.ads:a-ngelfu-cert.ads \
+     a-nlelfu.ads:a-nlelfu-cert.ads a-nllefu.ads:a-nllefu-cert.ads \
+     a-nuelfu.adb:a-nuelfu-cert.adb a-nuelfu.ads:a-nuelfu-cert.ads \
+     s-gcmain.adb:s-gcmain-cert.adb s-gcmain.ads:s-gcmain-cert.ads \
+     i-c.ads:i-c-hie.ads \
+     s-memory.ads:s-memory-cert.ads \
+     s-secsta.adb:s-secsta-cert.adb s-secsta.ads:s-secsta-cert.ads \
+     s-soflin.adb:s-soflin-cert.adb s-soflin.ads:s-soflin-cert.ads \
+     s-stalib.adb:s-stalib-raven.adb s-stalib.ads:s-stalib-raven.ads \
+     s-traceb.ads:s-traceb-cert.ads
+
+endif
+
+############################
+# III.B.2 Minimal run-time #
+############################
+
+# Used in PikeOS
+
+ifeq ($(strip $(filter-out minimal ravenscar-minimal, $(RTS))),)
+  # Currently all minimal runtimes exclude floating point
+  LIBGNAT_FP_SOURCES=
+  LIBGNAT_NON_COMPILABLE_FP_SOURCES=
+
+  LIBGNAT_SOURCES+= a-elchha.adb \
+     a-elchha.ads              a-exctra.ads                           \
+     g-debuti.adb g-debuti.ads              s-addope.adb s-addope.ads \
+     s-arit64.adb s-arit64.ads s-bitops.adb s-bitops.ads s-boarop.ads \
+     s-carsi8.adb s-carsi8.ads s-carun8.adb s-carun8.ads s-casi16.adb \
+     s-casi16.ads s-casi32.adb s-casi32.ads s-casi64.adb s-casi64.ads \
+     s-caun16.adb s-caun16.ads s-caun32.adb s-caun32.ads s-caun64.adb \
+     s-caun64.ads                           s-exnint.adb s-exnint.ads \
+                               s-exnlli.adb s-exnlli.ads s-expint.adb \
+     s-expint.ads s-explli.adb s-explli.ads s-expllu.adb s-expllu.ads \
+     s-expmod.adb s-expmod.ads s-expuns.adb s-expuns.ads s-geveop.adb \
+     s-geveop.ads                                                     \
+     s-macres.adb s-macres.ads                                        \
+                  s-memory.adb s-memory.ads                           \
+                                            s-strops.adb s-strops.ads \
+     s-traceb.adb s-traceb.ads s-traent.adb s-traent.ads s-veboop.adb \
+     s-veboop.ads s-vector.ads
+
+  LIBGNAT_SOURCES+=s-imgint.ads s-imgint.adb s-imglli.ads s-imglli.adb\
+     s-imgboo.ads s-imgboo.adb s-imguns.ads s-imguns.adb \
+     s-imgllu.ads s-imgllu.adb
+
+  TARGET_PAIRS+=  \
+     a-elchha.ads:a-elchha-zfp.ads a-elchha.adb:a-elchha-zfp.adb \
+     a-except.adb:a-except-zfp.adb a-except.ads:a-except-zfp.ads \
+     a-exctra.ads:a-exctra-zfp.ads \
+     a-tags.adb:a-tags-hie.adb a-tags.ads:a-tags-hie.ads \
+     i-c.ads:i-c-hie.ads \
+     s-assert.adb:s-assert-xi.adb \
+     s-memory.ads:s-memory-cert.ads \
+     s-macres.adb:s-macres-native.adb \
+     s-secsta.adb:s-secsta-static.adb s-secsta.ads:s-secsta-static.ads \
+     s-traceb.ads:s-traceb-cert.ads
+
+endif
+
+###################
+# III.C Ravenscar #
+###################
+
+# Files common to all Ravenscar variants
+
+ifeq ($(strip $(filter-out ravenscar ravenscar-apex ravenscar-cert ravenscar-cert-rci ravenscar-cert-rtp ravenscar-sfp ravenscar-minimal, $(RTS))),)
+
+  LIBGNAT_SOURCES+=s-multip.ads s-multip.adb s-mufalo.ads s-mufalo.adb \
+     s-musplo.ads s-musplo.adb
+
+  LIBGNARL_SOURCES+= a-reatim.adb \
+     a-reatim.ads a-retide.adb a-retide.ads a-sytaco.adb a-sytaco.ads \
+     a-taside.adb a-taside.ads s-parame.adb s-parame.ads \
+     s-taprob.adb s-taprob.ads s-taprop.adb s-taprop.ads s-tarest.adb \
+     s-tarest.ads s-tasdeb.adb s-tasdeb.ads s-tasinf.adb s-tasinf.ads \
+     s-taskin.adb s-taskin.ads s-taspri.ads s-tasres.ads s-tposen.adb \
+     s-tposen.ads s-tpobmu.adb s-tpobmu.ads
+
+  TARGET_PAIRS+= a-retide.adb:a-retide-raven.adb \
+     a-taside.adb:a-taside-raven.adb \
+     s-taprob.adb:s-taprob-raven.adb s-taprob.ads:s-taprob-raven.ads \
+     s-tasdeb.ads:s-tasdeb-xi.ads s-tasdeb.adb:s-tasdeb-raven.adb
+endif
+
+################################
+# III.C.1 Ravenscar SFP family #
+################################
+
+# This category includes ravenscar-apex (for PikeOS) and ravenscar-sfp, based
+# on ZFP
+
+ifeq ($(strip $(filter-out ravenscar-sfp ravenscar-minimal ravenscar-apex, $(RTS))),)
+
+    LIBGNAT_SOURCES+=  s-sssita.adb s-sssita.ads
+
+    LIBGNARL_SOURCES+= a-taster.adb a-taster.ads
+
+    TARGET_PAIRS+= a-except.adb:a-except-zfp.adb \
+       a-except.ads:a-except-zfp.ads a-tags.adb:a-tags-hie.adb \
+       a-tags.ads:a-tags-hie.ads \
+       a-taster.adb:a-taster-raven.adb a-taster.ads:a-taster-raven.ads \
+       i-c.ads:i-c-hie.ads \
+       s-assert.adb:s-assert-xi.adb s-parame.adb:s-parame-xi.adb \
+       s-parame.ads:s-parame-xi.ads s-secsta.adb:s-secsta-zfp.adb \
+       s-secsta.ads:s-secsta-zfp.ads s-sssita.adb:s-sssita-xi.adb \
+       s-sssita.ads:s-sssita-xi.ads s-tarest.adb:s-tarest-raven.adb \
+       s-taskin.adb:s-taskin-raven.adb s-taskin.ads:s-taskin-raven.ads \
+       s-tposen.adb:s-tposen-raven.adb s-tposen.ads:s-tposen-raven.ads
+endif
+
+#################################
+# III.C.2 Ravenscar Cert Family #
+#################################
+
+# For VxWorks Cert, 653 and MILS, and LynxOS-178, based on the Cert run-time
+# ??? cert rci is an intermediate deliverable for RCI; will become
+# ravenscar-cert for all current targets, planned for 7.2.1
+ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci ravenscar-cert-rtp, $(RTS))),)
+    LIBGNAT_SOURCES+= a-elchha.adb a-elchha.ads a-exctra.adb \
+       a-exctra.ads  a-einuoc.adb a-einuoc.ads a-ngelfu.adb a-ngelfu.ads \
+       a-nlelfu.ads a-nllefu.ads a-nuelfu.adb a-nuelfu.ads a-numeri.ads \
+       clexco.c g-debuti.adb g-debuti.ads g-sestin.ads initflt.c \
+       s-addope.adb s-addope.ads s-arit64.adb s-arit64.ads \
+       s-bitops.adb s-bitops.ads s-boarop.ads s-carsi8.adb s-carsi8.ads \
+       s-carun8.adb s-carun8.ads s-casi16.adb s-casi16.ads s-casi32.adb \
+       s-casi32.ads s-casi64.adb s-casi64.ads s-caun16.adb s-caun16.ads \
+       s-caun32.adb s-caun32.ads s-caun64.adb s-caun64.ads s-excdeb.adb \
+       s-excdeb.ads s-exnint.adb s-exnint.ads s-exnllf.adb s-exnllf.ads \
+       s-exnlli.adb s-exnlli.ads s-expint.adb s-expint.ads s-explli.adb \
+       s-explli.ads s-expllu.adb s-expllu.ads s-expmod.adb s-expmod.ads \
+       s-expuns.adb s-expuns.ads s-flocon.ads s-flocon.adb \
+       s-gcmain.adb s-gcmain.ads s-geveop.adb \
+       s-geveop.ads s-init.adb s-init.ads s-memory.adb s-memory.ads \
+       s-osvers.ads s-soflin.adb s-soflin.ads s-stalib.adb s-stalib.ads \
+       s-strops.adb s-strops.ads s-traceb.adb s-traceb.ads s-traent.adb \
+       s-traent.ads s-veboop.adb s-veboop.ads s-vector.ads
+
+    LIBGNAT_NON_COMPILABLE_SOURCES+= a-excach.adb s-tpopsp.adb
+
+    TARGET_PAIRS+= a-excach.adb:a-excach-cert.adb \
+       a-except.adb:a-except-cert.adb \
+       a-except.ads:a-except-cert.ads \
+       a-ngelfu.adb:a-ngelfu-cert.adb \
+       a-ngelfu.ads:a-ngelfu-cert.ads \
+       a-nlelfu.ads:a-nlelfu-cert.ads \
+       a-nllefu.ads:a-nllefu-cert.ads \
+       a-nuelfu.adb:a-nuelfu-cert.adb \
+       a-nuelfu.ads:a-nuelfu-cert.ads \
+       a-tags.adb:a-tags-hie.adb a-tags.ads:a-tags-hie.ads \
+       s-gcmain.adb:s-gcmain-cert.adb \
+       s-gcmain.ads:s-gcmain-cert.ads \
+       s-memory.adb:s-memory-cert.adb s-memory.ads:s-memory-cert.ads \
+       s-parame.adb:s-parame-vxworks.adb s-parame.ads:s-parame-ae653.ads \
+       s-secsta.adb:s-secsta-cert.adb s-secsta.ads:s-secsta-cert.ads \
+       s-soflin.adb:s-soflin-cert.adb s-soflin.ads:s-soflin-cert.ads \
+       s-stalib.adb:s-stalib-raven.adb s-stalib.ads:s-stalib-raven.ads \
+       s-taprop.ads:s-taprop-raven-cert.ads \
+       s-tarest.adb:s-tarest-raven-cert.adb \
+       s-taskin.adb:s-taskin-raven-cert.adb \
+       s-taskin.ads:s-taskin-raven-cert.ads \
+       s-tposen.adb:s-tposen-xi-full.adb \
+       s-tposen.ads:s-tposen-xi-full.ads
+
+################################
+# III.C.2.a Ravenscar Cert RCI #
+################################
+
+# ??? temporary until merged with ravenscar cert and ravenscar cert rtp.
+# Definitions in the section augment those in the previous one. This is nested
+# in previous ifeq section for ravenscar-cert.
+  ifneq (ravenscar-cert-rci, $(RTS))
+      TARGET_PAIRS+= i-c.ads:i-c-hie.ads
+  else
+
+    LIBGNAT_SOURCES+= \
+       a-charac.ads \
+       a-chahan.adb \
+       a-chahan.ads \
+       a-chlat1.ads \
+       a-contai.ads \
+       a-ioexce.ads \
+       a-stmaco.ads \
+       a-strbou.adb \
+       a-strbou.ads \
+       a-strfix.adb \
+       a-strfix.ads \
+       a-string.ads \
+       a-strmap.adb \
+       a-strmap.ads \
+       a-strsea.adb \
+       a-strsea.ads \
+       a-strsup.adb \
+       a-strsup.ads \
+       ioexcept.ads \
+       i-c.adb \
+       i-cpoint.adb \
+       i-cpoint.ads \
+       i-cstrin.adb \
+       i-cstrin.ads \
+       s-casuti.adb \
+       s-casuti.ads \
+       s-imenne.adb \
+       s-imenne.ads \
+       s-imgbiu.adb \
+       s-imgbiu.ads \
+       s-imgboo.adb \
+       s-imgboo.ads \
+       s-imgcha.adb \
+       s-imgcha.ads \
+       s-imgdec.adb \
+       s-imgdec.ads \
+       s-imgint.adb \
+       s-imgint.ads \
+       s-imgllb.adb \
+       s-imgllb.ads \
+       s-imglld.adb \
+       s-imglld.ads \
+       s-imglli.adb \
+       s-imglli.ads \
+       s-imgllu.adb \
+       s-imgllu.ads \
+       s-imgllw.adb \
+       s-imgllw.ads \
+       s-imgrea.adb \
+       s-imgrea.ads \
+       s-imguns.adb \
+       s-imguns.ads \
+       s-imgwiu.adb \
+       s-imgwiu.ads \
+       s-io.adb \
+       s-io.ads \
+       s-powtab.ads \
+       s-vaflop.adb \
+       s-vaflop.ads \
+       s-valboo.adb \
+       s-valboo.ads \
+       s-valcha.adb \
+       s-valcha.ads \
+       s-valdec.adb \
+       s-valdec.ads \
+       s-valenu.adb \
+       s-valenu.ads \
+       s-valint.adb \
+       s-valint.ads \
+       s-vallld.adb \
+       s-vallld.ads \
+       s-vallli.adb \
+       s-vallli.ads \
+       s-valllu.adb \
+       s-valllu.ads \
+       s-valrea.adb \
+       s-valrea.ads \
+       s-valuns.adb \
+       s-valuns.ads \
+       s-valuti.adb \
+       s-valuti.ads
+
+    LIBGNARL_SOURCES+= \
+       a-comlin.adb a-comlin.ads
+
+    TARGET_PAIRS+= \
+       a-comlin.adb:a-comlin-raven-cert.adb \
+       a-comlin.ads:a-comlin-raven-cert.ads
+
+  endif # ravenscar-cert-rci
+endif # ravenscar-cert
+
+############################
+# III.C.3 Ravenscar "Full" #
+############################
+
+# This library approaches a full Ada run-time library with restriction to the
+# Ravenscar tasking profile - mainly for "bare" products. Where a full Ada
+# run-time library exists, Makefile.in is used and a full Ravenscar profile is
+# accessed by using pragma Ravenscar on the full library.
+
+ifeq (ravenscar, $(RTS))
+
+    LIBGNAT_SOURCES+= \
+       a-chahan.adb \
+       a-chahan.ads \
+       a-charac.ads \
+       a-chlat1.ads \
+       a-chlat9.ads \
+       a-cwila1.ads \
+       a-cwila9.ads \
+       a-decima.adb \
+       a-decima.ads \
+       a-einuoc.adb \
+       a-einuoc.ads \
+       a-elchha.adb \
+       a-elchha.ads \
+       a-exctra.adb \
+       a-exctra.ads \
+       a-finali.adb \
+       a-finali.ads \
+       a-ioexce.ads \
+       a-ncelfu.ads \
+       a-ngcefu.adb \
+       a-ngcefu.ads \
+       a-ngcoty.adb \
+       a-ngcoty.ads \
+       a-ngelfu.adb \
+       a-ngelfu.ads \
+       a-nlcefu.ads \
+       a-nlcoty.ads \
+       a-nlelfu.ads \
+       a-nllcef.ads \
+       a-nllcty.ads \
+       a-nllefu.ads \
+       a-nscefu.ads \
+       a-nscoty.ads \
+       a-nselfu.ads \
+       a-nucoty.ads \
+       a-nuelfu.ads \
+       a-numaux.ads \
+       a-numeri.ads \
+       a-stmaco.ads \
+       a-storio.adb \
+       a-storio.ads \
+       a-strbou.adb \
+       a-strbou.ads \
+       a-stream.ads \
+       a-strfix.adb \
+       a-strfix.ads \
+       a-string.ads \
+       a-strmap.adb \
+       a-strmap.ads \
+       a-strsea.adb \
+       a-strsea.ads \
+       a-strsup.adb \
+       a-strsup.ads \
+       a-strunb.adb \
+       a-strunb.ads \
+       a-stunau.adb \
+       a-stunau.ads \
+       a-stwibo.adb \
+       a-stwibo.ads \
+       a-stwifi.adb \
+       a-stwifi.ads \
+       a-stwima.adb \
+       a-stwima.ads \
+       a-stwise.adb \
+       a-stwise.ads \
+       a-stwisu.adb \
+       a-stwisu.ads \
+       a-stwiun.adb \
+       a-stwiun.ads \
+       a-swmwco.ads \
+       a-undesu.ads \
+       a-undesu.adb \
+       g-arrspl.adb \
+       g-arrspl.ads \
+       g-bubsor.adb \
+       g-bubsor.ads \
+       g-busora.adb \
+       g-busora.ads \
+       g-busorg.adb \
+       g-busorg.ads \
+       g-bytswa.adb \
+       g-bytswa.ads \
+       g-casuti.adb \
+       g-casuti.ads \
+       g-comver.adb \
+       g-comver.ads \
+       g-crc32.adb \
+       g-crc32.ads \
+       g-debuti.adb \
+       g-debuti.ads \
+       g-except.ads \
+       g-heasor.adb \
+       g-heasor.ads \
+       g-hesora.adb \
+       g-hesora.ads \
+       g-hesorg.adb \
+       g-hesorg.ads \
+       g-htable.adb \
+       g-htable.ads \
+       g-md5.adb \
+       g-md5.ads \
+       g-moreex.adb \
+       g-moreex.ads \
+       g-regexp.ads \
+       g-sechas.adb \
+       g-sechas.ads \
+       g-sehamd.adb \
+       g-sehamd.ads \
+       g-sehash.adb \
+       g-sehash.ads \
+       g-sha1.adb \
+       g-sha1.ads \
+       g-sha224.ads \
+       g-sha256.ads \
+       g-sha384.ads \
+       g-sha512.ads \
+       g-shsh32.adb \
+       g-shsh32.ads \
+       g-shsh64.adb \
+       g-shsh64.ads \
+       g-shshco.adb \
+       g-shshco.ads \
+       g-string.ads \
+       g-strspl.ads \
+       g-table.adb \
+       g-table.ads \
+       g-tasloc.ads \
+       g-wistsp.ads \
+       i-cexten.ads \
+       i-cobol.adb \
+       i-cobol.ads \
+       i-cpp.adb \
+       i-cpp.ads \
+       i-fortra.adb \
+       i-fortra.ads \
+       i-pacdec.adb \
+       i-pacdec.ads \
+       ioexcept.ads \
+       s-addima.adb \
+       s-addima.ads \
+       s-addope.adb \
+       s-addope.ads \
+       s-arit64.adb \
+       s-arit64.ads \
+       s-bitops.adb \
+       s-bitops.ads \
+       s-boarop.ads \
+       s-btstch.adb \
+       s-btstch.ads \
+       s-bytswa.ads \
+       s-carsi8.adb \
+       s-carsi8.ads \
+       s-carun8.adb \
+       s-carun8.ads \
+       s-casi16.adb \
+       s-casi16.ads \
+       s-casi32.adb \
+       s-casi32.ads \
+       s-casi64.adb \
+       s-casi64.ads \
+       s-casuti.adb \
+       s-casuti.ads \
+       s-caun16.adb \
+       s-caun16.ads \
+       s-caun32.adb \
+       s-caun32.ads \
+       s-caun64.adb \
+       s-caun64.ads \
+       s-chepoo.ads \
+       s-crc32.adb \
+       s-crc32.ads \
+       s-excdeb.adb \
+       s-excdeb.ads \
+       s-exnint.adb \
+       s-exnint.ads \
+       s-exnllf.adb \
+       s-exnllf.ads \
+       s-exnlli.adb \
+       s-exnlli.ads \
+       s-expint.adb \
+       s-expint.ads \
+       s-explli.adb \
+       s-explli.ads \
+       s-expllu.adb \
+       s-expllu.ads \
+       s-expmod.adb \
+       s-expmod.ads \
+       s-expuns.adb \
+       s-expuns.ads \
+       s-finmas.adb \
+       s-finmas.ads \
+       s-finroo.ads \
+       s-finroo.adb \
+       s-flocon.adb \
+       s-flocon.ads \
+       s-fore.adb \
+       s-fore.ads \
+       s-geveop.adb \
+       s-geveop.ads \
+       s-htable.adb \
+       s-htable.ads \
+       s-imenne.adb \
+       s-imenne.ads \
+       s-imgbiu.adb \
+       s-imgbiu.ads \
+       s-imgboo.adb \
+       s-imgboo.ads \
+       s-imgcha.adb \
+       s-imgcha.ads \
+       s-imgdec.adb \
+       s-imgdec.ads \
+       s-imgenu.adb \
+       s-imgenu.ads \
+       s-imgint.adb \
+       s-imgint.ads \
+       s-imgllb.adb \
+       s-imgllb.ads \
+       s-imglld.adb \
+       s-imglld.ads \
+       s-imglli.adb \
+       s-imglli.ads \
+       s-imgllu.adb \
+       s-imgllu.ads \
+       s-imgllw.adb \
+       s-imgllw.ads \
+       s-imgrea.adb \
+       s-imgrea.ads \
+       s-imguns.adb \
+       s-imguns.ads \
+       s-imgwch.adb \
+       s-imgwch.ads \
+       s-imgwiu.adb \
+       s-imgwiu.ads \
+       s-init.adb \
+       s-init.ads \
+       s-io.adb \
+       s-io.ads \
+       s-mantis.adb \
+       s-mantis.ads \
+       s-mastop.adb \
+       s-mastop.ads \
+       s-memory.adb \
+       s-memory.ads \
+       s-pack03.adb \
+       s-pack03.ads \
+       s-pack05.adb \
+       s-pack05.ads \
+       s-pack06.adb \
+       s-pack06.ads \
+       s-pack07.adb \
+       s-pack07.ads \
+       s-pack09.adb \
+       s-pack09.ads \
+       s-pack10.adb \
+       s-pack10.ads \
+       s-pack11.adb \
+       s-pack11.ads \
+       s-pack12.adb \
+       s-pack12.ads \
+       s-pack13.adb \
+       s-pack13.ads \
+       s-pack14.adb \
+       s-pack14.ads \
+       s-pack15.adb \
+       s-pack15.ads \
+       s-pack17.adb \
+       s-pack17.ads \
+       s-pack18.adb \
+       s-pack18.ads \
+       s-pack19.adb \
+       s-pack19.ads \
+       s-pack20.adb \
+       s-pack20.ads \
+       s-pack21.adb \
+       s-pack21.ads \
+       s-pack22.adb \
+       s-pack22.ads \
+       s-pack23.adb \
+       s-pack23.ads \
+       s-pack24.adb \
+       s-pack24.ads \
+       s-pack25.adb \
+       s-pack25.ads \
+       s-pack26.adb \
+       s-pack26.ads \
+       s-pack27.adb \
+       s-pack27.ads \
+       s-pack28.adb \
+       s-pack28.ads \
+       s-pack29.adb \
+       s-pack29.ads \
+       s-pack30.adb \
+       s-pack30.ads \
+       s-pack31.adb \
+       s-pack31.ads \
+       s-pack33.adb \
+       s-pack33.ads \
+       s-pack34.adb \
+       s-pack34.ads \
+       s-pack35.adb \
+       s-pack35.ads \
+       s-pack36.adb \
+       s-pack36.ads \
+       s-pack37.adb \
+       s-pack37.ads \
+       s-pack38.adb \
+       s-pack38.ads \
+       s-pack39.adb \
+       s-pack39.ads \
+       s-pack40.adb \
+       s-pack40.ads \
+       s-pack41.adb \
+       s-pack41.ads \
+       s-pack42.adb \
+       s-pack42.ads \
+       s-pack43.adb \
+       s-pack43.ads \
+       s-pack44.adb \
+       s-pack44.ads \
+       s-pack45.adb \
+       s-pack45.ads \
+       s-pack46.adb \
+       s-pack46.ads \
+       s-pack47.adb \
+       s-pack47.ads \
+       s-pack48.adb \
+       s-pack48.ads \
+       s-pack49.adb \
+       s-pack49.ads \
+       s-pack50.adb \
+       s-pack50.ads \
+       s-pack51.adb \
+       s-pack51.ads \
+       s-pack52.adb \
+       s-pack52.ads \
+       s-pack53.adb \
+       s-pack53.ads \
+       s-pack54.adb \
+       s-pack54.ads \
+       s-pack55.adb \
+       s-pack55.ads \
+       s-pack56.adb \
+       s-pack56.ads \
+       s-pack57.adb \
+       s-pack57.ads \
+       s-pack58.adb \
+       s-pack58.ads \
+       s-pack59.adb \
+       s-pack59.ads \
+       s-pack60.adb \
+       s-pack60.ads \
+       s-pack61.adb \
+       s-pack61.ads \
+       s-pack62.adb \
+       s-pack62.ads \
+       s-pack63.adb \
+       s-pack63.ads \
+       s-pooglo.adb \
+       s-pooglo.ads \
+       s-pooloc.adb \
+       s-pooloc.ads \
+       s-poosiz.adb \
+       s-poosiz.ads \
+       s-powtab.ads \
+       s-regexp.adb \
+       s-regexp.ads \
+       s-restri.adb \
+       s-restri.ads \
+       s-rident.ads \
+       s-scaval.adb \
+       s-scaval.ads \
+       s-soflin.adb \
+       s-soflin.ads \
+       s-sopco3.adb \
+       s-sopco3.ads \
+       s-sopco4.adb \
+       s-sopco4.ads \
+       s-sopco5.adb \
+       s-sopco5.ads \
+       s-spsufi.adb \
+       s-spsufi.ads \
+       s-sssita.adb \
+       s-sssita.ads \
+       s-stalib.adb \
+       s-stalib.ads \
+       s-stopoo.adb \
+       s-stopoo.ads \
+       s-stposu.adb \
+       s-stposu.ads \
+       s-stratt.adb \
+       s-stratt.ads \
+       s-strhas.adb \
+       s-strhas.ads \
+       s-string.adb \
+       s-string.ads \
+       s-strops.adb \
+       s-strops.ads \
+       s-tasloc.adb \
+       s-tasloc.ads \
+       s-traceb.adb \
+       s-traceb.ads \
+       s-traent.adb \
+       s-traent.ads \
+       s-vaflop.adb \
+       s-vaflop.ads \
+       s-valboo.adb \
+       s-valboo.ads \
+       s-valcha.adb \
+       s-valcha.ads \
+       s-valdec.adb \
+       s-valdec.ads \
+       s-valenu.adb \
+       s-valenu.ads \
+       s-valint.adb \
+       s-valint.ads \
+       s-vallld.adb \
+       s-vallld.ads \
+       s-vallli.adb \
+       s-vallli.ads \
+       s-valllu.adb \
+       s-valllu.ads \
+       s-valrea.adb \
+       s-valrea.ads \
+       s-valuns.adb \
+       s-valuns.ads \
+       s-valuti.adb \
+       s-valuti.ads \
+       s-valwch.adb \
+       s-valwch.ads \
+       s-veboop.adb \
+       s-veboop.ads \
+       s-vector.ads \
+       s-vercon.adb \
+       s-vercon.ads \
+       s-wchcnv.adb \
+       s-wchcnv.ads \
+       s-wchcon.adb \
+       s-wchcon.ads \
+       s-wchjis.adb \
+       s-wchjis.ads \
+       s-wchstw.adb \
+       s-wchstw.ads \
+       s-wchwts.adb \
+       s-wchwts.ads \
+       s-widboo.adb \
+       s-widboo.ads \
+       s-widcha.adb \
+       s-widcha.ads \
+       s-widenu.adb \
+       s-widenu.ads \
+       s-widlli.adb \
+       s-widlli.ads \
+       s-widllu.adb \
+       s-widllu.ads \
+       s-widwch.adb \
+       s-widwch.ads \
+       s-wwdcha.adb \
+       s-wwdcha.ads \
+       s-wwdenu.adb \
+       s-wwdenu.ads \
+       s-wwdwch.adb \
+       s-wwdwch.ads
+
+    LIBGNAT_NON_COMPILABLE_SOURCES+= a-excach.adb
+
+    LIBGNARL_SOURCES+= a-taster.adb a-taster.ads
+
+    TARGET_PAIRS+= a-elchha.adb:a-elchha-xi.adb a-excach.adb:a-excach-cert.adb \
+       a-except.adb:a-except-xi.adb a-except.ads:a-except-cert.ads \
+       a-taster.adb:a-taster-raven.adb a-taster.ads:a-taster-raven.ads \
+       i-c.ads:i-c-hie.ads \
+       s-io.adb:s-io-xi.adb \
+       s-memory.adb:s-memory-xi.adb \
+       s-parame.adb:s-parame-xi.adb s-parame.ads:s-parame-xi.ads \
+       s-secsta.adb:s-secsta-zfp.adb s-secsta.ads:s-secsta-zfp.ads \
+       s-soflin.adb:s-soflin-xi.adb s-soflin.ads:s-soflin-xi.ads \
+       s-sssita.adb:s-sssita-xi.adb s-sssita.ads:s-sssita-xi.ads \
+       s-stalib.adb:s-stalib-raven.adb s-stalib.ads:s-stalib-raven.ads \
+       s-taskin.adb:s-taskin-raven.adb s-taskin.ads:s-taskin-xi-full.ads \
+       s-tarest.adb:s-tarest-raven.adb s-tposen.adb:s-tposen-xi-full.adb \
+       s-tposen.ads:s-tposen-xi-full.ads \
+       s-traceb.ads:s-traceb-cert.ads
+endif
+
+############################
+# IV Target Specific parts #
+############################
+
+# Organized as OS x OS variants x Run-time and variants (as above) x processor
+
+##########################
+# IV.A Bareboard systems #
+##########################
+
+ifeq ($(strip $(filter-out elf eabispe eabi, $(osys))),)
+   # Definitions for all runtimes.
+   LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+   TARGET_PAIRS+= g-io.adb:g-io-zfp.adb g-io.ads:g-io-zfp.ads
+
+   # PowerPC
+   ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+      # Provides traceback feature.
+      ifeq (ravenscar, $(RTS))
+         LIBGNAT_SOURCES+= s-tracon.ads s-tracon.adb
+         TARGET_PAIRS+=\
+            s-traceb.adb:s-traceb-cert-ppc.adb \
+            s-tracon.adb:s-tracon-ppc-eabi.adb
+      endif
+      ifeq (zfp, $(RTS))
+         LIBGNAT_SOURCES+= s-traceb.ads s-traceb.adb
+         TARGET_PAIRS+=\
+            s-traceb.adb:s-traceb-xi-ppc.adb s-traceb.ads:s-traceb-xi.ads
+      endif
+   endif
+
+   # AVR
+   ifeq ($(strip $(filter-out avr, $(arch))),)
+      TARGET_PAIRS+=interfac.ads:interfac-avr.ads
+   endif
+
+   # SPARC
+   ifeq ($(strip $(filter-out leon leon3 erc32, $(arch))),)
+      LIBGNAT_NON_COMPILABLE_SOURCES+= sparc.h
+      TARGET_PAIRS+= sparc.h:sparc-bb.h
+   endif
+
+   ifeq (zfp, $(RTS))
+      # Definitions for ZFP.
+      # Only system.ads and possibly g-io-put.adb needs to be defined.
+
+      # PowerPC
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-xi-ppc.ads
+      endif
+
+      # Erc32
+      ifeq ($(strip $(filter-out sparc erc32, $(arch))),)
+         TARGET_PAIRS+= g-io-put.adb:g-io-put-null.adb
+         TARGET_PAIRS+= system.ads:system-xi-sparc.ads
+      endif
+
+      # LEON
+      ifeq ($(strip $(filter-out sparc leon, $(arch))),)
+         TARGET_PAIRS+= g-io-put.adb:g-io-put-leon.adb
+         TARGET_PAIRS+= system.ads:system-xi-sparc.ads
+      endif
+
+      # LEON3
+      ifeq ($(strip $(filter-out sparc leon3, $(arch))),)
+         TARGET_PAIRS+= g-io-put.adb:g-io-put-leon3.adb
+         TARGET_PAIRS+= system.ads:system-xi-sparc.ads
+      endif
+
+      # AVR
+      ifeq ($(strip $(filter-out avr, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-xi-avr.ads
+      endif
+
+      # ARM
+      ifeq ($(strip $(filter-out arm, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-xi-arm.ads
+      endif
+
+      # LMP (GR5/GR6)
+      ifeq ($(strip $(filter-out lmp, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-xi-lmp.ads
+      endif
+   else
+      # Apart from the ZFP runtime all runtimes running on a bareboard system
+      # will need an "executive" to provide functionalities usually provide by
+      # the operating system. Currently this executive is not implemented for
+      # all architectures.
+      LIBGNAT_SOURCES+= s-bb.ads s-bbthre.adb s-bbthqu.adb s-bbprot.adb	  \
+         s-bbtime.adb s-bbinte.adb s-bbcppr.adb s-bbpara.ads s-bbbosu.adb \
+         s-bbthre.ads s-bbthqu.ads s-bbprot.ads s-bbtime.ads s-bbinte.ads \
+         s-bbcppr.ads s-bbbosu.ads s-osinte.ads s-bcprmu.ads s-bcprmu.adb \
+         s-bbexti.ads s-bbexti.adb s-bbtiev.ads s-bbtiev.adb \
+         s-textio.ads s-textio.adb
+
+      LIBGNARL_SOURCES+= a-interr.adb a-interr.ads a-intnam.ads s-interr.adb \
+         s-interr.ads a-exetim.ads a-exetim.adb a-extiin.ads a-extiin.adb \
+         a-rttiev.ads a-rttiev.adb
+
+      TARGET_PAIRS+= a-interr.adb:a-interr-raven.adb \
+         s-interr.ads:s-interr-raven.ads s-interr.adb:s-interr-xi.adb \
+         a-reatim.ads:a-reatim-xi.ads a-reatim.adb:a-reatim-xi.adb \
+         s-taspri.ads:s-taspri-xi.ads \
+         s-taprop.ads:s-taprop-xi.ads s-taprop.adb:s-taprop-xi.adb \
+         a-sytaco.ads:a-sytaco-xi.ads a-sytaco.adb:a-sytaco-xi.adb \
+         s-osinte.ads:s-osinte-bb.ads \
+         s-multip.ads:s-multip-bb.ads \
+         s-tpobmu.adb:s-tpobmu-bb.adb \
+         s-textio.ads:s-textio-zfp.ads \
+         a-exetim.ads:a-exetim-bb.ads \
+         a-exetim.adb:a-exetim-bb.adb \
+         a-extiin.ads:a-extiin-bb.ads \
+         a-extiin.adb:a-extiin-bb.adb \
+         a-rttiev.ads:a-rttiev-bb.ads \
+         a-rttiev.adb:a-rttiev-bb.adb \
+         g-io-put.adb:g-io-put-stextio.adb
+
+
+      ifneq (ravenscar-sfp, $(RTS))
+	 # Ravenscar SFP does not need s-flocon
+	 TARGET_PAIRS+= s-flocon.adb:s-flocon-none.adb
+      endif
+
+      # Erc32 and Leon executive
+      ifeq ($(strip $(filter-out leon leon3 erc32, $(arch))),)
+         LIBGNAT_SOURCES+=context_switch.S trap_handler.S \
+            interrupt_masking.S floating_point.S
+
+         LIBGNAT_NON_COMPILABLE_SOURCES+= s-bcpith.adb
+
+         TARGET_PAIRS+= s-bbcppr.adb:s-bbcppr-sparc.adb \
+            s-bcpith.adb:s-bcpith-bb-sparc.adb \
+            s-bbpara.ads:s-bbpara-sparc.ads \
+            s-bbbosu.adb:s-bbbosu-$(arch).adb \
+            s-bbthre.ads:s-bbthre.ads \
+            s-bbthre.adb:s-bbthre.adb \
+            s-textio.adb:s-textio-$(arch).adb \
+            a-intnam.ads:a-intnam-xi-$(arch).ads \
+            context_switch.S:context_switch-bb-sparc.S \
+            trap_handler.S:trap_handler-bb-sparc.S \
+            interrupt_masking.S:interrupt_masking-bb-sparc.S \
+            floating_point.S:floating_point-bb-sparc.S
+
+         ifeq (ravenscar-sfp, $(RTS))
+            TARGET_PAIRS+=system.ads:system-xi-sparc-ravenscar.ads
+         endif
+         ifeq (ravenscar, $(RTS))
+            TARGET_PAIRS+=system.ads:system-xi-sparc-full.ads \
+               s-traceb.adb:s-traceb-xi-sparc.adb
+         endif
+
+         ifeq ($(strip $(filter-out leon leon3, $(arch))),)
+            # Add cache control support
+            LIBGNAT_SOURCES+= s-bbcaco.ads s-bbcaco.adb
+            TARGET_PAIRS+= s-bbcaco.adb:s-bbcaco-leon.adb \
+                           s-musplo.adb:s-musplo-leon.adb
+
+            EXTRA_CFLAGS+= -DLEON
+         endif
+
+         ifeq (erc32, $(arch))
+            LIBGNAT_SOURCES+= s-bbsuer.ads
+            TARGET_PAIRS+= s-multip.adb:s-multip-raven-default.adb
+         endif
+
+         ifeq (leon, $(arch))
+            LIBGNAT_SOURCES+= s-bbsule.ads
+            TARGET_PAIRS+= s-multip.adb:s-multip-raven-default.adb
+            EXTRA_CFLAGS+= -DLEON2
+         endif
+
+         ifeq (leon3, $(arch))
+            LIBGNAT_SOURCES+= s-bbsle3.ads
+            TARGET_PAIRS+= s-multip.adb:s-multip-leon3.adb \
+                           s-bcprmu.adb:s-bcprmu-leon3.adb
+            EXTRA_CFLAGS+= -DLEON3
+         endif
+      endif
+
+      # Add here the target pairs when available.
+   endif
+endif
+
+###################
+# IV.B LynxOS-178 #
+###################
+
+ifeq ($(strip $(filter-out lynxos178, $(osys))),)
+
+  LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+  TARGET_PAIRS+= \
+     g-io.ads:g-io-zfp.ads \
+     g-io.adb:g-io-zfp.adb
+
+   # ZFP runtime
+   ifeq (zfp, $(RTS))
+      ifeq ($(strip $(filter-out powerpc%, $(arch))),)
+
+         TARGET_PAIRS+= \
+            system.ads:system-lynxos178-ppc-hie.ads
+      endif
+   endif
+
+   ifeq (cert, $(RTS))
+      LIBGNAT_SOURCES+= \
+         cal.c clexco.c s-init.adb s-init.ads s-osvers.ads \
+         s-tracon.ads s-tracon.adb
+
+      TARGET_PAIRS+= \
+         a-calclo.adb:a-calclo-lynxos178-cert.adb \
+         a-elchha.adb:a-elchha-lynxos178-cert.adb \
+         s-init.adb:s-init-lynxos178-cert.adb \
+         s-memory.adb:s-memory-cert.adb \
+         s-osvers.ads:s-osvers-lynxos178.ads \
+         s-traceb.adb:s-traceb-cert-ppc.adb \
+	 s-tracon.adb:s-tracon-ppc-lynx178.adb \
+         system.ads:system-lynxos178-ppc-cert.ads
+
+   endif
+
+   # all Ravenscar run-times
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci, $(RTS))),)
+      LIBGNAT_SOURCES+= \
+         errno.c s-osinte.adb s-osinte.ads s-tracon.adb s-tracon.ads
+
+      TARGET_PAIRS+= \
+         a-elchha.adb:a-elchha-lynxos178-cert.adb \
+         a-sytaco.adb:a-sytaco-xi.adb \
+         a-sytaco.ads:a-sytaco-xi.ads \
+         s-init.adb:s-init-lynxos178-cert.adb \
+         s-multip.adb:s-multip-raven-default.adb \
+         s-multip.ads:s-multip-raven-default.ads \
+         s-osinte.adb:s-osinte-lynxos-5.adb \
+         s-osinte.ads:s-osinte-lynxos178.ads \
+         s-osvers.ads:s-osvers-lynxos178.ads \
+         s-taprop.adb:s-taprop-raven-cert-lynxos178.adb \
+         s-taspri.ads:s-taspri-posix.ads \
+         s-tpopsp.adb:s-tpopsp-posix-raven-cert.adb \
+         s-traceb.adb:s-traceb-cert-ppc.adb \
+         s-traceb.ads:s-traceb-cert.ads \
+         s-tracon.adb:s-tracon-ppc-lynx178.adb \
+         system.ads:system-lynxos178-ppc-raven-cert.ads
+   endif
+endif
+
+###############################
+# IV.C Native implementations #
+###############################
+
+#####################################
+# IV.C.a X86 native implementations #
+#####################################
+
+ifeq ($(strip $(filter-out %86 pentium x86_64 linux% mingw32% solaris%,$(arch) $(osys))),)
+
+  LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+
+  TARGET_PAIRS+= g-io.adb:g-io-zfp.adb g-io.ads:g-io-zfp.ads
+
+  ifeq (zfp, $(RTS))
+     ifeq (x86_64,$(arch))
+        TARGET_PAIRS+= system.ads:system-xi-x86_64.ads
+     else
+        TARGET_PAIRS+= system.ads:system-xi-x86.ads
+     endif
+  endif
+
+  ifeq (cert, $(RTS))
+     TARGET_PAIRS+= a-elchha.adb:a-elchha-xi-cert.adb \
+       s-traceb.adb:s-traceb-vx653-sim.adb \
+       system.ads:system-xi-x86-cert.ads \
+       s-memory.adb:s-memory-cert.adb 
+     LIBGNAT_SOURCES+= init.c cio.c sysdep.c s-osprim.adb adaint.c adaint.h
+
+     ifeq ($(strip $(filter-out linux%, $(osys))),)
+        TARGET_PAIRS+= s-osprim.adb:s-osprim-posix.adb
+     endif
+
+     ifeq ($(strip $(filter-out solaris%, $(osys))),)
+        TARGET_PAIRS+= s-osprim.adb:s-osprim-solaris.adb
+     endif
+
+     ifeq ($(strip $(filter-out mingw32%, $(osys))),)
+        TARGET_PAIRS+= s-osprim.adb:s-osprim-mingw.adb
+     endif
+  endif
+endif
+
+######################################
+# IV.C.b Sparc native implementation #
+######################################
+
+ifeq ($(strip $(filter-out sparc sun solaris%,$(targ))),)
+
+  LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+
+  TARGET_PAIRS+= g-io.adb:g-io-zfp.adb g-io.ads:g-io-zfp.ads
+
+  ifeq (zfp,$(RTS))
+    TARGET_PAIRS+= system.ads:system-xi-sparc.ads
+  endif
+endif
+
+###############
+# IV.D PikeOS #
+###############
+
+ifeq (pikeos, $(osys))
+   # Common for the ZFP and Ravenscar run times
+   LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+
+   TARGET_PAIRS+= g-io.adb:g-io-zfp.adb g-io.ads:g-io-zfp.ads \
+      g-io-put.adb:g-io-put-pikeos.adb \
+
+   ifeq ($(strip $(filter-out powerpc, $(arch))),)
+     EXTRA_CFLAGS+= -DPPC_OEA
+   endif
+
+   # Ravenscar HIE. ravenscar-sfp uses the native interface, ravenscar-apex
+   # uses the APEX interface.
+   ifeq ($(strip $(filter-out ravenscar-sfp ravenscar-apex, $(RTS))),)
+      LIBGNAT_SOURCES+= s-osinte.ads s-osinte.adb
+
+      LIBGNARL_SOURCES+= a-interr.adb a-interr.ads a-intnam.ads s-interr.adb \
+         s-interr.ads
+
+      TARGET_PAIRS+= a-interr.adb:a-interr-raven.adb \
+         a-intnam.ads:a-intnam-dummy.ads \
+         a-reatim.ads:a-reatim-xi.ads a-reatim.adb:a-reatim-xi.adb \
+         s-interr.adb:s-interr-xi.adb \
+         s-interr.ads:s-interr-raven.ads \
+         s-taspri.ads:s-taspri-xi.ads \
+         s-taprop.ads:s-taprop-xi.ads s-taprop.adb:s-taprop-xi.adb \
+         a-sytaco.ads:a-sytaco-xi.ads a-sytaco.adb:a-sytaco-xi.adb \
+         s-multip.ads:s-multip-raven-default.ads \
+         s-multip.adb:s-multip-raven-default.adb
+
+      ifeq (ravenscar-sfp, $(RTS))
+         LIBGNAT_SOURCES+= pikeos-app.c adaint-pikeos.c
+
+         TARGET_PAIRS+= system.ads:system-pikeos-ppc.ads \
+            s-osinte.ads:s-osinte-pikeos.ads s-osinte.adb:s-osinte-pikeos.adb
+
+         EXTRA_CFLAGS+= -I/opt/pikeos-3.0/target/ppc/oea/include
+      else
+         LIBGNAT_SOURCES+= pikeos-apex-app.c
+
+         TARGET_PAIRS+= system.ads:system-pikeos-apex-ppc.ads \
+            s-osinte.ads:s-osinte-apex.ads s-osinte.adb:s-osinte-apex.adb
+
+         EXTRA_CFLAGS+= -I/opt/pikeos-3.0/target/ppc/oea/apex/include
+      endif
+   endif
+
+   # For pikeos-*-app.c
+   EXTRA_CFLAGS+= -I$(PIKEOS_TARGET_FILES)/include
+
+   ifeq (zfp, $(RTS))
+      LIBGNAT_SOURCES += pikeos-cert-app.c
+
+      ifeq ($(strip $(filter-out i586 i386, $(arch))),)
+        TARGET_PAIRS+= system.ads:system-pikeos-x86.ads
+      endif
+   endif
+
+   ifeq (cert, $(RTS))
+      LIBGNAT_SOURCES += pikeos-cert-app.c s-init.adb s-init.ads
+
+      TARGET_PAIRS+= a-elchha.adb:a-elchha-xi-cert.adb \
+         a-calclo.adb:a-calclo-pikeos-cert.adb \
+         s-init.adb:s-init-pikeos-cert.adb \
+         s-memory.adb:s-memory-zfp.adb
+
+      ifeq ($(strip $(filter-out i586 i386, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-pikeos-x86-cert.ads \
+            s-traceb.adb:s-traceb-vx653-sim.adb
+      endif
+   endif
+
+   ifeq (minimal, $(RTS))
+      LIBGNAT_SOURCES += pikeos-cert-app.c
+
+      TARGET_PAIRS+= s-memory.adb:s-memory-zfp.adb
+
+      ifeq ($(strip $(filter-out i586 i386, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-pikeos-x86-minimal.ads \
+            s-traceb.adb:s-traceb-vx653-sim.adb
+      endif
+   endif
+endif
+
+################
+# IV.D VxWorks #
+################
+
+# Common to all VxWorks
+ifeq ($(strip $(filter-out vxworks%, $(osys))),)
+
+#############################
+# IV.D.1 All VxWorks, ZFP #
+#############################
+
+   ifeq (zfp, $(RTS))
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-vxworks-ppc-hie.ads
+      endif
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-vxworks-x86-hie.ads
+      endif
+   endif
+
+#################################
+# IV.D.2 All VxWorks, Ravenscar #
+#################################
+
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rtp \
+      ravenscar-cert-rci ravenscar-sfp, $(RTS))),)
+      LIBGNAT_SOURCES+= s-vxwork.ads s-osinte.adb s-osinte.ads s-vxwext.adb \
+         s-vxwext.ads
+
+      TARGET_PAIRS+= g-io.adb:g-io-vxworks-ppc-cert.adb \
+         s-tasinf.ads:s-tasinf-vxworks.ads \
+         s-taspri.ads:s-taspri-raven-vxworks.ads \
+         s-osinte.ads:s-osinte-vxworks.ads s-osinte.adb:s-osinte-vxworks.adb \
+         s-multip.ads:s-multip-raven-default.ads \
+         s-multip.adb:s-multip-raven-default.adb
+
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         TARGET_PAIRS+= s-vxwork.ads:s-vxwork-ppc.ads
+      endif
+
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= s-vxwork.ads:s-vxwork-x86.ads
+      endif
+   endif
+
+######################################
+# IV.D.2.a All VxWorks Ravenscar SFP #
+######################################
+
+   # not currently in any product
+   ifeq ($(strip $(filter-out ravenscar-sfp, $(RTS))),)
+
+      TARGET_PAIRS+= a-reatim.ads:a-reatim-raven-sfp.ads \
+         a-reatim.adb:a-reatim-raven-sfp.adb \
+         s-taprop.ads:s-taprop-raven-sfp-vxworks.ads \
+         s-taprop.adb:s-taprop-raven-sfp-vxworks.adb \
+         a-sytaco.ads:a-sytaco-raven-vxworks.ads \
+         a-sytaco.adb:a-sytaco-raven-vxworks.adb
+   endif
+
+#######################################
+# IV.D.2.b All VxWorks Ravenscar Cert #
+#######################################
+
+   # Ravenscar Cert and Ravenscar Cert RTP
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rtp \
+     ravenscar-cert-rci, $(RTS))),)
+
+      LIBGNAT_SOURCES+= sysdep.c
+
+      TARGET_PAIRS+= a-sytaco.adb:a-sytaco-raven-vxworks.adb \
+         a-sytaco.ads:a-sytaco-raven-vxworks.ads \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-taprop.adb:s-taprop-raven-cert-vxworks.adb \
+         s-traceb.ads:s-traceb-cert.ads sysdep.c:sysdep-raven-cert-vxworks.c
+
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         LIBGNAT_SOURCES+= s-tracon.ads s-tracon.adb
+         TARGET_PAIRS+= s-traceb.adb:s-traceb-cert-ppc.adb \
+	    s-tracon.adb:s-tracon-ppc-vxcert.adb
+      endif
+
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= s-traceb.adb:s-traceb-vx653-sim.adb
+      endif
+   endif
+endif
+
+########################
+# IV.D.3 VxWorks 5 & 6 #
+########################
+
+ifeq ($(strip $(filter-out vxworks, $(osys))),)
+
+##############################
+# IV.D.3.a VxWorks 5 & 6 ZFP #
+##############################
+
+   ifeq (zfp, $(RTS))
+      # Use the cert version of GNAT.IO
+      TARGET_PAIRS+= g-io.adb:g-io-vxworks-ppc-cert.adb
+   endif
+
+########################################
+# IV.D.3.b VxWorks 5 & 6 Ravenscar SFP #
+########################################
+
+   # ravenscar-sfp
+   ifeq (ravenscar-sfp, $(RTS))
+
+      EXTRA_INCLUDE_DIRS=-I$(WIND_BASE)/target/h \
+         -isystem $(WIND_BASE)/target/h
+
+      LIBGNAT_SOURCES+= i-vxwork.ads
+
+      LIBGNARL_SOURCES+= a-interr.adb a-interr.ads a-intnam.ads \
+         s-interr.adb s-interr.ads
+
+      TARGET_PAIRS+= a-interr.adb:a-interr-raven.adb \
+         a-intnam.ads:a-intnam-vxworks.ads \
+         s-interr.ads:s-interr-raven.ads \
+         s-interr.adb:s-interr-raven-vxworks.adb \
+         s-osvers.ads:s-osvers-vxworks-cert.ads \
+         s-vxwext.adb:s-vxwext-cert.adb s-vxwext.ads:s-vxwext-kernel.ads
+
+     ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-vxworks-ppc-ravenscar.ads
+     endif
+
+     ifeq ($(strip $(filter-out %86, $(arch))),)
+         # ?? If ported to x86, need to provided system.ads
+         TARGET_PAIRS+= i-vxwork.ads:i-vxwork-x86.ads
+      endif
+   endif
+
+##################################################
+# IV.D.3.c VxWorks 5 & 6 Ravenscar Cert (kernel) #
+##################################################
+
+   # for kernel apps
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci, $(RTS))),)
+
+      EXTRA_INCLUDE_DIRS=-I$(WIND_BASE)/target/h \
+         -isystem $(WIND_BASE)/target/h
+
+      LIBGNAT_SOURCES+= i-vxwork.ads ivec.c
+
+      LIBGNARL_SOURCES+= a-interr.adb a-interr.ads a-intnam.ads \
+         s-interr.adb s-interr.ads
+
+      TARGET_PAIRS+= a-elchha.adb:a-elchha-vx6-raven-cert.adb \
+         a-interr.adb:a-interr-raven.adb \
+         a-intnam.ads:a-intnam-vxworks.ads \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-interr.ads:s-interr-raven.ads \
+         s-interr.adb:s-interr-raven-vxworks.adb \
+         s-osvers.ads:s-osvers-vxworks-cert.ads \
+         s-tpopsp.adb:s-tpopsp-vxworks-raven-cert.adb \
+         s-vxwext.adb:s-vxwext-cert.adb s-vxwext.ads:s-vxwext-kernel.ads
+
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+           TARGET_PAIRS+= system.ads:system-vxworks-ppc-raven-cert.ads
+      endif
+
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= i-vxwork.ads:i-vxwork-x86.ads \
+                        system.ads:system-vxworks-x86-raven-cert.ads
+
+         EXTRA_CFLAGS+= -march=pentium -DCPU=I86 -D_VX_CPU_FAMILY=_VX_I80X86
+      endif
+   endif
+
+###########################################
+# IV.D.3.d VxWorks 6 Ravenscar Cert (RTP) #
+###########################################
+
+   # no interrupt handling
+   ifeq (ravenscar-cert-rtp, $(RTS))
+
+      EXTRA_CFLAGS+= -mrtp
+         TARGET_PAIRS+= 
+      EXTRA_INCLUDE_DIRS=-I$(WIND_BASE)/target/usr/h \
+         -isystem $(WIND_BASE)/target/usr/h
+
+      TARGET_PAIRS+= a-elchha.adb:a-elchha-vx6-raven-cert.adb \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-osvers.ads:s-osvers-vxworks-cert-rtp.ads \
+         s-tpopsp.adb:s-tpopsp-vxworks-raven-cert-rtp.adb \
+         s-vxwext.adb:s-vxwext-rtp-cert.adb s-vxwext.ads:s-vxwext-rtp.ads
+
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+        TARGET_PAIRS+= system.ads:system-vxworks-ppc-raven-cert-rtp.ads
+      endif
+
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-vxworks-x86-raven-cert.ads
+
+         EXTRA_CFLAGS+= -march=pentium -DCPU=I86 -D_VX_CPU_FAMILY=_VX_I80X86
+      endif
+   endif
+
+endif
+
+###############################
+# IV.D.4 VxWorks 653 vThreads #
+###############################
+
+# VxWorks 653 vThreads apps - no interrupt handling
+ifeq ($(strip $(filter-out vxworksae, $(osys))),)
+
+   EXTRA_INCLUDE_DIRS=-I$(WIND_BASE)/target/vThreads/h \
+      -I$(WIND_BASE)/target/val/h \
+      -isystem $(WIND_BASE)/target/vThreads/h \
+      -isystem $(WIND_BASE)/target/val/h
+
+   EXTRA_CFLAGS+= -DVTHREADS -DCERT
+
+############################
+# IV.D.4.a VxWorks 653 ZFP #
+############################
+
+   ifeq (zfp, $(RTS))
+      # Use the cert version of GNAT.IO
+      TARGET_PAIRS+= g-io.adb:g-io-vxworks-ppc-cert.adb
+   endif
+
+#############################
+# IV.D.4.b VxWorks 653 Cert #
+#############################
+
+   ifeq (cert, $(RTS))
+
+      LIBGNAT_SOURCES+= clexco.c s-init.adb s-init.ads s-osvers.ads \
+         s-thread.adb s-thread.ads s-tracon.ads s-tracon.adb
+
+      # Note: Some files should be probably be renamed ???
+      # Use the cert version of GNAT.IO
+      TARGET_PAIRS+= g-io.adb:g-io-vxworks-ppc-cert.adb \
+         a-calclo.adb:a-calclo-vxworks-cert.adb \
+         a-elchha.adb:a-elchha-vxworks-ppc-cert.adb \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-memory.adb:s-memory-cert.adb \
+         s-osvers.ads:s-osvers-vxworks-653.ads \
+         s-thread.adb:s-thread-ae653.adb \
+         s-traceb.adb:s-traceb-cert-ppc.adb \
+	 s-tracon.adb:s-tracon-ppc-vxcert.adb \
+         system.ads:system-vxworks-ppc-cert.ads
+   endif
+
+##################################
+# IV.D.4.c VxWorks 653 Ravenscar #
+##################################
+
+   # all Ravenscar run-times
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci ravenscar-sfp, $(RTS))),)
+      TARGET_PAIRS+= s-vxwext.adb:s-vxwext-noints-cert.adb \
+         s-vxwext.ads:s-vxwext-vthreads.ads
+   endif
+
+   # ravenscar-sfp
+   ifeq (ravenscar-sfp, $(RTS))
+
+      LIBGNAT_SOURCES+= i-vxwork.ads s-arit64.adb s-arit64.ads
+
+      ifeq ($(strip $(filter-out e500v2 powerpc%, $(arch))),)
+         TARGET_PAIRS+= system.ads:system-vxworks-ppc-ravenscar.ads
+      endif
+
+      # ?? No system variant for x86
+      ifeq ($(strip $(filter-out %86, $(arch))),)
+         TARGET_PAIRS+= i-vxwork.ads:i-vxwork-x86.ads
+      endif
+   endif
+
+   # ravenscar-cert
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci, $(RTS))),)
+      TARGET_PAIRS+= a-elchha.adb:a-elchha-vxworks-ppc-cert.adb \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-osvers.ads:s-osvers-vxworks-653.ads \
+         s-tpopsp.adb:s-tpopsp-vxworks-raven-cert.adb \
+         system.ads:system-vthreads-raven.ads
+   endif
+endif
+
+################################
+# IV.D.5 VxWorks MILS vThreads #
+################################
+
+# interrupt handling supported
+ifeq ($(strip $(filter-out vxworksmils, $(osys))),)
+
+   # all restricted run-times on MILS
+   EXTRA_INCLUDE_DIRS=-I$(WIND_BASE)/target/vThreads/h \
+      -I$(WIND_BASE)/target/val/h \
+      -isystem $(WIND_BASE)/target/vThreads/h \
+      -isystem $(WIND_BASE)/target/val/h
+
+   EXTRA_CFLAGS+= -DVTHREADS
+
+#############################
+# IV.D.5.a VxWorks MILS ZFP #
+#############################
+
+   # Compatible with vThreads and HAE
+   ifeq (zfp, $(RTS))
+
+      # Use the ZFP MILS version of GNAT.IO
+      LIBGNAT_NON_COMPILABLE_SOURCES+= g-io-put.adb
+
+      TARGET_PAIRS+= g-io.adb:g-io-zfp.adb \
+         g-io.ads:g-io-zfp.ads \
+         g-io-put.adb:g-io-put-vxworksmils.adb
+
+   endif
+
+#######################################
+# IV.D.5.b VxWorks MILS vThreads Cert #
+#######################################
+
+   # cert run-time: no "Ada" interrupt handling; stack limit checking,
+   # no hardware fp checking
+   ifeq (cert, $(RTS))
+
+      LIBGNAT_SOURCES+= clexco.c s-init.adb s-init.ads s-osvers.ads \
+         s-parame.adb s-parame.ads s-stache.adb s-stache.ads \
+         s-stchop.adb s-stchop.ads s-thread.adb s-thread.ads \
+	 vx_stack_info.c s-tracon.ads s-tracon.adb
+
+      # Note: Some files should be probably be renamed ???
+      # Use the cert version of GNAT.IO
+      TARGET_PAIRS+= g-io.adb:g-io-vxworks-ppc-cert.adb \
+         a-calclo.adb:a-calclo-vxworks-cert.adb \
+         a-elchha.adb:a-elchha-vx6-raven-cert.adb \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-memory.adb:s-memory-cert.adb \
+         s-osvers.ads:s-osvers-vxworks-mils.ads \
+         s-parame.adb:s-parame-vxworks.adb s-parame.ads:s-parame-ae653.ads \
+         s-stchop.adb:s-stchop-vxworks.adb s-stchop.ads:s-stchop-limit.ads \
+         s-thread.adb:s-thread-ae653.adb \
+         s-traceb.adb:s-traceb-cert-ppc.adb \
+	 s-tracon.adb:s-tracon-ppc-vxcert.adb \
+         system.ads:system-vxworks-ppc-cert-mils.ads
+   endif
+
+#################################################
+# IV.D.5.C VxWorks MILS vThreads Ravenscar Cert #
+#################################################
+
+   # ravenscar-cert - VxWorks MILS does not support guard pages
+   ifeq ($(strip $(filter-out ravenscar-cert ravenscar-cert-rci, $(RTS))),)
+
+      LIBGNAT_SOURCES+= i-vxwork.ads ivec.c s-stache.adb  s-stache.ads \
+         s-stchop.adb s-stchop.ads vx_stack_info.c
+
+      LIBGNARL_SOURCES+= a-interr.adb a-interr.ads a-intnam.ads \
+         s-interr.adb s-interr.ads
+
+      TARGET_PAIRS+= a-elchha.adb:a-elchha-vx6-raven-cert.adb \
+         a-interr.adb:a-interr-raven.adb \
+         a-intnam.ads:a-intnam-vxworks.ads \
+         s-init.adb:s-init-vxworks-cert.adb \
+         s-interr.ads:s-interr-raven.ads \
+         s-interr.adb:s-interr-raven-vxworks.adb \
+         s-osvers.ads:s-osvers-vxworks-mils.ads \
+         s-stchop.adb:s-stchop-vxworks.adb s-stchop.ads:s-stchop-limit.ads \
+         s-tpopsp.adb:s-tpopsp-vxworks-raven-cert.adb \
+         system.ads:system-vxworks-ppc-raven-mils.ads
+   endif
+
+endif
+
+##############################
+# V. Build targets and rules #
+##############################
+
+LIBGNAT_SOURCES+= $(LIBGNAT_FP_SOURCES)
+LIBGNAT_NON_COMPILABLE_SOURCES+=$(LIBGNAT_NON_COMPILABLE_FP_SOURCES)
+
+ALL_SOURCES=$(LIBGNAT_SOURCES) $(LIBGNAT_NON_COMPILABLE_SOURCES) $(LIBGNARL_SOURCES)
+DEP_FILE=$(RTS_SUBDIR)Makefile.deps
+ALL_SOURCES_D=$(addprefix $(RTS_SUBDIR), $(ALL_SOURCES))
+
+MAKE_CMD=make -f $(MAKE_FILE) RTS=$(RTS) CC="$(CC)" \
+  GNAT_SRC_DIR=$(GNAT_SRC_DIR) CFLAGS="$(CFLAGS)" \
+  RTS_SUBDIR=$(RTS_SUBDIR) build
+
+# This is the default target.
+all: $(DEP_FILE)
+	@$(MAKE_CMD)
+
+dump:
+	@echo LIBGNAT=$(LIBGNAT)
+	@echo LIBGNAT_NON_COMPILABLE_SOURCES=$(LIBGNAT_NON_COMPILABLE_SOURCES)
+	@echo LIBGNARL=$(LIBGNARL)
+	@echo TARGET_PAIRS=$(TARGET_PAIRS)
+	@echo $(MAKE_CMD)
+
+# Not unlike dump, but can be read by a shell script.
+show-sources:
+	@echo 'LIBGNAT_SOURCES="'
+	@echo $(LIBGNAT_SOURCES) '"'
+	@echo 'LIBGNARL_SOURCES="'
+	@echo $(LIBGNARL_SOURCES) '"'
+	@echo 'LIBGNAT_NON_COMPILABLE_SOURCES="'
+	@echo $(LIBGNAT_NON_COMPILABLE_SOURCES) '"'
+	@echo 'TARGET_PAIRS="'
+	@echo $(TARGET_PAIRS) '"'
+
+dump-all:
+	@for arch in $(all_arch) ; \
+	do \
+		for osys in $(all_osys) ; \
+		do \
+			for rts in $(all_rts) ; \
+			do \
+				echo RTS=$$rts TARGET=$$arch-$$osys ; \
+				$(MAKE) $(MAKEFLAGS) -f $(MAKE_FILE) RTS=$$rts TARGET=$$arch-$$osys ; \
+			done ; \
+		done ; \
+	done ;
+
+# Don't use - here. This will cause non wanted calls to $(DEP_FILE) target
+ifneq ($(wildcard $(DEP_FILE)),)
+  include $(DEP_FILE)
+endif
+
+.SUFFIXES: .adb .ads
+
+%.o : %.adb
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) $< -o $@
+
+%.o : %.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) $< -o $@
+
+%.o : %.S
+	$(CC) -c -fasm $(ALL_CFLAGS) $(INCLUDE_DIRS) $< -o $@
+
+%.o : %.c
+	$(CC) -c $(ALL_CFLAGS) $(INCLUDE_DIRS) $< -o $@
+
+# Special flags - see gcc-interface/Makefile.in for the template
+
+$(RTS_SUBDIR)s-traceb.o: $(RTS_SUBDIR)s-traceb.adb $(RTS_SUBDIR)s-traceb.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g \
+	      $(NO_SIBLING_ADAFLAGS) -fno-inline-functions-called-once $< -o $@
+
+$(RTS_SUBDIR)s-tasdeb.o: $(RTS_SUBDIR)s-tasdeb.adb $(RTS_SUBDIR)s-tasdeb.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g -O0 $< -o $@
+
+$(RTS_SUBDIR)a-except.o: $(RTS_SUBDIR)a-except.adb $(RTS_SUBDIR)a-except.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g -O1 -fno-inline \
+              $(NO_REORDER_ADAFLAGS) $< -o $@
+
+$(RTS_SUBDIR)s-excdeb.o: $(RTS_SUBDIR)s-excdeb.adb $(RTS_SUBDIR)s-excdeb.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g -O0 $< -o $@
+
+$(RTS_SUBDIR)s-assert.o: $(RTS_SUBDIR)s-assert.adb $(RTS_SUBDIR)s-assert.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g $< -o $@
+
+$(RTS_SUBDIR)a-tags.o: $(RTS_SUBDIR)a-tags.adb $(RTS_SUBDIR)a-tags.ads
+	$(CC) -c $(ALL_ADAFLAGS) -I- $(INCLUDE_DIRS) -g $< -o $@
+
+$(RTS_SUBDIR)stmp-Makefile: $(MAKE_FILE)
+	rm -f $(RTS_SUBDIR)stmp-Makefile
+
+$(RTS_SUBDIR)stmp-deps:
+	mkdir -p $(RTS_SUBDIR)
+	touch $(RTS_SUBDIR)stmp-deps
+
+$(DEP_FILE): $(RTS_SUBDIR)stmp-Makefile $(RTS_SUBDIR)stmp-deps
+
+	@if [ ! -f $(RTS_SUBDIR)stmp-Makefile ]; then \
+	   echo "Makefile.hie has changed so reset build directory";\
+	   rm -rf "rts-$(RTS)"; \
+	   mkdir -p $(RTS_SUBDIR); \
+	fi
+
+	@touch $(RTS_SUBDIR)stmp-Makefile
+
+	# Compute target pairs and copy source to build directory
+	@c=`for j in $(TARGET_PAIRS); do echo "-e s:$$j:g"; done`; \
+	for d in $(ALL_SOURCES); do \
+	   s=`echo $$d | sed $$c`; \
+	   echo "$(RTS_SUBDIR)$$d: $(GNAT_SRC_DIR)/$$s"; \
+	   echo "	cp \$$< \$$@"; \
+        done > $(DEP_FILE);
+
+	# Compute object list and generate dependencies rules (libgnat.a)
+	@o=`echo $(LIBGNAT_SOURCES) | tr ' ' '\n' | sed -e "s/\.ads//g" -e "s/\.adb//g" -e "s/\.c//g" -e "s/\.S//g"  | sort | uniq`; \
+	for j in $$o; do \
+           echo "$(RTS_SUBDIR)$$j.o: `echo $(LIBGNAT_SOURCES) | \
+                                          tr ' ' '\n' | fgrep $$j. | \
+                                          sed -e "s;^;$(RTS_SUBDIR);g" | tr '\n' ' '`"; \
+        done >> $(DEP_FILE); \
+	(echo -n "LIBGNAT_OBJS="; for j in $$o; do echo -n "$(RTS_SUBDIR)$$j.o "; done; echo) >> $(DEP_FILE)
+
+	# Compute object list and generate dependencies rules (libgnarl.a)
+	@o=`echo $(LIBGNARL_SOURCES) | tr ' ' '\n' | sed -e "s/\.ads//g" -e "s/\.adb//g" -e "s/\.c//g" -e "s/\.S//g" | sort | uniq`; \
+	for j in $$o; do \
+	   if [ -f $(RTS_SUBDIR)$$j.ali ]; then \
+	      echo -n "$(RTS_SUBDIR)$$j.o: ";\
+	      awk '/^D/ { printf ("'$(RTS_SUBDIR)'%s ",$$2);}' $(RTS_SUBDIR)$$j.ali; \
+	      echo; \
+	   else \
+              echo "$(RTS_SUBDIR)$$j.o: `echo $(LIBGNARL_SOURCES) | \
+                                          tr ' ' '\n' | fgrep $$j. | \
+                                          sed -e "s;^;$(RTS_SUBDIR);g"| tr '\n' ' '`"; \
+	   fi; \
+        done >> $(DEP_FILE); \
+	(echo -n "LIBGNARL_OBJS="; for j in $$o; do echo -n "$(RTS_SUBDIR)$$j.o "; done; echo) >> $(DEP_FILE)
+
+	# Compute which libraries list
+	@if [ "$(LIBGNARL_SOURCES)" = "" ]; then \
+	   echo "BUILD_TARGETS=$(RTS_SUBDIR)libgnat.a" >> $(DEP_FILE); \
+	else \
+	   echo "BUILD_TARGETS=$(RTS_SUBDIR)libgnat.a $(RTS_SUBDIR)libgnarl.a" >> $(DEP_FILE); \
+	fi
+
+$(RTS_SUBDIR)libgnat.a: $(ALL_SOURCES_D) $(LIBGNAT_OBJS)
+	$(AR) rcs $@ $(LIBGNAT_OBJS)
+	rm -f $(RTS_SUBDIR)stmp-deps
+	make -f $(MAKE_FILE) RTS=$(RTS) CC="$(CC)" \
+          GNAT_SRC_DIR=$(GNAT_SRC_DIR) CFLAGS="$(CFLAGS)" \
+          RTS_SUBDIR="$(RTS_SUBDIR)" $(DEP_FILE)
+
+$(RTS_SUBDIR)libgnarl.a: $(ALL_SOURCES_D) $(LIBGNARL_OBJS)
+	$(AR) rcs $@ $(LIBGNARL_OBJS)
+	rm -f $(RTS_SUBDIR)stmp-deps
+	make -f $(MAKE_FILE) RTS=$(RTS) CC="$(CC)" \
+          GNAT_SRC_DIR=$(GNAT_SRC_DIR) CFLAGS="$(CFLAGS)" \
+          RTS_SUBDIR="$(RTS_SUBDIR)" $(DEP_FILE)
+
+build: $(BUILD_TARGETS)
+
+install:
+	rm -rf $(PREFIX)/$(RTS_SUBDIR)/adalib $(PREFIX)/$(RTS_SUBDIR)/adainclude
+	mkdir -p $(PREFIX)/$(RTS_SUBDIR)
+	mkdir -p $(PREFIX)/$(RTS_SUBDIR)/adalib
+	mkdir -p $(PREFIX)/$(RTS_SUBDIR)/adainclude
+	chmod u+w $(RTS_SUBDIR)/*
+	cp -p $(RTS_SUBDIR)/*.ad? $(PREFIX)/$(RTS_SUBDIR)/adainclude
+	cp -p $(RTS_SUBDIR)/*.a   $(PREFIX)/$(RTS_SUBDIR)/adalib
+	cp -p $(RTS_SUBDIR)/*.ali $(PREFIX)/$(RTS_SUBDIR)/adalib
+	-cp -p $(RTS_SUBDIR)/*.ci $(PREFIX)/$(RTS_SUBDIR)/adalib
+	-cp -p $(RTS_SUBDIR)/*.c   $(PREFIX)/$(RTS_SUBDIR)/adainclude
+	-cp -p $(RTS_SUBDIR)/*.h   $(PREFIX)/$(RTS_SUBDIR)/adainclude
+	chmod a-wx $(PREFIX)/$(RTS_SUBDIR)/adainclude/*.ads
+	chmod a-wx $(PREFIX)/$(RTS_SUBDIR)/adainclude/*.adb
+	chmod a-wx $(PREFIX)/$(RTS_SUBDIR)/adalib/*.a
+	chmod a-wx $(PREFIX)/$(RTS_SUBDIR)/adalib/*.ali
+	-chmod a-wx $(PREFIX)/$(RTS_SUBDIR)/adalib/*.ci
+
+check:
+	@echo "Check for duplicate target pairs:"
+	@echo $(TARGET_PAIRS) | tr ' ' '\n' | cut -f1 -d':' | sort | uniq -c | grep -v "^ *1 " || true
+	@echo "Check for duplicate sources (LIBGNAT_SOURCES):"
+	@echo $(LIBGNAT_SOURCES) | tr ' ' '\n' | cut -f1 -d':' | sort | uniq -c | grep -v "^ *1 " || true
+	@echo "Check for duplicate sources (NON_COMPILABLE_LIBGNAT_SOURCES):"
+	@echo $(NON_COMPILABLE_LIBGNAT_SOURCES) | tr ' ' '\n' | cut -f1 -d':' | sort | uniq -c | grep -v "^ *1 " || true
+	@echo "Check for duplicate between LIBGNAT_SOURCES and NON_COMPILABLE_LIBGNAT_SOURCES"
+	@echo $(LIBGNAT_SOURCES) $(LIBGNAT_NON_COMPILABLE_SOURCES) | tr ' ' '\n' | cut -f1 -d':' | sort | uniq -c | grep -v "^ *1 " || true
+	@echo "Check for duplicate sources (LIBGNARL_SOURCES):"
+	@echo $(LIBGNARL_SOURCES) | tr ' ' '\n' | cut -f1 -d':' | sort | uniq -c | grep -v "^ *1 " || true
+	@echo "Check that for each target pairs there is a corresponding sources"
+	@for t in `echo $(TARGET_PAIRS) | tr ' ' '\n' | cut -f1 -d':'`; do \
+	  echo $(LIBGNAT_SOURCES) | grep $$t >/dev/null 2>&1 || \
+	  echo $(LIBGNARL_SOURCES) | grep $$t >/dev/null 2>&1 || \
+	  echo $(LIBGNAT_NON_COMPILABLE_SOURCES) | grep $$t >/dev/null 2>&1 || \
+	  echo " * no source associated with target pair $$t"; \
+	done

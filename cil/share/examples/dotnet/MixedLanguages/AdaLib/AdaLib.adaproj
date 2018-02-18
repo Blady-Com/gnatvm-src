@@ -1,0 +1,41 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"AdaLib"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5a58b1f3-2f13-4c1e-ada8-f3e88bfa8d2c}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AdaLib</RootNamespace>
+    <AssemblyName>AdaLib</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="mgnat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="adalib.gpr" />
+    <Compile Include="adalib.ads" />
+    <Compile Include="adalib.adb" />
+    <Content Include="assemblyinfo" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\AdaCore\DotGnat.targets" />
+  <Target Name="BeforeBuild">
+    <MakeDir Directories="bin\$(Configuration)" />
+    <MakeDir Directories="obj\$(Configuration)" />
+    <Copy SourceFiles="assemblyinfo" DestinationFolder="obj\$(Configuration)" />
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="bin\$(Configuration)" />
+    <RemoveDir Directories="obj\$(Configuration)" />
+  </Target>
+</Project>

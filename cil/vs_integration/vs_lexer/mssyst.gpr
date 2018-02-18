@@ -1,0 +1,7 @@
+project MSSyst is
+
+   for Object_Dir use "lib";
+   for Source_Dirs use ("include");
+
+end MSSyst;
+

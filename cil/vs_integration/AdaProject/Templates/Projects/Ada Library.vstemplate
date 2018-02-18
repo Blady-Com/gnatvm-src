@@ -1,0 +1,28 @@
+<VSTemplate Version="2.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Class Library</Name>
+    <Description>A project for creating an A# library (.dll)</Description>
+    <Icon>__TemplateIcon.ico</Icon>
+    <ProjectType>Ada</ProjectType>
+    <SortOrder>50</SortOrder>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Library</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="AdaDll_adaproj" 
+         TargetFileName="$safeprojectname$.adaproj"
+         ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName ="$safeprojectname$.gpr"           
+         OpenInEditor="false">libraryProject.gpr</ProjectItem>
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName ="assemblyinfo"
+         OpenInEditor="false">assemblyinfo</ProjectItem>
+      <ProjectItem ReplaceParameters="true" 
+         TargetFileName="$safeprojectname$.ads"
+         OpenInEditor="true">package1.ads</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

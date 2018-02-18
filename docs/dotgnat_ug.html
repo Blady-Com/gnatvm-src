@@ -1,0 +1,1673 @@
+<html lang="en">
+<head>
+<title>GNAT User's Guide Supplement for the .NET Platform</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="GNAT User's Guide Supplement for the .NET Platform">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="top" href="#Top">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<h1 class="settitle">GNAT User's Guide Supplement for the .NET Platform</h1>
+<div class="node">
+<a name="Top"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#About-This-Guide">About This Guide</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#dir">(dir)</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<div class="node">
+<a name="About-This-Guide"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Top">Top</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="unnumbered">About This Guide</h2>
+
+<!-- =========================================================================== -->
+<p class="noindent">This guide describes the features and the use of GNAT, the Ada
+development environment for the .NET platform. This guide also explains
+how to use the .NET API from Ada and how to interface Ada and the .NET
+framework.
+
+   <p>Before reading this manual you should be familiar with the <cite>GNAT
+User's Guide</cite> as a thorough understanding of the concepts and notions
+explained there is needed to use GNAT effectively.
+
+<ul class="menu">
+<li><a accesskey="1" href="#What-This-Guide-Contains">What This Guide Contains</a>
+<li><a accesskey="2" href="#What-you-should-know-before-reading-this-guide">What you should know before reading this guide</a>
+<li><a accesskey="3" href="#Related-Information">Related Information</a>
+<li><a accesskey="4" href="#Conventions">Conventions</a>
+</ul>
+
+<div class="node">
+<a name="What-This-Guide-Contains"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#What-you-should-know-before-reading-this-guide">What you should know before reading this guide</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#About-This-Guide">About This Guide</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#About-This-Guide">About This Guide</a>
+
+</div>
+
+<h3 class="unnumberedsec">What This Guide Contains</h3>
+
+<!--  -->
+<p class="noindent">This guide contains the following chapters:
+
+     <ul>
+<li><a href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>, gives an overview of GNAT and its
+tools and explains how to compile and run your first Ada program for the
+.NET platform.
+
+     <li><a href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>, explains how the .NET API and the
+services of any .NET class can be used from Ada. This section also explains
+how Ada services can be exported to .NET programmers.
+
+     <li><a href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>, describes the <code>cil2ada</code>
+interfacing tool that takes any <samp><span class="file">.dll</span></samp> file as input and generates
+Ada package specs as output. The
+resulting Ada specs can be used by Ada programs to interface to .NET.
+
+     <li><a href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>, explains some special pragmas that have been
+introduced to support certain aspects of interfacing between Ada and .NET.
+
+     <li><a href="#Debugging-Ada-Programs">Debugging Ada Programs</a>, describes how to run and debug Ada programs.
+
+     <li><a href="#Limitations">Limitations</a>, describes the language constructs, libraries and switches
+that are not supported by GNAT under .NET. 
+</ul>
+
+<div class="node">
+<a name="What-you-should-know-before-reading-this-guide"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Related-Information">Related Information</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#What-This-Guide-Contains">What This Guide Contains</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#About-This-Guide">About This Guide</a>
+
+</div>
+
+<h3 class="unnumberedsec">What You Should Know Before Reading This Guide</h3>
+
+<!--  -->
+<p class="noindent">Before reading this document readers should be familiar with the
+<cite>GNAT User's Guide</cite> and have a conceptual understanding of the .NET
+technology.
+
+<div class="node">
+<a name="Related-Information"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Conventions">Conventions</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#What-you-should-know-before-reading-this-guide">What you should know before reading this guide</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#About-This-Guide">About This Guide</a>
+
+</div>
+
+<h3 class="unnumberedsec">Related Information</h3>
+
+<!--  -->
+<p class="noindent">For further information about GNAT, Ada, and the .NET technology,
+we recommend consulting the following documents:
+
+     <ul>
+<li><cite>GNAT User's Guide</cite> contains introductory and reference material
+for the GNAT development environment.
+
+     <li><cite>Ada 2005 Language Reference Manual</cite> contains all reference material
+for the Ada 2005 programming language.
+
+   </ul>
+
+<div class="node">
+<a name="Conventions"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Related-Information">Related Information</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#About-This-Guide">About This Guide</a>
+
+</div>
+
+<h3 class="unnumberedsec">Conventions</h3>
+
+<!--  -->
+<p><a name="index-Conventions-1"></a><a name="index-Typographical-conventions-2"></a>
+Following are examples of the typographical and graphic conventions used
+in this guide:
+
+     <ul>
+<li><code>source code</code>, and <code>utility program names</code>.
+
+     <li>&lsquo;<samp><span class="samp">Option flags</span></samp>&rsquo;.
+
+     <li><samp><span class="file">File Names</span></samp>.
+
+     <li><var>Variables</var>.
+
+     <li><em>Emphasis</em>.
+
+     <li>[optional information or parameters]
+
+     <li>Examples are described by text
+     <pre class="smallexample">          and then shown this way.
+</pre>
+     </ul>
+
+<p class="noindent">Commands that are entered by the user are preceded in this manual by the
+&ldquo;<code>$ </code>&rdquo; characters (dollar sign followed by space). If your system uses
+this sequence as a prompt, then the commands will appear exactly as you see
+them in the manual. If your system uses some other prompt, then the command
+will appear with the <code>$</code> replaced by whatever prompt character you are
+using.
+
+<div class="node">
+<a name="Getting-Started-with-GNAT-for-.NET"></a>
+<a name="Getting-Started-with-GNAT-for-_002eNET"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#About-This-Guide">About This Guide</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">1 Getting Started with GNAT for .NET</h2>
+
+<!-- =========================================================================== -->
+<ul class="menu">
+<li><a accesskey="1" href="#Overview">Overview</a>
+<li><a accesskey="2" href="#GNAT-Tools">GNAT Tools</a>
+<li><a accesskey="3" href="#g_t_002eNET-Development-Kits-that-you-can-use-with-GNAT">.NET Development Kits that you can use with GNAT</a>
+<li><a accesskey="4" href="#Compiling-Your-First-Application-with-GNAT-for-_002eNET">Compiling Your First Application with GNAT for .NET</a>
+</ul>
+
+<div class="node">
+<a name="Overview"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#GNAT-Tools">GNAT Tools</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>
+
+</div>
+
+<h3 class="section">1.1 Overview</h3>
+
+<!--  -->
+<p class="noindent">The .NET technology, introduced by Microsoft, is a paradigm
+whose goal is to add platform-independent programming flexibility to
+applications and embedded devices such as consumer electronics,
+smart cards, etc.
+
+   <p>The .NET technology consists of a comprehensive set of libraries (.NET API),
+and a virtual execution environment offering the same object code interface on
+all platforms (bytecode).
+
+   <p>The GNAT system offers an Ada programming environment for
+the .NET platform. In addition to a bytecode compiler, binder and
+linker, GNAT contains a .NET-to-Ada-2005 binding generator that produces
+the Ada 2005 specs of the services contained in any .NET <samp><span class="file">.class</span></samp>
+file or API.
+
+   <p>Furthermore, because the <samp><span class="file">.dll</span></samp> files generated by the GNAT
+compiler are fully compliant with the CIL standard, the user can employ
+any .NET debugger to debug Ada code, and can use any of the .NET tools that
+operate on <samp><span class="file">.dll</span></samp> files (e.g. <code>ildasm</code>, <code>gacutil</code>, etc.).
+
+   <p>As a side note, the GNAT system is implemented in Ada 2005 and its sources
+are available under the GPL.
+
+<div class="node">
+<a name="GNAT-Tools"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#g_t_002eNET-Development-Kits-that-you-can-use-with-GNAT">.NET Development Kits that you can use with GNAT</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Overview">Overview</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>
+
+</div>
+
+<h3 class="section">1.2 GNAT Tools</h3>
+
+<!--  -->
+<p class="noindent">Most tools are regular GNAT tools that have been slightly adapted
+for use with .NET. They are used in the same fashion as their
+corresponding GNAT equivalent. These tools are:
+
+     <ul>
+<li><code>dotnet-gnatmake</code>: the GNAT automatic make program,
+determines the set of sources needed by an Ada compilation unit and
+performs the necessary build commands (to compile, bind, and link).
+
+     <li><code>dotnet-gnat</code>: the GNAT project driver, calls other GNAT tools
+with projects.
+
+     <li><code>dotnet-gnatcompile</code>: the GNAT compiler, compiles an Ada unit into one
+<samp><span class="file">.il</span></samp> file. For compatibility with other platforms and some of the
+GNAT tools, the command <code>dotnet-gcc</code> is equivalent
+to <code>dotnet-gnatcompile</code>.
+
+     <li><code>dotnet-gnatbind</code>: the GNAT binder, generates an Ada source file
+containing the elaboration code for the Ada application to run.
+
+     <li><code>dotnet-gnatlink</code>: the GNAT linker, compiles the source file generated
+by <code>dotnet-gnatbind</code> and generates an executable (by default),
+or a DLL when using the <samp><span class="option">/DLL</span></samp> switch.
+
+     <li><code>dotnet-gnatls</code>: the GNAT library browser, displays information about
+compiled units, including dependencies on the corresponding sources
+files, and consistency of compilations.
+
+     <li><code>dotnet-gnatfind</code>: the GNAT find utility, provides an easy way to locate
+the declaration and references for an Ada entity.
+
+     <li><code>dotnet-gnatxref</code>: the GNAT cross-referencer, generates a
+full report of all cross-references in a given set of Ada units.
+
+     <li><code>dotnet-gnatclean</code>: cleans up compilation artifacts.
+
+     <li><code>dotnet-gnatelim</code>: eliminates uncalled subprograms.
+
+     <li><code>dotnet-gnatmetric</code>: computes metrics on Ada sources.
+
+     <li><code>dotnet-gnatname</code>: generates project files for your source tree.
+
+     <li><code>dotnet-gnatpp</code>: produces a pretty-printed version of Ada sources.
+
+     <li><code>dotnet-gnatprep</code>: performs preprocessing.
+
+     <li><code>dotnet-gnatstub</code>: generates body stubs from Ada specs.
+
+     <li><code>dotnet-gnatchop</code>: splits a multi-unit source file into
+individual files, one compilation unit per file.
+
+     <li><code>dotnet-gnatkr</code>: &ldquo;krunch&rdquo;es GNAT names.
+
+     <li><code>dotnet-gnatcheck</code>: checks coding style.
+
+   </ul>
+
+<p class="noindent">The following GNAT tools have been specifically developed for .NET:
+
+     <ul>
+<li><code>cil2ada</code>: The GNAT interfacing tool, (see <a href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>) takes <samp><span class="file">.dll</span></samp> files as input and generates
+Ada package specifications as output. The resulting Ada package specs can be
+<code>with</code>ed by Ada programs to interface to .NET services. 
+</ul>
+
+<div class="node">
+<a name=".NET-Development-Kits-that-you-can-use-with-GNAT"></a>
+<a name="g_t_002eNET-Development-Kits-that-you-can-use-with-GNAT"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Compiling-Your-First-Application-with-GNAT-for-_002eNET">Compiling Your First Application with GNAT for .NET</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#GNAT-Tools">GNAT Tools</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>
+
+</div>
+
+<h3 class="section">1.3 .NET Development Kits compatible with GNAT</h3>
+
+<!--  -->
+<p class="noindent">GNAT has been tested with the .NET 2.0 framework. It may also be
+compatible with other frameworks, e.g. <code>mono</code> under <code>GNU/Linux</code>.
+
+   <p>In order to use the GNAT toolset for .NET, you first need to install the
+.NET run-time and SDK (e.g. <samp><span class="file">dotnetfx.exe</span></samp> and <samp><span class="file">setup.exe</span></samp> under
+Windows). The run-time should come with any recent Windows version, while
+the SDK can generally be found either as a standalone installer or as part of
+Microsoft Visual Studio or Microsoft Visual Studio Express.
+
+<div class="node">
+<a name="Compiling-Your-First-Application-with-GNAT-for-.NET"></a>
+<a name="Compiling-Your-First-Application-with-GNAT-for-_002eNET"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#g_t_002eNET-Development-Kits-that-you-can-use-with-GNAT">.NET Development Kits that you can use with GNAT</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>
+
+</div>
+
+<h3 class="section">1.4 Compiling Your First Application with GNAT for .NET</h3>
+
+<!--  -->
+<p class="noindent">To compile the following &ldquo;<code>Hello .NET</code>&rdquo; program put the following in
+file <samp><span class="file">hello.adb</span></samp>:
+
+<pre class="smallexample">     with Ada.Text_IO; use Ada.Text_IO;
+     procedure Hello is
+     begin
+        Put_Line ("Hello .NET!");
+     end Hello;
+</pre>
+   <p class="noindent">then type:
+
+<pre class="smallexample">     $ dotnet-gnatmake hello
+</pre>
+   <p class="noindent">This command will generate file <samp><span class="file">hello.exe</span></samp>. To run it,
+just type
+
+<pre class="smallexample">     $ hello
+</pre>
+   <p class="noindent">To compile more complex Ada applications use
+<code>dotnet-gnatmake</code> as usual. If you want to use the GNAT compiler, binder,
+and linker separately, you will need to individually invoke the appropriate
+<code>dotnet-gnatcompile</code>, <code>dotnet-gnatbind</code> and <code>dotnet-gnatlink</code>
+commands.
+
+<div class="node">
+<a name="Ada-%26-.NET-Interoperability"></a>
+<a name="Ada-_0026-_002eNET-Interoperability"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Getting-Started-with-GNAT-for-_002eNET">Getting Started with GNAT for .NET</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">2 Ada and .NET Interoperability</h2>
+
+<!-- =========================================================================== -->
+<p class="noindent">An attractive aspect of .NET is its growing
+set of API classes. It is therefore fundamental that the API be made
+available to the Ada programmer transparently. It is also important for
+the Ada programmer to be able to write libraries or APIs for the .NET platform
+in Ada, and that these libraries be easily usable in any .NET application. 
+GNAT provides full interoperability between Ada and .NET.
+
+   <p>To achieve this goal, constructs that can appear in a .NET class at the
+specification level are mapped to Ada either by means of a corresponding
+Ada feature or by using an implementation-defined Ada pragma.
+
+   <p>In addition, the mapping from .NET to Ada is
+completely automated. GNAT does not include any Ada bindings
+for the .NET API, but instead provides a tool (see <a href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>) that can produce Ada specifications from any
+.NET DLL.
+
+<ul class="menu">
+<li><a accesskey="1" href="#Importing-_002eNET-Services-to-Ada">Importing .NET Services to Ada</a>
+<li><a accesskey="2" href="#Exporting-Ada-Services-to-_002eNET">Exporting Ada Services to .NET</a>
+</ul>
+
+<div class="node">
+<a name="Importing-.NET-Services-to-Ada"></a>
+<a name="Importing-_002eNET-Services-to-Ada"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Exporting-Ada-Services-to-_002eNET">Exporting Ada Services to .NET</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>
+
+</div>
+
+<h3 class="section">2.1 Importing .NET Services to Ada</h3>
+
+<!--  -->
+<p class="noindent">To access the services provided by the .NET API or by any set of
+<samp><span class="file">.dll</span></samp> files, you should proceed as follows:
+
+     <ol type=1 start=1>
+<li>If your .NET code is in source form (e.g. <code>C#</code>), compile it using any
+.NET compiler.
+
+     <li>If you just want to import a variable or a subprogram from a .NET class,
+use <code>pragma Import</code> (see <a href="#Pragma-Import-CIL">Pragma Import CIL</a>) in the Ada code
+where you want to import the .NET service.
+
+     <li>More generally, you can use the <code>cil2ada</code> utility to produce the Ada
+specs (containing the appropriate .NET-specific pragmas) for the <samp><span class="file">.dll</span></samp>,
+files containing the .NET services you would
+like to use from Ada (see <a href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>). Note that
+<code>cil2ada</code> preserves, in the generated Ada specs, the names of the
+original .NET services.
+
+     <li><code>with</code> the needed Ada specs and use their services as usual.
+        </ol>
+
+   <p>You can see an example of an Ada program using the .NET framework to display
+a window with menus and callbacks at <samp><span class="file">&lt;GNAT Pro installation
+dir&gt;/share/examples/dotnet/CompactFramework</span></samp>.
+
+<div class="node">
+<a name="Exporting-Ada-Services-to-.NET"></a>
+<a name="Exporting-Ada-Services-to-_002eNET"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-_002eNET-Services-to-Ada">Importing .NET Services to Ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>
+
+</div>
+
+<h3 class="section">2.2 Exporting Ada Services to .NET</h3>
+
+<!--  -->
+<p class="noindent">To export a set of Ada services to .NET you should:
+
+     <ol type=1 start=1>
+<li>Use <code>pragma Export</code> and other CIL interfacing pragmas inside the Ada
+code (see <a href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>). This gives you complete control of
+what is being generated and allows you to decide very precisely what the
+exported services look like on the .NET side.
+
+     <li>Create a library containing you compiled Ada code.
+
+     <p>Note that there is for now no direct support of .NET libraries generation in
+the project files. Instead, you need to specify:
+          <ul>
+<li><code>-z</code> as builder switch (no main procedure, to perform bind/link steps
+even if no main is specified)
+<li><code>-n</code> as binder switch (no main entry point)
+<li><code>/dll</code> as linker switch (instruct the linker to produce a dll)
+<li>force the generated library name to use a <samp><span class="file">.dll</span></samp> suffix (by
+ default, it will have a .exe extension)
+</ul>
+
+     <p>For example, here is a simple project file to generate a library from
+all the sources used by <code>library.adb</code>:
+
+     <pre class="smallexample">          project Library1 is
+             for Main use ("library.adb");
+             for Object_Dir use "obj";
+          
+             package Builder is
+                for Executable_Suffix use ".dll";
+                for Default_Switches ("ada") use ("-z");
+             end Builder;
+          
+             package Binder is
+                for Default_Switches ("ada") use ("-n");
+             end Binder;
+          
+             package Linker is
+                for Default_Switches ("ada") use ("/DLL");
+             end Linker;
+          
+          end Library1;
+</pre>
+     <p>You can automatically create such a project from Visual Studio, by creating a
+new project using the 'library Ada Project' template, or you can look at
+the <samp><span class="file">&lt;GNAT Pro installation dir&gt;/share/examples/dotnet/MixedLanguages/</span></samp>
+example where the <samp><span class="file">AdaLib</span></samp> subdirectory contains a project creating an
+Ada library.
+
+     <li>Add a reference to this library from the .NET project, and call the library
+elaboration routine before calling any of its services. The elaboration routine
+is contained in a special namespace <code>ada_&lt;library_name_in_lowercase&gt;_pkg</code>
+and is called <code>adainit</code>, e.g: <code>ada_lib1_pkg::adainit</code>. After using
+the library, you may also need to manually call <code>adafinal</code> to finalize any
+objects created on the Ada side.
+
+     <li>Call the ada methods contained in the library using their underlying CIL naming
+scheme: all Ada names are translated to lower case, and the last package name
+receives a <code>_pkg</code> suffix (for example, the package Foo.Adapackage will be
+named in CIL <code>foo.adapackage_pkg</code>). You can easily verify the naming
+scheme by looking at the compiled files (with <samp><span class="file">.il</span></samp> extension) located
+in the object directory: these are text files that can be read by any text
+editor or IDE.
+        </ol>
+
+   <p>You can see an example of C# program using Ada services in <samp><span class="file">&lt;GNAT Pro
+ installation dir&gt;/share/examples/dotnet/MixedLanguages/</span></samp>
+
+<div class="node">
+<a name="Using-the-.NET-API-with-cil2ada"></a>
+<a name="Using-the-_002eNET-API-with-cil2ada"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Ada-_0026-_002eNET-Interoperability">Ada &amp; .NET Interoperability</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">3 Using the .NET API with <code>cil2ada</code></h2>
+
+<!-- =========================================================================== -->
+<p><a name="index-cil2ada-3"></a>
+The <code>cil2ada</code> tool takes <samp><span class="file">.dll</span></samp> files as input and
+generates Ada specs as output.
+
+<ul class="menu">
+<li><a accesskey="1" href="#Running-cil2ada">Running cil2ada</a>
+<li><a accesskey="2" href="#Switches-for-cil2ada">Switches for cil2ada</a>
+<li><a accesskey="3" href="#Running-cil2ada-on-the-_002eNET-API">Running cil2ada on the .NET API</a>
+</ul>
+
+<div class="node">
+<a name="Running-cil2ada"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Switches-for-cil2ada">Switches for cil2ada</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>
+
+</div>
+
+<h3 class="section">3.1 Running <code>cil2ada</code></h3>
+
+<!--  -->
+<p class="noindent">The form of the <code>cil2ada</code> command is
+
+<pre class="smallexample">     cil2ada [<var>options</var>] <var>file</var>
+</pre>
+   <p>Where <var>file</var> is either a DLL containing .NET APIs, or an assembly name
+(e.g. <code>System.Windows.Form</code>, <code>mscorlib</code>, etc.). File names may be
+prefixed with directory information.
+
+   <p>The output of <code>cil2ada</code> is an Ada source file for each <samp><span class="file">class</span></samp>
+processed. The Ada source file contains a package spec giving the Ada
+declaration for the services exported by the corresponding <samp><span class="file">class</span></samp>.
+
+   <p>The Ada files generated are placed in the directory where the
+<code>cil2ada</code> command is invoked, or in the subdiretory specified via the
+<var>-o</var> option.
+
+<div class="node">
+<a name="Switches-for-cil2ada"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Running-cil2ada-on-the-_002eNET-API">Running cil2ada on the .NET API</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Running-cil2ada">Running cil2ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>
+
+</div>
+
+<h3 class="section">3.2 Switches for <code>cil2ada</code></h3>
+
+<!--  -->
+<p class="noindent">The following switches are available with the <code>cil2ada</code> utility:
+
+     <dl>
+<dt><code>-compact</code><dd><a name="index-g_t_0040code_007b_002dcompact_007d-_0028_0040code_007bcil2ada_007d_0029-4"></a>Search assemblies from the .NET compact framework repository
+<br><dt><code>-h</code><dd><a name="index-g_t_0040code_007b_002dh_007d-_0028_0040code_007bcil2ada_007d_0029-5"></a>Displays the help message and exits
+<br><dt><code>-o name</code><dd><a name="index-g_t_0040code_007b_002do_007d-_0028_0040code_007bcil2ada_007d_0029-6"></a>Create the files in the specified output directory. 
+<br><dt><code>-q, -quiet</code><dd><a name="index-g_t_0040code_007b_002dq_007d-_0028_0040code_007bcil2ada_007d_0029-7"></a>Quiet mode
+<br><dt><code>-r</code><dd><a name="index-g_t_0040code_007b_002dr_007d-_0028_0040code_007bcil2ada_007d_0029-8"></a>Perform also the analysis of the referenced assemblies. 
+<br><dt><code>-V, --version</code><dd><a name="index-g_t_0040code_007b_002d_002dversion_007d-_0028_0040code_007bcil2ada_007d_0029-9"></a>Displays the tool's version and exits
+</dl>
+
+<div class="node">
+<a name="Running-cil2ada-on-the-.NET-API"></a>
+<a name="Running-cil2ada-on-the-_002eNET-API"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Switches-for-cil2ada">Switches for cil2ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>
+
+</div>
+
+<h3 class="section">3.3 Running cil2ada on the .NET API</h3>
+
+<!--  -->
+<p class="noindent">To be able to access the .NET API you need to use <samp><span class="command">cil2ada</span></samp> to
+generate an Ada package spec for each public class in the API.
+
+<pre class="smallexample">     $ cd <var>some-dir</var>
+     $ cil2ada mscorlib -o bindings
+</pre>
+   <p class="noindent">This will create, in directory <var>some-dir/bindings</var>, an Ada package spec
+for each public .NET class included in <samp><span class="file">mscorlib</span></samp> (the default .NET
+library).
+
+<div class="node">
+<a name=".NET-Specific-Pragmas"></a>
+<a name="g_t_002eNET_002dSpecific-Pragmas"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Using-the-_002eNET-API-with-cil2ada">Using the .NET API with cil2ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">4 .NET-Specific Pragmas</h2>
+
+<!-- =========================================================================== -->
+<p class="noindent">The simplest way to import services from .NET classes is to use the
+<code>cil2ada</code> tool to automatically generate the specification of the
+corresponding <samp><span class="file">.class</span></samp> file. The resulting specification contains the
+appropriate .NET-specific pragmas.
+
+   <p>Sometimes, however, interfacing between .NET and Ada requires more
+fine-grained control. For example;
+
+     <ul>
+<li>Importing just one routine into your Ada code,
+
+     <li>Grouping certain services from multiple <samp><span class="file">.class</span></samp>
+files into a single Ada spec (for instance to provide
+a simplified view of the .NET API),
+
+     <li>Exporting Ada services to .NET. 
+</ul>
+
+<p class="noindent">This chapter explains the features and pragmas that are needed for full
+support of interfacing between .NET and Ada.
+
+<ul class="menu">
+<li><a accesskey="1" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>
+<li><a accesskey="2" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+<li><a accesskey="3" href="#Pragma-Export-CIL">Pragma Export CIL</a>
+</ul>
+
+<div class="node">
+<a name="The-CIL_Constructor-Pragma"></a>
+<a name="The-CIL_005fConstructor-Pragma"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Pragma-Import-CIL">Pragma Import CIL</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>
+
+</div>
+
+<h3 class="section">4.1 The <code>CIL_Constructor</code> Pragma</h3>
+
+<!--  -->
+<ul class="menu">
+<li><a accesskey="1" href="#Background-on-_002eNET-Constructors">Background on .NET Constructors</a>
+<li><a accesskey="2" href="#Using-_002eNET-Constructors-in-Ada">Using .NET Constructors in Ada</a>
+<li><a accesskey="3" href="#g_t_002eNET-Constructors-and-Ada-Allocators">.NET Constructors and Ada Allocators</a>
+</ul>
+
+<div class="node">
+<a name="Background-on-.NET-Constructors"></a>
+<a name="Background-on-_002eNET-Constructors"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Using-_002eNET-Constructors-in-Ada">Using .NET Constructors in Ada</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>
+
+</div>
+
+<h4 class="subsection">4.1.1 Background on .NET Constructors</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">A .NET constructor is a special method that must be invoked immediately
+after allocating an object, in order to initialize the object. Given
+the following .NET class:
+
+<pre class="smallexample">     public class C {
+        public int field;
+        public C ()      { field = 3; }
+        public C (int i) { field = i; }
+     }
+</pre>
+   <p class="noindent">then the statement <code>C obj = new C (3)</code> accomplishes two things:
+
+     <ol type=1 start=1>
+<li>It allocates a new instance of class <code>C</code> in the .NET heap and sets
+<code>obj</code> to point to this object;
+
+     <li>It then calls the constructor that takes an <code>int</code> parameter, passing
+<code>obj</code> to it as a hidden parameter and the value 3 for its <code>int</code>
+parameter.
+        </ol>
+
+<p class="noindent">If no constructor is provided, as in the following class:
+
+<pre class="smallexample">     class D extends C {
+        float f;
+     }
+</pre>
+   <p class="noindent">then a default constructor
+
+<pre class="smallexample">     public D () {
+        super ();
+     }
+</pre>
+   <p class="noindent">is automatically generated for class <code>D</code>. The call of <code>super()</code>
+inside this default constructor (known as a <em>no-arg</em> constructor)
+invokes the no-arg constructor of the superclass of <code>D</code>, that is, the
+constructor of class <code>C</code>.
+
+   <p>Generally speaking, the first statement of every constructor must either be
+a call to another constructor of the class, or a call to a constructor of
+the superclass. For instance, given a constructor
+
+<pre class="smallexample">     public C (int i, int j) { this (i + j); }
+</pre>
+   <p class="noindent">The call <code>this (i + j)</code> invokes the constructor in class <code>C</code>
+that takes an <code>int</code> as its parameter. As another
+example, consider:
+
+<pre class="smallexample">     public D (int k) { super (k); }
+</pre>
+   <p class="noindent">Here <code>super (k)</code> invokes the constructor from <code>D</code>'s superclass
+that takes an <code>int</code> as its parameter.
+
+   <p>Note that in both of the original constructors of
+class <code>C</code>, there are no calls to either <code>this (...)</code> or <code>super
+(...)</code>. When no such call is explicitly given, the .NET compiler
+automatically inserts a call to the no-arg constructor of the superclass. If
+(as will be explained below) the superclass does not have an accessible
+no-arg constructor then you must explicitly insert a call to a constructor
+from either the same class or its superclass.
+
+   <p>As just noted, a class might not have an accessible no-arg constructor. 
+This can occur only when explicit constructors are defined in the class. 
+In this case, the no-arg constructor is not automatically generated for
+the class, and if a no-arg constructor is desired, you must add it explicitly. 
+For instance, in the following class:
+
+<pre class="smallexample">     public class A {
+        int ival;
+        public A (int i) { ival = i; }
+     }
+     
+     public class B extends A {
+        float fval;
+        public B (float f) { fval = f; }
+     }
+</pre>
+   <p class="noindent">the .NET compiler will issue a compile-time error reporting that no
+constructor matching <code>A ()</code> was found in class <code>A</code>, because the
+compiler tries to insert such a call at the beginning of <code>B</code>. To
+correct this problem the .NET programmer must either add a no-arg
+constructor <code>A ()</code> in class <code>A</code>, or else change the definition of
+<code>B</code>'s constructor to contain an explicit constructor, e.g., as
+follows:
+
+<pre class="smallexample">     public B (float f) {
+       super (0);
+       fval = f;
+     }
+</pre>
+   <p class="noindent">A similar situation may arise when the superclass contains a no-arg
+constructor that is not accessible in the subclass.  For example:
+
+<pre class="smallexample">     public class A {
+        int ival;
+        public A (int i) { ival = i; }
+        private A () { ival = 0; }
+     }
+     
+     public class B extends A {
+        float fval;
+        public B (float f) { fval = f; }
+     }
+</pre>
+   <p class="noindent">This will generate the same error as above: the private no-arg
+constructor from <code>A</code> cannot be legally invoked from <code>B</code>,
+and thus the compiler's attempt to implicitly place the call <code>super()</code>
+as the first statement in <code>B</code>'s constructor will fail.
+
+<div class="node">
+<a name="Using-.NET-Constructors-in-Ada"></a>
+<a name="Using-_002eNET-Constructors-in-Ada"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#g_t_002eNET-Constructors-and-Ada-Allocators">.NET Constructors and Ada Allocators</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Background-on-_002eNET-Constructors">Background on .NET Constructors</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>
+
+</div>
+
+<h4 class="subsection">4.1.2 Using .NET Constructors in Ada</h4>
+
+<!-- .......................................................................... -->
+<p class="noindent">To map an Ada function <var>function-name</var> to a
+.NET constructor for some Ada <var>tagged-type</var>, GNAT provides the
+<code>CIL_Constructor</code> pragma. Its syntax is as follows:
+
+<pre class="smallexample">     pragma CIL_Constructor (<var>function-name</var>);
+</pre>
+   <p class="noindent">where <var>function-name</var> is the name of a function declared immediately
+within the same declarative part where the pragma occurs. The function
+must satisfy the following requirements:
+
+     <ul>
+<li>The function's result type is an access type designating a class-wide
+type with convention CIL declared at the same declarative level as the
+function (<code>access </code><var>tagged-type</var><code>'Class</code>);
+
+     <li>The first function parameter is named <code>This</code>, and its type is a
+named access type designating <var>tagged-type</var><code>'Class</code> which may
+have a <code>null</code> default value;
+
+     <li>If the constructor invokes other constructor then the first
+declaration in the function body is an object declaration with a
+default initial expression of the form <var>constructor-func</var><code>
+(..., This)</code>, where the <var>constructor-func</var> is a <code>CIL_Constructor</code>
+function belonging either to <var>tagged-type</var> or to the parent type
+of <var>tagged-type</var>;
+</ul>
+
+<p class="noindent">The effect of a <code>CIL_Constructor</code> pragma is to compile
+<var>function-name</var> into a constructor for the class corresponding to
+<var>tagged-type</var>.  In addition, whenever <var>function-name</var> is invoked
+with a <code>null</code> value for parameter <code>This</code>, the compiler calls the
+<code>tagged-type</code> object allocator and passes in the pointer to the newly
+allocated object instead of the value <code>null</code>.
+
+   <p>A <code>CIL_Constructor</code> pragma is a program unit pragma. It can appear in
+the same places where an <code>Inline</code> pragma for <var>function-name</var> can
+appear. The <code>CIL_Constructor</code> pragma applies to all the overloaded
+<var>function-name</var> subprograms declared immediately within the declarative
+region containing the pragma.
+
+   <p>For examples of use of this pragma, see the packages generated by
+<code>cil2ada</code>.
+
+<div class="node">
+<a name=".NET-Constructors-and-Ada-Allocators"></a>
+<a name="g_t_002eNET-Constructors-and-Ada-Allocators"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Using-_002eNET-Constructors-in-Ada">Using .NET Constructors in Ada</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>
+
+</div>
+
+<h4 class="subsection">4.1.3 .NET Constructors and Ada Allocators</h4>
+
+<!-- .......................................................................... -->
+<p class="noindent">If an Ada function has been defined as a no-arg constructor
+(via pragma <code>CIL_Constructor</code>) then it is implicitly invoked
+during the evaluation of an Ada allocator. 
+For instance a client of package <code>C</code> given in the previous section
+could write:
+
+<pre class="smallexample">     with C;
+     procedure Client is
+        Obj_1 : C.Ref := new_C;
+        Obj_2 : C.Ref := new C.Typ;  -- <i>allocator</i>
+</pre>
+   <p class="noindent">In compiling <code>new C.Typ</code>, GNAT generates a call of the no-arg constructor
+if present (in the example <code>new_C (This : Ref := null)</code>). If there is no
+no-arg constructor then GNAT reports an error. (This last
+check is not supported as of September 2007, and an exception is
+raised at run time).
+
+<div class="node">
+<a name="Pragma-Import-CIL"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Pragma-Export-CIL">Pragma Export CIL</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#The-CIL_005fConstructor-Pragma">The CIL_Constructor Pragma</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>
+
+</div>
+
+<h3 class="section">4.2 Pragma Import CIL</h3>
+
+<!--  -->
+<p class="noindent">For convention CIL, pragma <code>Import</code> has the following syntax:
+
+<pre class="smallexample">     pragma Import ([Convention    =&gt;] CIL,
+                    [Entity        =&gt;] <var>Local_Name</var>
+                  [,[External_Name =&gt;] <var>String_Expression</var>]);
+</pre>
+   <p class="noindent">where <var>Local_Name</var> is the name of an object, subprogram, record
+component, exception, or package, while <var>String_Expression</var> is a string
+giving the .NET name of the imported entity. If <var>String_Expression</var> is
+missing it is taken to be the <var>Local_Name</var>, folded to lower case.
+
+<ul class="menu">
+<li><a accesskey="1" href="#Importing-Packages">Importing Packages</a>
+<li><a accesskey="2" href="#Importing-Exceptions">Importing Exceptions</a>
+<li><a accesskey="3" href="#Importing-Record-Components">Importing Record Components</a>
+<li><a accesskey="4" href="#Importing-Dispatching-Subprograms">Importing Dispatching Subprograms</a>
+<li><a accesskey="5" href="#Importing-Objects">Importing Objects</a>
+<li><a accesskey="6" href="#Importing-Non_002dDispatching-Subprograms">Importing Non-Dispatching Subprograms</a>
+<li><a accesskey="7" href="#Importing-Delegates">Importing Delegates</a>
+</ul>
+
+<div class="node">
+<a name="Importing-Packages"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Exceptions">Importing Exceptions</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Pragma-Import-CIL">Pragma Import CIL</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.1 Importing Packages</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of a package
+spec <var>P</var>, then all the entities declared in <var>P</var> must be
+explicitly imported from .NET. The <var>String_Expression</var> of such an
+<code>Import</code> pragma gives the name of the .NET class corresponding to
+<var>P</var> and can be a simple class name or it can have the form
+<var>namespace</var><code>.</code><var>class_name</var>.
+
+   <p>The following rules apply when importing a package <var>P</var>:
+
+     <ul>
+<li>All the entities declared inside <var>P</var> must be imported either by means
+of the <code>Import</code> pragma or by using other .NET-specific pragmas.
+
+     <li><var>P</var> must declare at most one tagged or untagged record type, and this
+type's name must be <code>Typ</code>. <code>Typ</code> models the record part of the class
+corresponding to <var>P</var>.
+
+     <li><var>P</var> must not contain task types or protected types.
+
+     <li>The <var>String_Expression</var> of the <code>Import</code> pragma for an object,
+subprogram, or record component declared in <var>P</var> must be a simple
+name (it cannot contain any &ldquo;<code>.</code>&rdquo; characters).
+
+     <li>Each package (if any) nested within <var>P</var> must itself contain an
+<code>Import</code> pragma (and the above rules apply recursively). 
+</ul>
+
+<p class="noindent">The following example illustrates these rules:
+
+<pre class="smallexample">     package MSSyst.Object is
+        pragma Preelaborate;
+     
+        type Typ (&lt;&gt;) is tagged limited private;
+     
+        type Ref       is access all Typ;
+        type Ref_Class is access all Typ'Class;
+     
+        function new_Object (This : Ref := null) return Ref;
+        function Equals
+          (This : access Typ;
+           obj  : access MSSyst.Object.Typ'Class) return Standard.Boolean;
+     
+     private
+        type Typ is tagged limited null record;
+        pragma Convention (CIL, Typ);
+     
+        pragma Cil_Constructor (new_Object);
+        pragma Import (CIL, Equals, "Equals");
+     
+     end MSSyst.Object;
+     pragma Import (CIL, Object, "[mscorlib]System.Object");
+</pre>
+   <div class="node">
+<a name="Importing-Exceptions"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Record-Components">Importing Record Components</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Packages">Importing Packages</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.2 Importing Exceptions</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of an
+exception <var>E</var>, the <var>String_Expression</var> of such an <code>Import</code>
+pragma gives the name of the class corresponding to <var>E</var>.  This can be
+a simple class name or it can have the form
+<var>namespace_name</var><code>.</code><var>class_name</var> (which says that the
+class <var>class_name</var> corresponding to <var>E</var> belongs to the namespace
+<var>namespace_name</var>).
+
+   <p>When importing an exception you should make sure that the imported
+class is indeed a .NET exception, i.e. it derives from
+<code>System.SystemException</code>.
+
+<div class="node">
+<a name="Importing-Record-Components"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Dispatching-Subprograms">Importing Dispatching Subprograms</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Exceptions">Importing Exceptions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.3 Importing Record Components</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of a record
+field, then the record field must be declared in a record whose convention
+is CIL and the record must be declared in a package specification which is
+itself imported.  In this case <var>String_Expression</var> must be a simple name
+(i.e. contains no dots) giving the name of the imported field.
+
+<div class="node">
+<a name="Importing-Dispatching-Subprograms"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Objects">Importing Objects</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Record-Components">Importing Record Components</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.4 Importing Dispatching Subprograms</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of a dispatching
+subprogram (i.e., a primitive operation of a tagged type), then the subprogram
+must be declared in a package specification which is itself imported. 
+In this case <var>String_Expression</var> must be a simple name (i.e. contains
+no dots) giving the name of the imported subprogram.
+
+<div class="node">
+<a name="Importing-Objects"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Non_002dDispatching-Subprograms">Importing Non-Dispatching Subprograms</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Dispatching-Subprograms">Importing Dispatching Subprograms</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.5 Importing Objects</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of an object
+and the object is declared in a package specification which is itself
+imported, then the <var>String_Expression</var> must be a simple name (i.e. 
+contains no dots) giving the name of the imported .NET static field.
+
+   <p>An <code>Import</code> pragma for an object can be given even though such an
+entity does not occur in a package spec with an <code>Import</code> pragma. In
+this case the <var>String_Expression</var> of the <code>Import</code> pragma must give
+the complete .NET name of the imported entity, as shown in the following
+example:
+
+<pre class="smallexample">     procedure Foo is
+        Var : Integer;
+        pragma Import (CIL, Var, "pack.Foo.the_var");
+     begin
+        Var := 3;
+     end Foo;
+</pre>
+   <div class="node">
+<a name="Importing-Non-Dispatching-Subprograms"></a>
+<a name="Importing-Non_002dDispatching-Subprograms"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Importing-Delegates">Importing Delegates</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Objects">Importing Objects</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.6 Importing Non-Dispatching Subprograms</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Import</code> pragma is the name of a
+non-dispatching subprogram and the subprogram is declared in a package
+specification which is itself imported, then the <var>String_Expression</var> must
+be a simple name (i.e. contains no dots) giving the name of the imported .NET
+static method.
+
+   <p>An <code>Import</code> pragma for a non-dispatching subprogram can be given even
+though such an entity does not occur in a package spec with an <code>Import</code>
+pragma. In this case the <var>String_Expression</var> of the <code>Import</code> pragma
+must give the complete .NET name of the imported entity as shown in the
+following example:
+
+<pre class="smallexample">     procedure Foo is
+        X : Integer;
+        function Compute (I : Integer) return Integer;
+        pragma Import (CIL, Compute, "pack.Bar.calc");
+     begin
+        X := Compute (3);
+     end Foo;
+</pre>
+   <div class="node">
+<a name="Importing-Delegates"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Importing-Non_002dDispatching-Subprograms">Importing Non-Dispatching Subprograms</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Import-CIL">Pragma Import CIL</a>
+
+</div>
+
+<h4 class="subsection">4.2.7 Importing Delegates</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">Starting with GNAT 6.2, access-to-subprograms Ada types and .NET delegates now
+perfectly match. As a result, an access-to-subprogram type can now be
+directly imported from a .NET delegate.
+
+   <p>An <code>Import</code> pragma for an access-to-subprogram can be given even
+though such an entity does not occur in a package spec with an <code>Import</code>
+pragma. In this case the <var>String_Expression</var> of the <code>Import</code> pragma
+must give the complete .NET name of the imported entity as shown in the
+following example:
+
+<pre class="smallexample">     procedure Foo is
+        --  This defines the delegate type, that matches pack.Bar.some_delegate_type
+        type CB_Type is access procedure (Arg : Integer);
+        pragma Import (CIL, CB, "pack.Bar.some_delegate_type");
+     
+        --  Let's import a method asking for such delegate as input.
+        procedure Fn_Using_Delegate (CB : CB_Type);
+        pragma Import (CIL, Fn_Using_Delegate, "pack.Bar.some_method");
+     
+        --  Our actual callback, full Ada
+        procedure Bar (Arg : Integer);
+     begin
+        --  We can now call the external .NET method with our full Ada Bar callback.
+        Fn_Using_Delegate (Bar'Access);
+     end Foo;
+</pre>
+   <p>Note that this behavior changed in GNAT 6.2. In previous versions, .NET
+delegates were treated as objects, and could only be imported as such.
+
+<div class="node">
+<a name="Pragma-Export-CIL"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Pragma-Import-CIL">Pragma Import CIL</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>
+
+</div>
+
+<h3 class="section">4.3 Pragma Export CIL</h3>
+
+<!--  -->
+<p class="noindent">In the absence of pragma <code>Export</code>, the name of any Ada object,
+field, or subprogram compiled into a class file is the name of the
+corresponding Ada entity folded to lower-case.
+
+   <p>For exceptions, record types, and packages, the names of the generated class
+files are all folded to lower case.
+
+   <p>By using pragma <code>Export</code> you can change the default name that
+is generated by the GNAT compiler. In addition, for Ada packages the
+pragma can also specify which .NET package they belong to. For convention
+CIL, the pragma <code>Export</code> has the following syntax:
+
+<pre class="smallexample">     pragma Export ([Convention    =&gt;] CIL,
+                    [Entity        =&gt;] <var>Local_Name</var>
+                  [,[External_Name =&gt;] <var>String_Expression</var>]);
+</pre>
+   <p class="noindent">where <var>Local_Name</var> is the name of an object, subprogram, record
+component, record type, exception, or package, and <var>String_Expression</var>
+is a string giving the CIL name of the exported entity. If
+<var>String_Expression</var> is missing it is taken to be the <var>Local_Name</var>,
+folded to lower-case.
+
+<ul class="menu">
+<li><a accesskey="1" href="#Exporting-Objects-Subprograms-and-Record-Components">Exporting Objects Subprograms and Record Components</a>
+<li><a accesskey="2" href="#Exporting-Exceptions">Exporting Exceptions</a>
+<li><a accesskey="3" href="#Exporting-Record-Types">Exporting Record Types</a>
+</ul>
+
+<div class="node">
+<a name="Exporting-Objects-Subprograms-and-Record-Components"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Exporting-Exceptions">Exporting Exceptions</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Pragma-Export-CIL">Pragma Export CIL</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Export-CIL">Pragma Export CIL</a>
+
+</div>
+
+<h4 class="subsection">4.3.1 Exporting Objects, Subprograms, and Record Components</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">NOTE: Exporting of record components is not yet supported. <br>
+
+<p class="noindent">If the <var>Local_Name</var> of an <code>Export</code> pragma is the name of an
+object, record component, or subprogram (but not a top-level subprogram),
+<var>String_Expression</var> must be a simple name (i.e., it contains no
+dots), giving the name of the corresponding entity at the
+CIL level. Here is an example:
+
+<pre class="smallexample">     package C is
+        type Typ is tagged record
+           Field : Integer;
+           pragma Export(CIL, Field, "THE_FIELD");
+        end record;
+     
+        function Instance_Op (This : access Typ; I : Integer) return Integer;
+     
+        Var : Integer;
+        function Op (J : Integer) return Integer;
+     
+     private
+        pragma Export (CIL, Instance_Op, "dispatch_op");
+        pragma Export (CIL, Var, "the_var");
+     end C;
+</pre>
+   <p class="noindent">This is interpreted as the following two class specifications at the CIL
+level:
+
+<pre class="smallexample">     public class c {
+        public static int the_var;
+        public static int op (int j);
+     }
+     public class c$typ {
+        public int THE_FIELD;
+        public int dispatch_op (int i) {...}
+     }
+</pre>
+   <p class="noindent">Note that when exporting an object, subprogram, or record component you
+cannot specify its class, as this is determined by the compiler.
+
+<div class="node">
+<a name="Exporting-Exceptions"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Exporting-Record-Types">Exporting Record Types</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Exporting-Objects-Subprograms-and-Record-Components">Exporting Objects Subprograms and Record Components</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Export-CIL">Pragma Export CIL</a>
+
+</div>
+
+<h4 class="subsection">4.3.2 Exporting Exceptions</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Export</code> pragma is the name of an
+exception <var>E</var>, then the <var>String_Expression</var> of such an
+<code>Export</code> pragma gives the name of the generated class for the Ada
+exception, overriding the name that would have been given by the
+compiler. <var>String_Expression</var> can be a simple class name, or it can
+have the form
+
+<pre class="smallexample">     <var>namespace_name</var><code>.</code><var>class_name</var>
+</pre>
+   <p class="noindent">indicating that the generated class belongs to .NET package
+<var>namespace_name</var>.
+
+   <p>Care must be taken not to use the same class name for two Ada exceptions,
+packages or record types when they belong to different source files located
+in the same directory, since one <samp><span class="file">.class</span></samp> file would overwrite the
+other.
+
+<div class="node">
+<a name="Exporting-Record-Types"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Exporting-Exceptions">Exporting Exceptions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Pragma-Export-CIL">Pragma Export CIL</a>
+
+</div>
+
+<h4 class="subsection">4.3.3 Exporting Record Types</h4>
+
+<!-- ........................................................................... -->
+<p class="noindent">If the <var>Local_Name</var> of an <code>Export</code> pragma is the name of a
+record type <var>P</var>, then the <var>String_Expression</var> of such an
+<code>Export</code> pragma gives the name of the generated .NET class, overriding
+the name that would have been given by the
+compiler. <var>String_Expression</var> can be a simple class name, or it can
+have the form <var>namespace_name</var><code>.</code><var>class_name</var>.
+
+   <p>Care must be taken not to use the same class name for two Ada exceptions
+or record types when they belong to different source files located
+in the same directory.
+
+<div class="node">
+<a name="Debugging-Ada-Programs"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Limitations">Limitations</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#g_t_002eNET_002dSpecific-Pragmas">.NET-Specific Pragmas</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">5 Debugging Ada Programs</h2>
+
+<!-- =========================================================================== -->
+<p class="noindent">Because GNAT generates DLLs and executables that are fully compliant with the
+.NET framework, you can use any .NET debugger (e.g. <code>Visual Studio</code>),
+with GNAT. 
+However, in order to use such a debugger on Ada
+constructs that are not directly available in CIL
+(e.g. attributes), you need to know how GNAT compiles these into bytecode.
+
+   <p>This chapter explains the correspondence between Ada features and
+bytecode.  It is not a complete description;
+if you need to understand the output of the
+GNAT compiler for a particular Ada construct that is not documented
+below, you can inspect the assembly code generated by GNAT (<samp><span class="file">.il</span></samp>
+file).
+
+<ul class="menu">
+<li><a accesskey="1" href="#Ada-Compilation-Units">Ada Compilation Units</a>
+<li><a accesskey="2" href="#Lexical-Elements">Lexical Elements</a>
+<li><a accesskey="3" href="#Enumeration-Types">Enumeration Types</a>
+<li><a accesskey="4" href="#Integer-Types">Integer Types</a>
+<li><a accesskey="5" href="#Floating-Point-Types">Floating Point Types</a>
+</ul>
+
+<div class="node">
+<a name="Ada-Compilation-Units"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Lexical-Elements">Lexical Elements</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>
+
+</div>
+
+<h3 class="section">5.1 Ada Compilation Units</h3>
+
+<!--  -->
+<p class="noindent">Unless pragma <code>Export</code> is used (see <a href="#Pragma-Export-CIL">Pragma Export CIL</a>),
+the names of all classes generated from the
+compilation of an Ada unit are folded to lower case. 
+Similarly for the names of all of the entities
+generated inside a class file.
+
+   <p>The compilation of a nongeneric Ada library unit <var>P</var> always generates
+an assembly file <samp><span class="file">p.il</span></samp> containing a <code>p_pkg</code> class.
+
+   <p>A package <code>Q</code> nested inside an Ada unit <code>P</code> does not result
+in a separate class. Entities declared within the nested package
+will generally be associated as members of the containing library
+package's class. However, the names of the
+corresponding fields and methods resulting from the nested package will
+be given expanded names that include the name of the outermost
+library package followed by the names of any enclosing nested
+packages. Adjacent pairs of simple names in the expansion are
+separated by an underscore (e.g., <samp><span class="file">p_q_proc</span></samp>).
+
+   <p>A child unit <code>P.Q</code> is compiled into a .NET class p.q_pkg. 
+All the rules described here are applied recursively with
+respect to <code>Q</code>'s contents.
+
+   <p>A generic package instantiation <code>R</code> nested inside an Ada unit <code>P</code> is
+treated exactly like a nested package.
+
+   <p>A generic subprogram instantiation <code>S</code> nested inside an Ada unit <code>P</code>
+treated exactly like a nested subprogram.
+
+   <p>A subprogram <code>N</code> nested inside another subprogram <code>P</code> will
+be treated as a static method of the enclosing library unit's class
+and will be given an expanded name that includes the names of any
+enclosing subprograms (e.g., <samp><span class="file">pkg_p_n</span></samp>). In addition, a special
+class will be generated for the nested subprogram's enclosing
+subprogram to contain fields for any objects of the enclosing subprogram
+that are referenced by the nested subprogram. The name of this
+special Activation Record class is constructed by appending the prefix
+<samp><span class="file">__AR_</span></samp> to the name of the enclosing subprogram (e.g., <samp><span class="file">__AR_pkg_p</span></samp>).
+
+<div class="node">
+<a name="Lexical-Elements"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Enumeration-Types">Enumeration Types</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Ada-Compilation-Units">Ada Compilation Units</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>
+
+</div>
+
+<h3 class="section">5.2 Lexical Elements</h3>
+
+<!--  -->
+<p class="noindent">Letters in all Ada identifiers in user code are folded into lower case
+when generating symbolic references for .NET, unless <code>pragma Export</code> is
+used. However, certain names corresponding to internal entities generated
+by the GNAT front end may include upper-case letters. These can be seen using
+the <code>-gnatG</code> or <code>-gnatD</code> switches.
+
+<div class="node">
+<a name="Enumeration-Types"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Integer-Types">Integer Types</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Lexical-Elements">Lexical Elements</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>
+
+</div>
+
+<h3 class="section">5.3 Enumeration Types</h3>
+
+<!--  -->
+<p class="noindent">An Ada enumeration type is converted into a .NET 1-byte, 2-byte, 4-byte or
+8-byte integer whose size best matches the value of the largest enumeration
+literal.
+
+   <p>Character types are treated like regular Ada enumeration types. More
+specifically, the Ada <code>Character</code> type is mapped to a .NET <code>byte</code>,
+and the Ada <code>Wide_Character</code> type is mapped to the equivalent
+2-byte .NET <code>char</code> type.
+
+   <p>An Ada Boolean type is treated like a standard Ada enumeration type with 2
+values and is consequently mapped into a .NET <code>byte</code>.
+
+<div class="node">
+<a name="Integer-Types"></a>
+<p><hr>
+Next:&nbsp;<a rel="next" accesskey="n" href="#Floating-Point-Types">Floating Point Types</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Enumeration-Types">Enumeration Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>
+
+</div>
+
+<h3 class="section">5.4 Integer Types</h3>
+
+<!--  -->
+<p class="noindent">Each signed integer type is mapped to the smallest corresponding .NET integer
+type whose size is able to represent all required integer values:
+
+   <p><table summary=""><tr align="left"><td valign="top"><b>Ada type</b>    </td><td valign="top"><b>.NET type</b>
+<br></td></tr><tr align="left"><td valign="top"><code>Short_Short_Integer</code> </td><td valign="top"><code>byte</code>  <i>(1 byte)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Short_Integer</code>       </td><td valign="top"><code>short</code> <i>(2 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Integer</code>             </td><td valign="top"><code>int</code>   <i>(4 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Long_Integer</code>        </td><td valign="top"><code>long</code>  <i>(8 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Long_Long_Integer</code>   </td><td valign="top"><code>long</code>  <i>(8 bytes)</i>
+   <br></td></tr></table>
+
+<p class="noindent">Each modular type is also mapped to the smallest corresponding .NET integer
+type whose size is able to represent all required modular values.
+
+<div class="node">
+<a name="Floating-Point-Types"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Integer-Types">Integer Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>
+
+</div>
+
+<h3 class="section">5.5 Floating Point Types</h3>
+
+<!--  -->
+<p class="noindent">The Ada predefined floating point types map very naturally onto .NET's
+IEEE 32-bit float and IEEE 64-bit double:
+
+   <p><table summary=""><tr align="left"><td valign="top"><b>Ada type</b>    </td><td valign="top"><b>.NET type</b>
+<br></td></tr><tr align="left"><td valign="top"><code>Short_Float</code>     </td><td valign="top"><code>float</code>  <i>(4 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Float</code>           </td><td valign="top"><code>float</code>  <i>(4 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Long_Float</code>      </td><td valign="top"><code>double</code> <i>(8 bytes)</i>
+<br></td></tr><tr align="left"><td valign="top"><code>Long_Long_Float</code> </td><td valign="top"><code>double</code> <i>(8 bytes)</i>
+   <br></td></tr></table>
+
+<p class="noindent">User-defined floating point types are mapped into <code>Float</code> where
+possible, and <code>Long_Float</code> otherwise.
+
+<div class="node">
+<a name="Limitations"></a>
+<p><hr>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="#Debugging-Ada-Programs">Debugging Ada Programs</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="#dir">(dir)</a>
+
+</div>
+
+<h2 class="chapter">6 Limitations</h2>
+
+<!-- =========================================================================== -->
+<p class="noindent">Due to constraints of the .NET environment, or to implementation limitations,
+GNAT for .NET only supports a subset of the Ada language and GNAT
+run-time.
+
+<p class="noindent">Language constructs not supported (where noted, partial support is provided):
+
+     <ul>
+<li>Types imported from .NET do not support enumeration attributes
+(e.g. <code>'Image</code>)
+
+     <li>Exception streams and attributes
+
+     <li>Representation items  (13.1)
+
+     <li>pragma <code>Pack</code> (ignored) (13.2)
+
+     <li>Representation attributes (13.3)
+
+     <li>Record layout   (13.5)
+
+     <li>Machine Code Insertions  (13.8)
+
+     <li><code>Unchecked_Conversion</code> between different non scalar types  (13.9)
+
+     <li>Limited support on Ada.Streams package  (13.13)
+
+     <li><code>'Size</code> attribute on non scalar objects
+
+     <li><code>'Storage_Size</code> attribute on non-task objects
+
+     <li><code>'First_Bit</code>, <code>'Last_Bit</code>, <code>'Position</code> attributes
+
+     <li><code>'External_Tag</code> attribute
+
+     <li><code>'Pred</code>, <code>'Succ</code> attribute for modular types
+
+     <li><code>'Version</code> and <code>'Body_Version</code> attributes
+
+     <li>Limited support of the <code>'Val</code> attribute
+
+     <li>Function returning unconstrained array will have wrong <code>'First</code>
+and <code>'Last</code>
+
+     <li>User-defined Storage_Pools
+
+     <li>Limited support for controlled types
+
+     <li><code>'Address</code> on non-aliased, non-local objects
+
+     <li><code>System.Address</code> comparisons, other than <code>"="</code> and
+<code>"/="</code>
+
+     <li>Some forms of scalar object renaming (e.g. renaming of dereferenced
+access value)
+
+     <li>Pragmas <code>Import</code>, <code>Export</code>, and <code>Convention</code> other than
+<code>Ada</code> and <code>CIL</code>
+
+     <li>Pragma <code>Interrupt_Handler</code>, <code>Attach_Handler</code>
+
+     <li>Asynchronous abort of tasking constructs and tasks
+
+     <li>Access-to-protected-subprogram types
+
+     <li>Incomplete types completed in package bodies
+
+     <li>Stack overflows cannot be caught. (e.g ACATS test cb1010c &amp; cb1010d)
+  This limitation comes with .NET 2.0, which does not allow an application to
+  catch the <code>StackOverflowException</code>.
+
+     <li><code>Wide_String</code> and <code>Wide_Wide_String</code> (e.g. ACATS test c250001)
+
+     <li>Null arrays with multiple dimensions
+
+   </ul>
+
+<p class="noindent">Switches not supported:
+
+     <ul>
+<li>-gnatE (dynamic elaboration)
+</ul>
+
+<p class="noindent">Run-time units not supported yet, which will be available in the future:
+
+     <ul>
+<li>Ada.Directories
+</ul>
+
+<p class="noindent">Run-time units not supported:
+
+     <ul>
+<li>Ada.Sequential_IO.C_Streams, Ada.Storage_IO,
+  Ada.Text_IO.C_Streams, Ada.Wide_Text_IO.C_Streams, Ada.Direct_IO.C_Streams
+<li>Ada.Real_Time.Timing_Events
+
+     <li>Ada.Asynchronous_Task_Control
+<li>Ada.Command_Line.Environment
+<li>Ada.Exceptions.Traceback
+<li>Ada.Interrupts,
+<li>Ada.Task_Attributes,
+<li>Ada.Task_Termination,
+
+     <li>Interfaces.C.Extensions, Interfaces.Cobol, Interfaces.C.Pointers,
+  Interfaces.CPP, Interfaces.C.Strings, Interfaces.Fortran,
+  Interfaces.Packed_Decimal
+
+     <li>Machine_Code, System.Machine_Code
+
+     <li>GNAT.Altivec
+<li>GNAT.Array_Split
+<li>GNAT.Lock_Files, GNAT.Socket
+<li>GNAT.Exceptions, GNAT.Expect, GNAT.AWK, GNAT.CGI, GNAT.CRC32, GNAT.MD5,
+  GNAT.SHA1, GNAT.Spitbol
+<li>GNAT.Byte_Swapping
+<li>GNAT.Calendar
+<li>GNAT.Command_Line
+<li>GNAT.Compiler_Version
+<li>GNAT.Current_Exception, GNAT.Debug_Pools, GNAT.Debug_Utilities,
+  GNAT.Exception_Actions, GNAT.Exception_Traces, GNAT.Memory_Dump
+<li>GNAT.Dynamic_Tables
+<li>GNAT.Float_Control
+<li>GNAT.OS_Lib is only partially supported
+<li>GNAT.Perfect_Hash_Generators
+<li>GNAT.Secondary_Stack_Info
+<li>GNAT.Table,
+<li>GNAT.Task_Stack_Usage,
+<li>GNAT.Time_Stamp
+<li>GNAT.Thread, GNAT.Signal
+<li>GNAT.String_Split, GNAT.Wide_String_Split, GNAT.Wide_Wide_String_Split
+  GNAT.Traceback
+
+   </ul>
+
+<!-- @node Index,, Limitations, (dir) -->
+<!-- @unnumbered Index -->
+<!-- @printindex cp -->
+   <div class="contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a name="toc_About-This-Guide" href="#About-This-Guide">About This Guide</a>
+<ul>
+<li><a href="#What-This-Guide-Contains">What This Guide Contains</a>
+<li><a href="#What-you-should-know-before-reading-this-guide">What You Should Know Before Reading This Guide</a>
+<li><a href="#Related-Information">Related Information</a>
+<li><a href="#Conventions">Conventions</a>
+</li></ul>
+<li><a name="toc_Getting-Started-with-GNAT-for-_002eNET" href="#Getting-Started-with-GNAT-for-_002eNET">1 Getting Started with GNAT for .NET</a>
+<ul>
+<li><a href="#Overview">1.1 Overview</a>
+<li><a href="#GNAT-Tools">1.2 GNAT Tools</a>
+<li><a href="#_002eNET-Development-Kits-that-you-can-use-with-GNAT">1.3 .NET Development Kits compatible with GNAT</a>
+<li><a href="#Compiling-Your-First-Application-with-GNAT-for-_002eNET">1.4 Compiling Your First Application with GNAT for .NET</a>
+</li></ul>
+<li><a name="toc_Ada-_0026-_002eNET-Interoperability" href="#Ada-_0026-_002eNET-Interoperability">2 Ada and .NET Interoperability</a>
+<ul>
+<li><a href="#Importing-_002eNET-Services-to-Ada">2.1 Importing .NET Services to Ada</a>
+<li><a href="#Exporting-Ada-Services-to-_002eNET">2.2 Exporting Ada Services to .NET</a>
+</li></ul>
+<li><a name="toc_Using-the-_002eNET-API-with-cil2ada" href="#Using-the-_002eNET-API-with-cil2ada">3 Using the .NET API with <code>cil2ada</code></a>
+<ul>
+<li><a href="#Running-cil2ada">3.1 Running <code>cil2ada</code></a>
+<li><a href="#Switches-for-cil2ada">3.2 Switches for <code>cil2ada</code></a>
+<li><a href="#Running-cil2ada-on-the-_002eNET-API">3.3 Running cil2ada on the .NET API</a>
+</li></ul>
+<li><a name="toc__002eNET_002dSpecific-Pragmas" href="#_002eNET_002dSpecific-Pragmas">4 .NET-Specific Pragmas</a>
+<ul>
+<li><a href="#The-CIL_005fConstructor-Pragma">4.1 The <code>CIL_Constructor</code> Pragma</a>
+<ul>
+<li><a href="#Background-on-_002eNET-Constructors">4.1.1 Background on .NET Constructors</a>
+<li><a href="#Using-_002eNET-Constructors-in-Ada">4.1.2 Using .NET Constructors in Ada</a>
+<li><a href="#_002eNET-Constructors-and-Ada-Allocators">4.1.3 .NET Constructors and Ada Allocators</a>
+</li></ul>
+<li><a href="#Pragma-Import-CIL">4.2 Pragma Import CIL</a>
+<ul>
+<li><a href="#Importing-Packages">4.2.1 Importing Packages</a>
+<li><a href="#Importing-Exceptions">4.2.2 Importing Exceptions</a>
+<li><a href="#Importing-Record-Components">4.2.3 Importing Record Components</a>
+<li><a href="#Importing-Dispatching-Subprograms">4.2.4 Importing Dispatching Subprograms</a>
+<li><a href="#Importing-Objects">4.2.5 Importing Objects</a>
+<li><a href="#Importing-Non_002dDispatching-Subprograms">4.2.6 Importing Non-Dispatching Subprograms</a>
+<li><a href="#Importing-Delegates">4.2.7 Importing Delegates</a>
+</li></ul>
+<li><a href="#Pragma-Export-CIL">4.3 Pragma Export CIL</a>
+<ul>
+<li><a href="#Exporting-Objects-Subprograms-and-Record-Components">4.3.1 Exporting Objects, Subprograms, and Record Components</a>
+<li><a href="#Exporting-Exceptions">4.3.2 Exporting Exceptions</a>
+<li><a href="#Exporting-Record-Types">4.3.3 Exporting Record Types</a>
+</li></ul>
+</li></ul>
+<li><a name="toc_Debugging-Ada-Programs" href="#Debugging-Ada-Programs">5 Debugging Ada Programs</a>
+<ul>
+<li><a href="#Ada-Compilation-Units">5.1 Ada Compilation Units</a>
+<li><a href="#Lexical-Elements">5.2 Lexical Elements</a>
+<li><a href="#Enumeration-Types">5.3 Enumeration Types</a>
+<li><a href="#Integer-Types">5.4 Integer Types</a>
+<li><a href="#Floating-Point-Types">5.5 Floating Point Types</a>
+</li></ul>
+<li><a name="toc_Limitations" href="#Limitations">6 Limitations</a>
+</li></ul>
+</div>
+
+</body></html>
+

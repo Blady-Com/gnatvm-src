@@ -1,0 +1,5 @@
+.assembly extern mscorlib
+{
+  .publickeytoken = (96 9D B8 05 3D 33 22 AC)
+  .ver 2:0:0:0
+}

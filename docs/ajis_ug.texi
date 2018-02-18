@@ -1,0 +1,4871 @@
+\input texinfo   @c -*-texinfo-*-
+@input texiplus
+
+@c %**start of header
+
+@c oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+@c                                                                            o
+@c                           GNAT DOCUMENTATION                               o
+@c                                                                            o
+@c                              A J I S _ UG                                  o
+@c                                                                            o
+@c          Copyright (C) 1995-2012, Free Software Foundation, Inc.           o
+@c                                                                            o
+@c                                                                            o
+@c  GNAT is maintained by Ada Core Technologies Inc (http://www.gnat.com).    o
+@c                                                                            o
+@c oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+
+@setfilename ajis_ug.info
+@include version.texi
+@c version.texi contains a command that sets the gnat_version flag
+
+@include edition.texi
+@c edition.texi contains commands that set exactly one of the flags
+@c FSFEDITION, PROEDITION, GPLEDITION
+@c and that clear the other two
+
+@ifset FSFEDITION
+@set EDITION GNAT
+@set DEFAULTLANGUAGEVERSION Ada 2005
+@set NONDEFAULTLANGUAGEVERSION Ada 95
+@end ifset
+
+@ifset PROEDITION
+@set EDITION GNAT Pro
+@set DEFAULTLANGUAGEVERSION Ada 95
+@set NONDEFAULTLANGUAGEVERSION Ada 2005
+@end ifset
+
+@ifset GPLEDITION
+@set EDITION GNAT
+@set DEFAULTLANGUAGEVERSION Ada 2005
+@set NONDEFAULTLANGUAGEVERSION Ada 95
+@end ifset
+
+@settitle GNAT Ada-Java Interfacing Suite User's Guide
+
+
+@setchapternewpage odd
+@syncodeindex fn cp
+
+@dircategory GNU Ada tools
+@direntry
+* GNAT Ada-Java Interfacing Suite User's Guide: (gnatajis_ug).  GNU Ada User's Guide for GNAT Ada-Java Interfacing Suite.
+@end direntry
+@titlepage
+
+@title GNAT-AJIS User's Guide
+@flushright
+@titlefont{GNAT Ada-Java Interfacing Suite}
+@end flushright
+@sp 2
+
+@ifset FSFEDITION
+@subtitle A Toolkit for GNAT, The GNU Ada Compiler
+@subtitle GNAT Version @value{gnat_version}
+@end ifset
+@c --------
+@ifset PROEDITION
+@subtitle A Toolkit for the GNAT Pro Ada Compiler
+@subtitle GNAT Pro Version @value{gnat_version}
+@end ifset
+@c --------
+@ifset GPLEDITION
+@subtitle A Toolkit for GNAT, the GNU Ada Compiler
+@subtitle GNAT GPL Edition, Version @value{gnat_version}
+@end ifset
+@c --------
+@c @subtitle Document revision level $Revision: 1.525 $
+@c @subtitle Date: $Date: 2006/12/31 13:15:36 $
+@c @subtitle March 2008 (Beta Release)
+@author AdaCore
+
+@page
+@vskip 0pt plus 1filll
+
+Copyright @copyright{} 1995-2008, Free Software Foundation
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1
+or any later version published by the Free Software Foundation;
+with the Invariant Sections being ``GNU Free Documentation License'',
+with the Front-Cover Texts being ``GNAT-AJIS User's Guide'' and
+``GNAT Ada-Java Interfacing Suite'', and with no Back-Cover Texts.
+A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+
+@end titlepage
+
+@ifnottex
+@ifset FSFEDITION
+@node Top, About This Guide, (dir), (dir)
+@top GNAT Ada-Java Interfacing Suite User's Guide
+@noindent
+GNAT Ada-Java Interfacing Suite User's Guide
+
+@noindent
+GNAT, The GNU Ada Compiler@*
+GNAT Version @value{gnat_version}@*
+@end ifset
+@c --------
+@ifset PROEDITION
+@node Top, About This Guide, (dir), (dir)
+@top GNAT Ada-Java Interfacing Suite User's Guide
+@noindent
+GNAT Ada-Java Interfacing Suite User's Guide
+@noindent
+The GNAT Pro Ada Compiler@*
+GNAT Pro Version @value{gnat_version}@*
+@end ifset
+@c --------
+@ifset GPLEDITION
+@node Top, About This Guide, (dir), (dir)
+@top GNAT Ada-Java Interfacing Suite User's Guide
+@noindent
+GNAT Ada-Java Interfacing Suite User's Guide
+
+@noindent
+GNAT, The GNU Ada Compiler@*
+GNAT GPL Edition, Version @value{gnat_version}@*
+@end ifset
+@c --------
+@noindent
+@c Document revision level $Revision: 1.525 $@*
+@c Date: $Date: 2006/12/31 13:15:36 $
+@c March 2008 (Beta Release)
+
+@noindent
+AdaCore
+
+@noindent
+Copyright @copyright{} 1995-2008, Free Software Foundation
+
+@noindent
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1
+or any later version published by the Free Software Foundation;
+with the Invariant Sections being ``GNU Free Documentation License'',
+ with the Front-Cover Texts being ``GNAT Ada-Java Interfacing Suite'' and
+``GNAT-AJIS User's Guide'', and with no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU
+Free Documentation License''.
+
+
+@menu
+* About This Guide::
+* Getting Started with GNAT-AJIS::
+* Using ada2java to Generate Java Classes::
+* Mapping Ada to Java::
+* Advanced ada2java Topics::
+* Using javastub to Generate Ada Package Specifications::
+* Using JNI Directly::
+* Index::
+
+ --- The Detailed Node Listing ---
+
+About This Guide
+
+Index
+@end menu
+
+@end ifnottex
+
+@c ******************************
+@node About This Guide
+@unnumbered About This Guide
+@c ******************************
+
+
+@noindent
+This guide describes the features and the use of GNAT-AJIS, the GNAT Ada-Java
+Interfacing Suite that can be used with the @value{EDITION}
+Ada development environment.
+
+@menu
+* What This Guide Contains::
+* What You Should Know before Reading This Guide::
+@end menu
+
+
+@node What This Guide Contains
+@unnumberedsec What This Guide Contains
+
+@noindent
+This guide contains the following chapters:
+@itemize @bullet
+
+@item
+@ref{Getting Started with GNAT-AJIS}, describes how to set up your environment
+and illustrates the use of the GNAT-AJIS toolset
+
+@item
+@ref{Using ada2java to Generate Java Classes}, describes how to use
+@command{ada2java} to generate Java classes that can be used as a ``thin
+binding'' to an Ada package specification.
+
+@item
+@ref{Mapping Ada to Java}, describes how Ada features are mapped to Java by
+@command{ada2java}.
+
+@item
+@ref{Advanced ada2java Topics}, describes some of the advanced aspects of
+the mapping of Ada to Java.
+
+@item
+@ref{Using javastub to Generate Ada Package Specifications}, describes how
+to use the @command{javastub} utility.
+
+@item
+@ref{Using JNI Directly}, describes how to write native methods in Ada with
+the same low-level style as in C.
+@end itemize
+
+
+@node What You Should Know before Reading This Guide
+@unnumberedsec What You Should Know before Reading This Guide
+
+Before reading this manual you should be familiar with the following:
+
+@itemize @bullet
+@item
+The Ada programming language, and in particular the Ada 2005 Object-Oriented
+Programming and separate compilation enhancements (e.g., @code{limited with},
+interfaces) that facilitate interfacing between Ada and Java.
+
+@item
+The @cite{@value{EDITION} User Guide}
+
+@item
+The Java programming language
+@end itemize
+
+@noindent
+It will also be useful if you have a basic knowledge of the following:
+
+@itemize @bullet
+@item
+JNI (Java Native Interface), for example as described in @cite{The Java Native
+Interface Programmer's Guide and Specification}, S. Liang, Addison-Wesley;
+1999.
+@end itemize
+
+
+
+
+
+
+@c ******************************
+@node Getting Started with GNAT-AJIS
+@chapter Getting Started with GNAT-AJIS
+@c ******************************
+
+@noindent
+This chapter summarizes GNAT-AJIS's basic capabilities and illustrates
+how to use the GNAT-AJIS tools for some simple applications.
+
+@menu
+* Introduction::
+* GNAT-AJIS Installation Structure::
+* GNAT-AJIS / GNAT Compatibility::
+* A Simple Example- Calling Ada from Java::
+@end menu
+
+@node Introduction
+@section Introduction
+
+@noindent
+GNAT-AJIS (GNAT Ada-Java Interfacing Suite) is a collection of @value{EDITION}
+add-on tools for developing mixed-language Ada / Java applications
+where the Java components run on a JVM and the Ada components are
+compiled natively.
+Through GNAT-AJIS you can realize the following scenarios:
+
+@enumerate
+@item
+In a Java application, invoke subprograms from natively-compiled
+Ada packages (i.e., either interface with an existing Ada API, or
+implement Java native methods in Ada);
+
+@item
+In a natively compiled Ada program, access methods and fields from Java
+classes or objects.
+@end enumerate
+
+@noindent
+GNAT-AJIS addresses these scenarios through an Ada binding to the JNI
+services and ``binding generator'' tools that automate the generation of the
+necessary ``glue code'':
+
+@table @command
+@item ada2java
+@cindex @command{ada2java}
+Takes an Ada package specification as input and produces one or more
+Java classes, with
+native methods corresponding to the Ada subprograms.
+This allows you to call Ada from Java.
+
+@item javastub
+@cindex @command{javastub}
+Takes a Java classfile and produces an Ada package spec for the native
+methods found in these files.
+This allows you to implement Java native methods in Ada.
+@end table
+
+@node GNAT-AJIS Installation Structure
+@section GNAT-AJIS Installation Structure
+@cindex Installation of GNAT-AJIS
+
+@noindent
+Installing the GNAT-AJIS tools results in the following
+directory structure:@footnote{For simplicity, Unix-style notation is
+used throughout this manual in depicting directories and other host system
+conventions.
+For Windows, please make the relevant transformations (e.g. `\'
+for `/' in path names.}
+
+@smallexample
+@group
+@i{$GNATAJIS_INSTALL_DIR}/
+   bin/
+      ada2java @i{(Solaris, Linux) or} ada2java.exe @i{(Windows) -- executable}
+   include/
+      ajis/
+         @i{Various @file{.ads} and @file{.adb} files}
+      gnatjni/
+         @i{Various @file{.ads} and @file{.adb} files}
+   lib/
+      libajis.so @i{(Solaris, Linux) or} ajis.dll @i{(Windows)}
+      libgnatjni.so @i{(Solaris, Linux) or} gnatjni.dll @i{(Windows)}
+      ajis.jar
+      ajis/
+         @i{Various @file{.ali} files}
+      gnat/
+         @i{Various files}
+      gnatjni/
+         @i{Various @file{.ali} files}
+@end group
+@end smallexample
+
+
+@node GNAT-AJIS / GNAT Compatibility
+@section GNAT-AJIS / GNAT Compatibility
+@cindex Compatibility (of GNAT-AJIS and GNAT)
+@cindex ASIS
+
+@noindent
+@code{ada2java} is based on ASIS and requires a compatible version of the
+GNAT compiler.
+To check the status of your installation, run @command{ada2java} with the
+@option{-v} switch; this will indicate the version of the GNAT compiler that
+was used to build the GNAT-AJIS suite.
+Your GNAT-AJIS installation is compatible with that GNAT version:
+
+@itemize
+@item
+Running @code{ada2java} requires using that specific GNAT version;
+
+@item
+On the other hand, the generated Ada files may be compiled with that version
+or any later one.
+@end itemize
+
+@noindent
+The @code{gnatjni} and @code{ajis} libraries have been prebuilt for a specific
+version of GNAT. If you need to compile them for some other version of GNAT,
+you can rebuild the libraries manually:
+
+@smallexample
+   gprbuild -P ajis.gpr -XExternal_Build=false -XObject_Dir=<@i{some-dir}>
+@end smallexample
+
+@noindent
+where <@i{some-dir}> is a local directory where the temporary objects will be
+placed.
+
+@node A Simple Example- Calling Ada from Java
+@section A Simple Example: Calling Ada from Java
+
+@noindent
+This section illustrates how to invoke an Ada subprogram (compiled natively)
+from Java running on a JVM.
+In summary, the steps are as follows:
+
+@itemize @bullet
+@item
+Make sure that the relevant environment variables are properly defined.
+
+@item
+Write a package specification for the subprogram(s) to be called from Java,
+and a corresponding package body.
+
+@item
+Invoke the GNAT-AJIS tool @command{ada2java} on the Ada package spec,
+to produce the corresponding Java classes (source files) and the necessary
+JNI ``glue'' code (additional Ada source files).
+Providing the @option{-L @i{libname}} switch will cause a project file to
+be generated, which will help to automate some of the processing.
+
+@item
+Invoke the Java compiler @command{javac} on the Java source files;
+
+@item
+Invoke @command{gprbuild} on the project file generated by @command{ada2java};
+this will compile the Ada files into a shared library
+(Solaris, Linux) or dll (Windows);
+
+@item
+Invoke the Java interpreter to run a Java main class that invokes methods from
+the Java classes generated by @command{ada2java}.
+@end itemize
+
+@noindent
+These steps will now be described in detail.
+
+@menu
+* Environment Setup::
+* An Ada Package::
+* Invoking ada2java::
+* Compiling the Java class::
+* Building the Application::
+* Running the Program::
+@end menu
+
+@node Environment Setup
+@subsection Environment Setup
+
+@noindent
+Since you will be using both the Ada and Java toolsets, you need to
+ensure that several environment variables are set.
+You can automate this step by defining these variables in a
+shell script / batch file.
+For convenience you will also find it useful to define an environment
+variable that ``points to'' the root directory for the GNAT-AJIS
+tool installation.
+The description below assumes that @code{GNATAJIS_INSTALL_DIR}
+has this role.
+
+@table @code
+@item PATH
+@cindex @code{PATH} environment variable
+Must contain the directories for the GNAT tools and for the GNAT-AJIS tools.
+The latter will be in the
+@code{$GNATAJIS_INSTALL_DIR/bin} directory. On Windows, it needs to contain
+the directory where the shared libraries are generated, typically @file{./lib}
+although you can override this.
+
+@item LD_LIBRARY_PATH
+@cindex @code{LD_LIBRARY_PATH} environment variable
+On Solaris and Linux, must contain the directories where your native libraries
+will reside (generally the @file{./lib} subdirectory).
+This variable is not needed on Windows.
+
+@item CLASSPATH
+@cindex @code{CLASSPATH} environment variable
+Must contain @code{$GNATAJIS_INSTALL_DIR/lib/ajis.jar}, which is the parent
+directory of the @file{com.adacore.ajis} Java package.
+
+@item ADA_PROJECT_PATH
+@cindex @code{ADA_PROJECT_PATH} environment variable
+Must contain @file{$GNATAJIS_INSTALL_DIR/lib/gnat}, the directory
+that holds the GNAT project files needed for building applications
+with GNAT-AJIS.
+@end table
+
+@node An Ada Package
+@subsection An Ada Package
+
+@noindent
+Assume that you would like to invoke an Ada procedure that displays
+the text @code{Hello from Ada}, followed by an integer value passed
+to Ada from Java.
+Declare a procedure @code{Hello} in a package spec @code{Hello_Pkg}
+(file @file{hello_pkg.ads}) and implement the body
+(file @file{hello_pkg.adb}):
+
+@smallexample @c ada
+@group
+package Hello_Pkg is
+   procedure Hello (Item : in Integer);
+end Hello_Pkg;
+@end group
+
+@group
+with Ada.Text_IO; use Ada.Text_IO;
+package body Hello_Pkg is
+   procedure Hello (Item : in Integer) is
+   begin
+      Put_Line("Hello from Ada: " & Integer'Image(Item));
+   end Hello;
+end Hello_Pkg;
+@end group
+@end smallexample
+
+@node Invoking ada2java
+@subsection Invoking @command{ada2java}
+
+@noindent
+Change to the directory containing the Ada source files, and
+invoke the command
+
+@smallexample
+ada2java hello_pkg.ads -L hello_proj
+@end smallexample
+
+@noindent
+This will generate a number of files and directories, including:
+
+@smallexample
+Hello_Pkg/
+   Hello_Pkg_Package.java
+
+Ada2Java/
+   Library.java
+
+hello_proj.gpr
+
+@i{Specs and bodies for the @code{JNI_Binding} package hierarchy}
+@end smallexample
+
+@noindent
+These have the following significance:
+
+@table @asis
+@item Directory @file{Hello_Pkg}
+In the absence of an option that specifies the output directory for the
+generated Java file, @command{ada2java} creates a new directory
+with the same name as the Ada input unit and places the Java file
+in this directory.
+
+@item File @file{Hello_Pkg_Package.java}
+@command{ada2java} generates a Java source file with native method(s)
+corresponding to the visible subprogram(s) in the Ada package.
+(In general @command{ada2java} may generate several Java source files,
+based on the contents of the Ada package spec.  In this example only
+one Java file is produced.)
+The name of this file is the same as the Ada unit,
+with @code{_Package} appended (since the input file is a package,
+rather than a procedure or function).
+The casing of the file name is the same as that specified on the Ada
+unit declaration.
+
+Ada parameters are mapped to Java types; here Ada's @code{Integer} corresponds
+to the Java type @code{int}.
+
+In skeletal form, here is the Java class that is generated:
+
+@smallexample
+@group
+package Hello_Pkg;
+
+public final class Hello_Pkg_Package @{
+
+   static public void Hello (int Item)@{...@}
+   ...
+@}
+@end group
+@end smallexample
+
+
+
+@item Directory @file{Ada2Java} and file @file{Library.java}
+@cindex @file{Ada2Java} directory
+@cindex @file{Library.java} file
+@command{ada2java} generates the boilerplate file @file{Library.java}
+to automate the library load step.
+
+@item File @file{hello_proj.gpr}
+This is a GNAT project file that automates building the application and
+loading the dynamic library.
+
+@item Specs and bodies for the @code{JNI_Binding} package hierarchy
+These files provide various ``boilerplate'' packages as well as the
+package containing the ``glue code'' procedure whose signature complies
+with the required JNI protocol and which
+invokes the @code{Hello} procedure supplied in the original
+@code{Hello_Pkg} package.
+@end table
+
+
+@node Compiling the Java class
+@subsection Compiling the Java class
+
+@noindent
+Invoke the Java compiler on the generated Java class:
+
+@smallexample
+$ javac Hello_Pkg/Hello_Pkg_Package.java
+@end smallexample
+
+@noindent
+This will generate the classfile @file{Hello_Pkg_Package.class} in
+the @file{Hello_Pkg} directory.
+
+@node Building the Application
+@subsection Building the Application
+
+@noindent
+Run @command{gprbuild}, using the project file generated by @command{ada2java}
+at an earlier step:
+@cindex @command{gprbuild} usage
+
+@smallexample
+$ gprbuild -p -P hello_proj.gpr
+@end smallexample
+
+@noindent
+This will generate a dynamic library -- @file{libhello_proj.so} (Solaris,
+Linux) or @file{hello_proj.dll} -- in the subdirectory @file{./lib} of the
+current directory, and will produce the necessary object files in the
+@file{./obj} subdirectory.  The two subdirectories will be created if
+they do not already exist.
+
+The dynamic library will be loaded automatically at run-time, by one of
+the generated Java classes.
+
+@node Running the Program
+@subsection Running the Program
+
+@noindent
+Write a main Java class, for example a file @file{Hello.java}:
+
+@smallexample
+@group
+import Hello_Pkg.Hello_Pkg_Package;
+
+public class Hello@{
+    public static void main(String[] args)@{
+       Hello_Pkg_Package.Hello(100);
+    @}
+@}
+@end group
+@end smallexample
+
+@noindent
+Compile this class:
+
+@smallexample
+$ javac Hello.java
+@end smallexample
+
+@noindent
+Run the Java program:
+
+@smallexample
+$ java Hello
+@end smallexample
+
+@noindent
+This will produce the following output:
+
+@smallexample
+Hello from Ada: 100
+@end smallexample
+
+@noindent
+Note that the library produced earlier must be locatable when the program is
+executed.  On Solaris and Linux the directory containing the library would be
+specified by LD_LIBRARY_PATH.  On Windows, that directory would be
+specified by the PATH environment variable. However, for the purpose of this
+introduction, you could simply copy or move the library to the same location
+as the "Hello.class" file.
+
+@c ******************************
+@node Using ada2java to Generate Java Classes
+@chapter Using @code{ada2java} to Generate Java Classes
+@c ******************************
+@cindex @command{ada2java} command
+
+@noindent
+The @command{ada2java} tool takes one or more Ada package specs
+and produces as output a Java ``binding'' to these packages, implemented
+through JNI.
+The binding consists of a set of Java classes, with methods that access
+the Ada package's visible entities.
+
+More specifically, @command{ada2java} generates two sets of source files
+as output:
+@itemize
+@item
+The Java classes that make up the binding, and
+@item
+The necessary Ada ``glue code''
+that hides the details of how JNI is used for interfacing between
+Ada and Java.
+@end itemize
+
+@noindent
+You will need to compile the Java files to bytecodes for execution
+on a JVM, and you will need to compile the Ada files to native code
+in a dynamic library.
+
+This chapter explains how to use the @command{ada2java} tool and
+describes the mapping from package spec contents to Java classes.
+
+@menu
+* Using the Tool::
+* Compiling and Running the Generated Code::
+* Debugging an Ada / Java Application::
+* Pragma Annotate and ada2java::
+@end menu
+
+@node Using the Tool
+@section Using the Tool
+
+@noindent
+The @command{ada2java} tool is invoked with at least one input file,
+and any number of switches, in any order:
+
+@smallexample
+$ ada2java @{@i{switch | input-file}@} @i{input-file} @{@i{switch | input-file}@}
+@end smallexample
+
+@noindent
+Each @i{input-file} must be the name of a source
+file for an Ada package spec (including the extension).
+
+The following @i{switch} values are allowed:
+
+@table @option
+@item -h
+@cindex @option{-h} option (for ada2java)
+Display help
+
+@item -c @i{JavaClassOutputDirectory}
+@cindex @option{-c} option (for ada2java)
+The root directory used as the destination for the output classes.
+The directory will be created if it does not already exist.
+In the absence of this switch, the current directory is used.
+See below for the relationship with the @option{-b} switch.
+
+@item -b @i{BaseJavaBindingPackage}
+@cindex @option{-b} option (for ada2java)
+The base package for the generated Java classes; this will be
+relative to the directory specified in the @option{-c} switch,
+or relative to the current directory if no @option{-c} switch was supplied.
+
+@item -o @i{AdaGlueOutputDirectory}
+@cindex @option{-o} option (for ada2java)
+The destination directory for the ``glue'' packages
+(@file{ads} and @file{adb} files) generated by @command{ada2java}.
+The current directory will be used if this switch is not supplied.
+The generated packages will need to be compiled into a dynamic library.
+
+@item -P @i{ProjectFile}
+@cindex @option{-P} option (for ada2java)
+The project file that applies to the processing of the @i{input-file}s
+submitted to @command{ada2java}.  This can specify compiler switches, source
+directories, etc.
+@i{ProjectFile} must be a ``flat'' project
+(sources from ``with''ed projects are not yet supported).
+
+@item -L @i{LibraryName}
+@cindex @option{-L} option (for ada2java)
+A mechanism for automating the loading of the native Ada dynamic library
+in Java.
+This switch causes the generation of a project file @file{@i{LibraryName}.gpr}
+in the directory specified by the @option{-o} switch (or in the current
+directory if the @option{-o} switch was not supplied).
+The resulting project file can be submitted to @command{gprbuild}
+to build the dynamic library:
+
+@smallexample
+$ gprbuild -p -P @i{LibraryName}.gpr
+@end smallexample
+
+@noindent
+which will generate a @file{lib/} subdirectory that contains the file
+@file{lib@i{LibraryName}.so} (Solaris, Linux) or @file{@i{LibraryName}.dll}
+(Windows).  This library will be loaded automatically whenever one of
+the Java classes produced by @command{ada2java} is loaded; there is
+no need for the user to explicitly include an invocation of
+@code{System.loadLibrary}.
+
+@item -M @i{MainName}
+@cindex @option{-M} option (for ada2java)
+A mechanism for automating the creation of an Ada main subprogram, embedding
+both the native code and a JVM. See @ref{Compiling as an Ada Main Subprogram}
+for more details. Implies @code{-link-method=register_natives}.
+
+@item --main-class=@i{java main class}
+@cindex @option{--main-class} option (for ada2java)
+Changes the name of the java main class to use, in case the @option{-M}
+switch is used.
+See @ref{Compiling as an Ada Main Subprogram} for more details.
+
+@item --link-mode=(@i{export}|@i{register_natives})
+@cindex @option{--link-mode} option (for ada2java)
+The Java virtual machine has two ways of discovering the functions declared in
+the native environment. Either it checks the correspondence between the
+exported symbol and the Java native declaration name (@i{export} mode), or the
+JNI code registers manually the symbols using the @code{Register_Native}
+JNI function
+(@i{register_natives} mode). Note that if the code is not in a shared library
+but compiled with a main native subprogram, then only @i{register_natives} mode
+will work.
+
+@item --library-kind=(@i{dynamic}|@i{encapsulated})
+@cindex @option{--library-kind} option (for ada2java)
+Set the library generation method: normal or standalone (used by -L).
+Ada2Java can create two different kinds of library: dynamic or encapsulated.
+Dynamic is the default mode and generate a dynamic library which depends on
+GNATJNI and AJIS libraries on one hand, and the GNAT run-time on the other
+hand whereas an encapsulated library is autonomous: it contains all the
+necessary symbols from the three dependencies to be standalone.
+
+@item --bound-package-root=@i{root package name}
+Set the name of the root glue Ada packages (default is JNI_Binding).
+
+@item --bound-package-suffix=@i{package suffix}
+Set the suffix of the glue Ada packages (default is _JNI).
+
+@item --no-monitor[-finalize]
+@itemx --monitor[-finalize]-(check|protect)
+@cindex @option{--monitor} option (for ada2java)
+@cindex @option{--no-monitor} option (for ada2java)
+@cindex @option{--monitor-finalize} option (for ada2java)
+@cindex @option{--no-monitor-finalize} option (for ada2java)
+Sets the default monitor for subprograms. See @ref{Thread Safety}.
+
+@item --[no-]attach-(parameter|access|controlling|ada2005)
+@cindex @option{--attach} option (for ada2java)
+@cindex @option{--no-attach} option (for ada2java)
+Sets the default attachment policy.
+See @ref{Managing Attachment to Java Proxies}
+
+@item --[no-]assume-escaped
+@cindex @option{--assume-escaped} option (for ada2java)
+@cindex @option{--no-assume-escaped} option (for ada2java)
+Controls whether checks for object ownership are enabled.
+See @ref{Restrictions on Proxy-Owned Objects passed to Subprograms}
+
+@item --[no-]java-enum
+@cindex @option{--java-enum} option (for ada2java)
+@cindex @option{--no-java-enum} option (for ada2java)
+Controls whether Java enumerations should be used to bind Ada enumerations,
+or if static integers should be used instead (Java enumerations are the default).
+
+@item --[no]unaliased-access
+@cindex @option{--unaliased-access} option (for ada2java)
+@cindex @option{--no-unaliased-access} option (for ada2java)
+Controls whether ada2java is allowed to create proxies on unaliased data.
+@option{--no-unaliased-access} is default.
+See @ref{Aliasing}
+@end table
+
+@noindent
+Example:
+
+@smallexample
+$ ada2java -c mydir pack1.ads -b foo.bar
+@end smallexample
+
+@noindent
+This results in the placement of the Java binding classes in the relative
+directory @file{mydir/foo/bar/}.
+
+Note that the actual directory containing the generated Java classes will need
+to be on the @code{CLASSPATH} environment variable in order to successfully
+run a Java application that uses the binding.
+
+
+@node Compiling and Running the Generated Code
+@section Compiling and Running the Generated Code
+
+@menu
+* Issues with the Ada Generated Code::
+* Compiling as an Ada Shared Library::
+* Compiling as an Ada Main Subprogram::
+* Compiling the Java Generated Classes::
+@end menu
+
+@node Issues with the Ada Generated Code
+@subsection Issues with the Ada Generated Code
+
+Two sets of Ada units need to be compiled -- the original
+packages and the generated ''glue'' code.  The Ada
+glue depends on the @code{ajis} project installed in the @file{lib/gnat}
+directory of the GNAT-AJIS installation.
+
+It is highly recommended that you use the project generation switches
+@option{-L} (for a shared library) or @option{-M} (for an Ada main subprogram).
+However, even if these switches handle most cases, you may
+need to write your own build procedures to address more advanced usage.
+In such a situation please note
+that some compiler options may have an impact on the ajis library and thus
+need to be taken into consideration:
+
+@table @option
+
+@item -O2 -O3
+@cindex @option{-O} option (for gcc)
+If you compile with a high optimization level, you should deactivate
+strict aliasing using the compiler switch @option{-fno-strict-aliasing}.
+@cindex @option{-fno-strict-aliasing} option (for gcc)
+
+@item -fstack-check
+@cindex @option{-fstack-check} option (for gcc)
+The stack checking mechanism is based on signals that are deactivated by the
+GNAT AJIS library, so this switch will have no effect and should not be used.
+
+@item -fPIC
+@cindex @option{-fPIC} option (for gcc)
+On Linux / Solaris, all the code has to be relocatable, which is specified
+through the @option{-fPIC} switch.
+If you are creating a shared library that integrates components compiled
+externally, you have to ensure that they have been compiled using the
+@option{-fPIC} switch.
+@end table
+
+@node Compiling as an Ada Shared Library
+@subsection Compiling as an Ada Shared Library
+@cindex Shared libraries
+
+@noindent
+The most common architecture of an Ada / Java program, and a Java / Native
+program in general, is to compile the native code into a shared library, and
+then load that shared library at run time. In this case, the main entry point
+is a Java main method, written by the developer.
+
+In order to implement this scheme, you will need to create a SAL
+(Stand-Alone Library) project
+containing the sources of the input packages plus the ``glue'',
+and use it to compile the library.
+@cindex SAL (Stand-Alone Library) project
+
+A simple standalone library project is generated if you use the @option{-L}
+switch. The generated project can then be compiled with gprbuild, for example:
+
+@smallexample
+$ ada2java my_package.ads -o ada -c java -P my_project.gpr -b base -L my_lib
+$ gprbuild -p -P ada/my_lib.gpr
+@end smallexample
+
+@noindent
+Note that the native library will then be loaded automatically by the generated
+Java glue code.
+
+@node Compiling as an Ada Main Subprogram
+@subsection Compiling as an Ada Main Subprogram
+
+@noindent
+If compiling the native code into a shared
+library is not practical, an alternative is to create an Ada main subprogram
+embedding a Java Virtual Machine.
+
+@code{ada2java} provides an easy way to generate a project and an Ada main
+subprogram, through the @option{-M} switch.
+@cindex @option{-M} option (for ada2java)
+This switch takes the name of the
+main as parameter and will generate an Ada main that will automatically create
+a Java virtual machine, and then call a Java method defined as follows:
+
+@smallexample
+package <base_package>;
+
+public class <main_name> @{
+
+   public static void main (String [] args) @{
+   @}
+
+@}
+@end smallexample
+
+@noindent
+This class (and thus the method implementation) has to be provided by the
+developer. If it is not present,
+the main subprogram will fail with an error at run time.
+
+The generated main will look into the CLASSPATH environment variable to find
+the Java classes when initializing the Java virtual machine. So for
+example, if that you provide the following class:
+
+@smallexample
+package java_code;
+
+import java_code.Test.Test_Package;
+
+public class Main @{
+
+   public static void main () @{
+      Test_Package.Call_Something ();
+   @}
+
+@}
+@end smallexample
+
+@noindent
+using the following Ada API:
+
+@smallexample
+package Test is
+   procedure Call_Something;
+end Test;
+@end smallexample
+
+@noindent
+with the appropriate @file{test.gpr} project referencing the @code{Test} code,
+you will be able to compile and run the code as follows:
+
+@smallexample
+$ ada2java test.ads -P test -b java_code -o ada -c java -M Main
+$ gnatmake -P ada/main.gpr
+$ CLASSPATH=`pwd`:`pwd`/java:$CLASSPATH
+$ export CLASSPATH
+$ javac java_code/Main.java
+$ ada/obj/main
+@end smallexample
+
+@noindent
+You can explicitly specify the name of the Java main class to use, through the
+@option{--main-class} switch, e.g.:
+
+@smallexample
+$ ada2java test.ads -P test -b java_code -o ada -c java \
+> -M Main --main-class=some.main.My_Main
+@end smallexample
+
+In this case, the Ada main will look for a main subprogram in
+@code{some.main.My_Main}, instead of @code{java_code.Main}.
+
+Note that you may need to define the @code{LPATH}, @code{LD_LIBRARY_PATH} or
+@code{PATH} environment variables so that the code can be compiled against
+@file{jvm.lib} or @file{libjvm.a}, and then run with @file{jvm.dll} or
+@file{libjvm.so}.
+
+@node Compiling the Java Generated Classes
+@subsection Compiling the Java Generated Classes
+
+The Java application needs to load the library before any of the
+Ada subprograms are invoked.
+If you did not supply the @option{-L} switch to @command{ada2java},
+then you will need to do this explicitly; conventional style is to
+invoke @code{System.loadLibrary ("}@i{library-name}@code{")}
+in a static initializer in the main Java class.
+This step is automated if you use the @option{-L} switch, as described above.
+
+Before running the Java code, you need to ensure that the
+@code{CLASSPATH} environment variable contains both the directory
+of the generated Java code, and the JAR for the GNAT-AJIS-related
+predefined classes.  The latter archive exists as
+@code{$GNATAJIS_INSTALL_DIR/lib/ajis.jar} where
+@code{GNATAJIS_INSTALL_DIR} is the root directory for the GNAT-AJIS
+installation.
+
+@node Debugging an Ada / Java Application
+@section Debugging an Ada / Java Application
+
+The Ada code embedded in a Java application can be debugged through the standard
+GDB debugger. In order to do so, the following steps needs to be followed:
+
+@enumerate
+
+@item
+Start the Java Virtual Machine on the Java application containing the Ada code to debug.
+
+@item
+Get the PID of the Java Virtual Machine. On Linux system, this is given by the ps command, on Windows, through the Task Manager.
+
+@item
+Start GDB giving the Java Virtual Machine as argument.
+
+@item
+Attach to the Java Virtual Machine, e.g.:
+
+@smallexample
+$> attach <pid>
+@end smallexample
+
+@item
+You can then run a regular GDB session. For example, the following will set the GDB environment in Ada mode, break on all Ada exception, and then continue the application:
+
+@smallexample
+$> set lang ada
+$> break exceptions
+$> continue
+@end smallexample
+@end enumerate
+
+@node Pragma Annotate and ada2java
+@section Pragma Annotate and @command{ada2java}
+@cindex pragma @code{Annotate}
+
+@noindent
+Pragma @code{Annotate} (see @cite{GNAT Reference Manual})
+has several uses in conjunction with the GNAT-AJIS tools,
+each with the form:
+
+@smallexample @c Ada
+pragma Annotate (AJIS, @i{AJIS_annotation_identifier} @{, @i{argument}@});
+@end smallexample
+
+@noindent
+GNAT-AJIS annotation names are defined in the package @code{AJIS.Annotations},
+@cindex @code{AJIS.Annotations} package
+which is a part of the @code{ajis.gpr} project installed with GNAT-AJIS. You
+need to have visibility on this package using a @code{with} and possibly a
+@code{use} clause before being able to use these pragmas.
+
+The following GNAT-AJIS annotation pragmas are supported:
+
+@itemize @bullet
+
+@item @code{Annotation_Renaming} -- @ref{Dealing with Name Clashes}
+
+@item @code{Assume_Escaped} --
+@ref{Restrictions on Proxy-Owned Objects passed to Subprograms}
+
+@item @code{Attached} -- @ref{Managing Attachment to Java Proxies}
+
+@item @code{Monitor} -- @ref{Thread Safety}
+
+@item @code{Rename} -- @ref{Dealing with Name Clashes}
+
+@end itemize
+
+
+
+@c *************************************
+@node Mapping Ada to Java
+@chapter Mapping Ada to Java
+@c *************************************
+
+@noindent
+To allow an Ada package to be used from Java,
+@command{ada2java} generates one or more Java classes
+(source files that will need to be compiled to bytecodes by
+a Java compiler)
+based on the content of the visible part of the Ada package spec.
+This section explains and illustrates the mapping for each of the
+various kinds of entities declared in a package that can be used
+from Java.
+
+@noindent
+In brief:
+
+@itemize @bullet
+@item
+Although there are some exceptions to this rule,
+in general a type and certain of its associated subprograms declared
+in an Ada package are mapped to a Java class with methods corresponding to
+the Ada subprograms.  Such entities are said to be @emph{attached} to the
+resulting class.
+@cindex Attachment (of entities to a class)
+
+@item
+Other entities declared in the Ada package map to static members
+defined in a ``default class'' generated by @command{ada2java}.
+@cindex Default class
+In particular,
+variables and constants in the Ada package map to private static fields
+in the default class and are accessed through ''getter'' (and ``setter''
+for variables) methods.
+Such entities are said to be @emph{unattached}.
+@end itemize
+
+@noindent
+If the default class is generated, its name is that of the
+original Ada package (with the same casing as the identifier in the
+package declaration) suffixed with @code{_Package}.
+
+In the examples, only the portions of the Java classes
+needed by users of the classes are shown.
+
+@menu
+* Types::
+* Global Variables and Constants::
+* Subprograms::
+* Subprogram Access Types::
+* Exceptions::
+* Renamings::
+* Generics::
+* Predefined Environment::
+* Current Limitations::
+@end menu
+
+
+@node Types
+@section Types
+
+@noindent
+Types used in the Ada package map to Java types in the generated
+class(es). This section explains the correspondence. As a general
+rule, note that while most forms of type declarations have a
+correspondence in Java, subtype declarations are ignored, as
+there is no equivalent to subtypes in Java. However, subtype
+constraints imposed on Ada entities, such as variables or
+formal parameters, must be respected when referenced from
+Java, and can result in exceptions when constraints are violated.
+
+@menu
+* Scalar Types::
+* Arrays::
+* Strings::
+* Simple Record Types::
+* Tagged Types::
+@end menu
+
+
+@node Scalar Types
+@subsection Scalar Types
+@cindex Scalar types (mapping to Java)
+
+@noindent
+The following table shows how Ada scalar types are mapped to
+Java primitive types:
+
+@need 1000
+@c "@need" command prevents orphan line at bottom of page (1000 mils = 1 in)
+@multitable {@i{Other enumeration type}} {@b{Java type}}
+@ifnothtml
+@headitem Ada type @tab Java type
+@end ifnothtml
+@ifhtml
+@item @b{Ada type} @tab @b{Java type}
+@end ifhtml
+@c Above conditional code needed as workaround to texi2html bug (Feb 2008)
+@item @i{Integer type} <= 32 bits @tab @code{int}
+@item @i{Integer type} > 32 bits  @tab @code{long}
+@item @code{Boolean}              @tab @code{boolean}
+@item @code{Character}            @tab @code{char}
+@item @i{Other enumeration type}  @tab @code{int}
+@item @i{Fixed-point type}        @tab @code{double}
+@item @i{Floating-point type}     @tab @code{double}
+@end multitable
+
+@noindent
+Constraint checks generated in the Ada glue code detect errors that may
+result from the range mismatches between Ada and Java.
+@cindex Constraint checks
+For example, since a 16-bit Ada integer will be mapped to 32-bit @code{int}
+in Java, the Java code might attempt to pass an out-of-range value to Ada.
+This will raise a @code{Constraint_Error} exception in Ada, which will be
+propagated back to Java as an @code{AdaException} exception.
+
+For an enumeration type, a Java final class is created,
+with the same name as the enumeration type.
+This class defines the possible values for the
+enumeration.
+@cindex Enumeration types (mapping to Java)
+
+Example:
+
+@smallexample @c ada
+@group
+package Pckg is
+   type Enum is (A, B, C);
+end Pckg;
+@end group
+@end smallexample
+
+@noindent
+will give:
+
+@smallexample
+@group
+package Pckg;
+
+public final class Enum @{
+   public static final int A = 0;
+   public static final int B = 1;
+   public static final int C = 2;
+@}
+@end group
+@end smallexample
+
+@noindent
+Representation clauses for enumeration types are not currently
+supported.
+
+A discussion of subprogram formal parameters of scalar types may be found in
+@ref{Subprogram parameters}.
+
+@node Arrays
+@subsection Arrays
+@cindex Array types (mapping to Java)
+
+@noindent
+Mapping Ada arrays to Java arrays would be very expensive, since it
+would imply a copy of the whole array each time a parameter has to be passed.
+Thus for efficiency an Ada array type is mapped to
+a dedicated ``proxy'' class with methods that serve as accessors
+to attributes and components. For example:
+
+@smallexample @c ada
+@group
+package Ex1 is
+   type T1 is array(Integer range <>) of Float;
+end Ex1;
+@end group
+@end smallexample
+
+@noindent
+will yield the following class:
+
+@smallexample
+public final class T1 extends com.adacore.ajis.internal.ada.AdaProxy @{
+   ...
+   public T1 (int First_1, int Last_1)@{...@}
+
+   final public double Get_Element_At (int Index_1)@{...@}
+
+   final public void Set_Element_At (int Index_1, double Value)@{...@}
+
+   final public int First ()@{...@}
+
+   final public int Last ()@{...@}
+
+   final public int Length ()@{...@}
+@}
+@end smallexample
+
+@noindent
+A subprogram that takes a parameter of the Ada array type is mapped to
+a method taking a parameter of the corresponding Java ``proxy'' class;
+note that this method is located in the default class, and not in the proxy
+class.
+
+@node Strings
+@subsection Strings
+@cindex Strings (mapping to Java)
+
+@noindent
+Directly passing @code{String} data between Ada and Java would require
+expensive copying, and thus an alternative approach is used.
+The Ada type @code{String} is mapped to the Java class @code{AdaString},
+which encapsulates the accesses.
+
+More specifically,
+an Ada parameter of type @code{String} of any mode, and an Ada
+@code{access String} parameter, are both mapped to a Java parameter of type
+@code{AdaString}.
+
+For efficiency, an @code{AdaString} object caches both its Ada and Java
+string values after they have been computed.
+As an example, if the Ada spec is:
+
+@smallexample @c ada
+@group
+package Pckg is
+   procedure P (V : String);
+end Pckg;
+@end group
+@end smallexample
+
+@noindent
+then the generated Java will be:
+
+@smallexample
+@group
+public final class Pckg_Package @{
+   public static void P (V : AdaString) @{...@}
+@}
+@end group
+@end smallexample
+
+@noindent
+If we now write:
+
+@smallexample
+@group
+AdaString str = new AdaString ("A string from Java");
+Pckg_Package.P (str);
+Pckg_Package.P (str);
+@end group
+@end smallexample
+
+@noindent
+Only the first call will require the expensive string translation from
+Java to Ada. The second invocation will directly use
+the cached value.
+
+Please note that Java strings are UTF16-encoded, whereas the corresponding
+Ada strings will be UTF8-encoded. This may have significant impact when
+computing character offset on Java strings.
+@cindex UTF-8 encoding
+@cindex UTF-16 encoding
+
+@node Simple Record Types
+@subsection Simple Record Types
+@cindex Record types (mapping to Java)
+
+@noindent
+Simple (that is, not tagged) record types are mapped to Java final classes.
+Components are accessed through a set of generated accessors
+(``getter'' / ``setter'' methods). As a current limitation, @command{ada2java}
+does not yet support accessing discriminant components.
+
+@noindent
+Example:
+
+@smallexample @c ada
+@group
+package Pckg is
+   type R is
+      record
+         F1 : Integer;
+         F2 : Float;
+      end record;
+end Pckg;
+@end group
+@end smallexample
+
+@noindent
+will give:
+
+@smallexample
+@group
+package Pckg;
+public final class R @{
+   public R () @{...@}
+
+   public final int F1 () @{...@}
+   public final void F1 (int Value) @{...@}
+
+   public final double F2 () @{...@}
+   public final void F2 (double Value) @{.../@}
+@}
+@end group
+@end smallexample
+
+@noindent
+A component that has an access-to-record type is treated as though
+it were of the record type itself.  For example:
+
+@smallexample @c ada
+@group
+package Pckg is
+   type R is
+      record
+         F1 : Integer;
+         F2 : Float;
+      end record;
+   type S is
+      record
+         G1 : R;
+         G2 : access R;
+      end record;
+end Pckg;
+@end group
+@end smallexample
+
+@noindent
+will result in both a class @code{R} as above, and the
+following class @code{S}:
+
+@smallexample
+@group
+package Pckg;
+public final class S @{
+   public S () @{...@}
+
+   public R G1 () @{...@}
+   public void G1 (R Value) @{...@}
+
+   public R G2 () @{...@}
+   public void G2 (R Value) @{...@}
+@}
+@end group
+@end smallexample
+
+@noindent
+Only one level of indirection is implemented;
+@command{ada2java} does not support access to access-to-record.
+
+A private (untagged) type is treated like a record type, except that
+it does not have any component-accessing methods. (A later release of
+@command{ada2java} will generate methods for accessing discriminants
+if the type has any.)
+
+
+@node Tagged Types
+@subsection Tagged Types
+@cindex Tagged types (mapping to Java)
+
+@noindent
+A tagged type is mapped to a Java class of the same name.
+If the Ada type is abstract, then the Java type will be abstract as well.
+
+@menu
+* General principles::
+* Ada type hierarchies::
+* Java class hierarchies::
+@end menu
+
+@node General principles
+@subsubsection General principles
+
+@noindent
+A primitive (i.e., dispatching) subprogram of a tagged type is mapped to
+a corresponding Java instance method.
+A current restriction is that the first parameter of the Ada subprogram
+must be a controlling parameter; otherwise the subprogram is mapped to a
+method in the default class.
+(Thus a function that delivers a value of the tagged type, but has no
+controlling parameter, is mapped to a method in the default class, and
+not to a method in the class corresponding to the Ada type.)
+The first Ada parameter is mapped to the Java method's implicit @code{this}
+parameter.
+
+A subprogram with a class-wide parameter is mapped to a method of the
+tagged type's Java class whose corresponding parameter has the Java
+class type.  However, as this is not properly a dispatching primitive
+of the Ada type, it is declared as a final method.
+@cindex Class-wide parameters (mapping to Java)
+
+As an example:
+
+@smallexample @c ada
+@group
+package Ex1 is
+   type T is tagged null record;
+   procedure P1 (X : in out T; F : Float);
+   procedure P2 (X : T'Class);
+   procedure Q1 (I : Integer; X : T);
+   procedure Q2 (I : Integer; X : T'Class);
+   function F return T;
+end Ex1;
+@end group
+@end smallexample
+
+
+@noindent
+is mapped to:
+
+@smallexample
+@group
+public final class Ex1_Package @{
+   ...
+   static public void Q1 (int I, Ex1.T X)@{...@}
+
+   static public void Q2 (int I, Ex1.T X)@{...@}
+
+   static public T F ()@{...@}
+@} // Ex1_Package
+@end group
+
+@group
+public class T extends com.adacore.ajis.internal.ada.AdaProxy @{
+   ...
+   public void P1 (double F)@{...@}
+
+   final public void P2 ()@{...@}
+@} // T
+@end group
+@end smallexample
+
+
+@node Ada type hierarchies
+@subsubsection Ada type hierarchies
+
+@noindent
+Hierarchies of Ada types are preserved in the generated Java classes.
+Therefore, the following structure:
+
+@smallexample @c ada
+@group
+   type R is tagged record;
+
+   type R_Child is new R with null record;
+@end group
+@end smallexample
+
+@noindent
+will result in:
+
+@smallexample
+@group
+public class R @{...@}
+
+public class R_Child extends R @{...@}
+@end group
+@end smallexample
+
+@noindent
+Consistency of Java types is guaranteed at run time.
+For example, the following function:
+
+@smallexample @c ada
+@group
+package Pckg is
+   function F return R'Class;
+end Pckg;
+@end group
+@end smallexample
+
+@noindent
+will result in:
+
+@smallexample
+@group
+public final class Pckg_Package @{
+   public R F () @{...@}
+@}
+@end group
+@end smallexample
+
+@noindent
+However, if the actual type of the returned object is @code{R_Child}, then
+the value returned by the Java function will be of the Java type
+corresponding to @code{R_Child}.
+
+
+@node Java class hierarchies
+@subsubsection Java class hierarchies
+
+It is possible to extend a Java class that was generated by @command{ada2java}
+from an Ada tagged type.
+
+For example:
+
+@smallexample @c ada
+@group
+package Rec_Pckg
+   type Rec is tagged null record;
+   procedure P (R : Rec);
+end Rec_Pckg;
+@end group
+@end smallexample
+
+@noindent
+results in a Java class @code{Rec} with an instance method @code{P}:
+
+@smallexample
+@group
+class Rec extends com.adacore.ajis.internal.ada.AdaProxy @{
+   ...
+   public void P()@{...@}
+@}
+@end group
+@end smallexample
+
+@noindent
+You can then write:
+
+@smallexample
+@group
+class Rec_Child extends Rec @{
+     public void P () @{
+        System.out.println ("Hello from Java");
+     @}
+@}
+...
+Rec ref = new Rec_Child();
+ref.P();  // Displays "Hello from Java"
+@end group
+@end smallexample
+
+@node Global Variables and Constants
+@section Global Variables and Constants
+@cindex Global variables (mapping to Java)
+
+@noindent
+A package containing global variables
+(that is, variables declared in the package spec's visible part)
+is mapped to a default class containing ``getter'' and ``setter''
+methods for accessing and updating the variables. Global constants
+are treated analogously, but they have only a ``getter'' method.
+Variables of limited types also only have a ``getter'' method.
+Note that Ada named numbers, which are really just values intended
+for use in static compile-time computations, are not mapped to
+Java.
+
+For example:
+
+@smallexample @c ada
+@group
+package Globals is
+   V : Integer;
+   C : constant Integer := 100;
+   N : constant := 3.14159;
+end Globals;
+@end group
+@end smallexample
+
+@noindent
+will result in the default class:
+
+@smallexample
+public class Globals_Package @{
+
+   static public int V ()@{...@}
+
+   static public void V (int Value)@{...@}
+
+   static public int C ()@{...@}
+@}
+@end smallexample
+
+
+
+
+@node Subprograms
+@section Subprograms
+@cindex Subprograms (mapping to Java)
+
+@noindent
+Ada procedures and functions are mapped to Java methods. Nondispatching
+subprograms are marked as @code{final}.  Dispatching subprograms are
+discussed in @ref{Tagged Types}.
+
+@menu
+* Method placement::
+* Subprogram parameters::
+* Overloaded operators::
+@end menu
+
+
+@node Method placement
+@subsection Method placement
+
+@noindent
+In general, nondispatching subprograms are mapped to methods defined in the
+default class.
+@cindex Default class
+For example, if the input package spec is:
+
+@smallexample @c ada
+@group
+package Pkg is
+  function F return Integer;
+end Pkg;
+@end group
+@end smallexample
+
+@noindent
+then @command{ada2java} will generate the following default class:
+
+@smallexample
+@group
+public class Pkg_Package@{
+   ...
+   public static int F()@{...@}
+@}
+@end group
+@end smallexample
+
+
+@noindent
+However, there are cases where the subprogram can be attached to the class
+of its first parameter. Attachment can be enabled / disabled depending on
+user requirement. In this case, the explicit initial Ada parameter is mapped to
+the implicit @code{this} parameter in Java. See @ref{Managing Attachment to
+Java Proxies} for further details.
+@cindex Attachment (of entities to a class)
+
+
+
+@node Subprogram parameters
+@subsection Subprogram parameters
+@cindex Parameters (mapping to Java)
+
+@noindent
+The following rules and restrictions apply to the types of subprogram
+formal parameters:
+
+@itemize @bullet
+@item Scalar types
+
+@itemize @minus
+@item Access-to-scalar types are not supported.
+
+@item A scalar type with mode @code{in} is mapped to the
+corresponding Java type. For example:
+
+@smallexample @c ada
+procedure P (V : Integer);
+@end smallexample
+
+@noindent
+will result in:
+
+@smallexample
+public void P (int V) @{...@}
+@end smallexample
+
+@item A formal scalar with mode @code{out} or @code{in out} will be mapped to
+a corresponding ``wrapper'' class: @code{BooleanRef}, @code{CharacterRef},
+@code{DoubleRef}, @code{IntegerRef}, and @code{LongRef} respectively
+encapsulating the primitive type @code{boolean}, @code{character},
+@code{double}, @code{int} and @code{long}).
+
+Each of these classes defines @code{setValue} and @code{getValue} methods
+for accessing the encapsulated value.
+
+The Java application needs to construct an object of the relevant wrapper
+class and pass it to the method that corresponds to the Ada subprogram.
+After the return from the method, the Java application can invoke the
+@code{getValue} method to retrieve the new value of the actual parameter.
+@end itemize
+
+@item Record and private types
+
+@itemize @minus
+@item
+An Ada @code{in}, @code{in out}, or @code{out} formal parameter of a record
+or private type (either tagged or untagged), is mapped to a Java formal
+parameter of the class corresponding to the Ada type. Similarly, an Ada
+formal parameter of an access-to-record-type or access-to-private-type
+(either anonymous or named) is mapped to a Java formal parameter of the
+class corresponding to the Ada type.
+
+Example:
+
+@smallexample @c ada
+@group
+package Example is
+   type R is null record;
+   type Access_R is access all R;
+   procedure P(V1 : R;
+               V2 : out R;
+               V3 : in out R;
+               V4 : access R;
+               V5 : Access_R);
+end Example;
+@end group
+@end smallexample
+
+@noindent
+The resulting Java class is:
+
+@smallexample
+@group
+public final class Example_Pckg @{
+   ...
+   public void P (R V1, R V2, R V3, R V4, R V5)@{...@}
+@}
+@end group
+@end smallexample
+
+@item
+An Ada @code{out} or @code{in out} parameter of an access-to-record
+(or access-to-private) type is mapped to a nested class.
+For example:
+
+@smallexample
+@group
+package Example is
+   type R is null record;
+   type Access_R is access all R;
+   procedure P(V : out Access_R);
+end Example;
+@end group
+@end smallexample
+
+@noindent
+will generate the default class and a class for @code{R}
+
+@smallexample
+@group
+public class Example_Package @{
+   ...
+   static public void P (R.Ref V)@{...@}
+@}
+@end group
+
+@group
+public class R extends com.adacore.ajis.internal.ada.AdaProxy @{
+   ...
+   public static class Ref implements com.adacore.ajis.IProxyRef @{
+      public void setValue (Object r) @{...@}
+      public Object getValue () @{...@}
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+The Java application needs to construct an object of the class @code{R.Ref}
+and pass it to @code{P}.  On return, the @code{getValue} method may be
+called to retrieve the value in the @code{out} parameter returned by
+the Ada procedure.
+
+@item Further indirection, such as an access-to-access type for a formal
+parameter, is not supported.
+@end itemize
+@end itemize
+
+@node Overloaded operators
+@subsection Overloaded operators
+
+Java doesn't allow operators overloading. When operators are overloaded in
+Ada, the corresponding Java name is set by the binding genreator to
+@code{OP_<operator_name>}. For example:
+
+@smallexample
+@group
+type Complex is record ...
+
+function "+" (Left, Right : T) return T;
+@end group
+@end smallexample
+
+will generate on the Java side:
+
+@smallexample
+@group
+public class Complex @{
+
+   public Complex OP_PLUS (Complex Right) @{
+   ...
+   @}
+
+@}
+@end group
+@end smallexample
+
+Here's a list of the equivalence between Ada operators and Java names:
+
+@multitable {@i{Ada operator}} {@b{Java name}}
+@ifnothtml
+@headitem Ada operator @tab Java name
+@end ifnothtml
+@ifhtml
+@item @b{Ada operator} @tab @b{Java name}
+@end ifhtml
+@c Above conditional code needed as workaround to texi2html bug (Feb 2008)
+@item @code{=}   @tab @code{OP_EQUAL}
+@item @code{>}   @tab @code{OP_GT}
+@item @code{<}   @tab @code{OP_LT}
+@item @code{>=}  @tab @code{OP_GE}
+@item @code{<=}  @tab @code{OP_LE}
+@item @code{or}  @tab @code{OP_OR}
+@item @code{and} @tab @code{OP_AND}
+@item @code{xor} @tab @code{OP_XOR}
+@item @code{+}   @tab @code{OP_PLUS}
+@item @code{-}   @tab @code{OP_MINUS}
+@item @code{/}   @tab @code{OP_DIV}
+@item @code{*}   @tab @code{OP_MUL}
+@item @code{**}  @tab @code{OP_EXP}
+@end multitable
+
+@node Subprogram Access Types
+@section Subprogram Access Types
+
+Accesses to subprograms - sometimes referred to as callbacks - can't be
+directly bound to Java. It is not possible to give a reference to a Java
+function in a type-safe fashion. ada2java generates an abstract class with
+an abstract member of the correct profile for each access type to be bound,
+the implementation of its abstract primitive being the implementation of
+the subprogram access. For example:
+
+@smallexample
+type P_Acc is access all procedure (V : Integer);
+
+procedure Call_P_Acc (Proc : P_Acc);
+pragma Annotate (AJIS, Assume_Escaped, False, Call_P_Acc, "Proc");
+@end smallexample
+
+will be bound into:
+
+@smallexample
+abstract public class P_Acc @{
+   abstract public P_Acc_Proc (int V);
+@}
+
+void Call_P_Acc (P_Acc Proc);
+@end smallexample
+
+and can be used in, for example, the following scenario:
+
+@smallexample
+Proc p = new Proc () @{
+
+   public P_Acc_Proc (int V) @{
+      System.out.println ("CALLED WITH " + V);
+   @}
+
+@};
+
+Pckg_Package.Call_P_Acc (p);
+@end smallexample
+
+Note the use of the pragma @code{Annotate} on the @code{Call_P_Acc method}.
+The Java implementations of bound subprogram access types are not actually
+accesses to subprograms, but instances of Java objects. It's not possible to
+store such an object on the Ada side afterwards, since the complete information
+can't be kept in the access type. Therefore, the programmer must ensure that
+no escape of the value is done, and take responsiblity for that by declaring
+the parameter as being not escaped. Further details on escapement can be found
+in @ref{Restrictions on Proxy-Owned Objects passed to Subprograms}.
+
+@node Exceptions
+@section Exceptions
+Exceptions are bound into classes derived from
+@code{com.adacore.ajis.NativeException}. It is then possible to throw or
+handle them directly in Java code.
+
+Example:
+
+@smallexample @c ada
+@group
+package Example is
+   An_Exception : exception;
+   procedure Raise_An_Exception;
+end Example;
+
+package body Example is
+   procedure Raise_An_Exception is
+   begin
+      raise An_Exception;
+   end Raise_An_Exception;
+end Example;
+@end group
+@end smallexample
+
+@noindent
+The resulting Java class is:
+
+@smallexample
+@group
+public final class An_Exception extends com.adacore.ajis.NativeException @{
+   ...
+@}
+@end group
+@end smallexample
+
+@noindent
+And can be used in e.g.:
+
+@smallexample
+@group
+try @{
+   Example_Package.Raise_An_Exception ();
+@} catch (An_Exception e) @{
+  // process the exception
+@}
+@end group
+@end smallexample
+
+@node Renamings
+@section Renamings
+@cindex Renamings (mapping to Java)
+
+@noindent
+Renamings of objects and subprograms are supported by @command{ada2java}.
+Object renamings are mapped in the same way as global objects, by means
+of ``setter'' and ``getter'' methods in the default class for the
+containing package.  A subprogram renaming is represented by a method
+with the name of the renaming that invokes the renamed subprogram,
+declared in the appropriate class.  In other words, the same rules
+that apply to other subprograms apply to subprogram renamings.
+
+
+@node Generics
+@section Generics
+
+@noindent
+Generic packages and subprogram can't be directly bound to Java. However,
+packages and subprograms instances and bound like regular packages and
+subprograms.
+
+@node Predefined Environment
+@section Predefined Environment
+@cindex Predefined environment (mapping to Java)
+
+@noindent
+In order to access descendants of @code{Ada} or @code{GNAT} from Java,
+you need to manually invoke @command{ada2java} on the Ada source files
+from the GNAT installation directories, to generate the corresponding
+Java binding classes.  This step will be automated in a future release of
+GNAT-AJIS.
+
+@node Current Limitations
+@section Current Limitations
+@cindex Current limitations
+
+@noindent
+The following features are not supported:
+
+@itemize @bullet
+@item
+@i{Discriminants.}
+Discriminants are not accessible from the Java class generated for
+a discriminated type.
+
+@item
+@i{Anonymous arrays.}
+Objects with an anonymous array type are not supported, but array type
+declarations which declare a constrained first subtype are supported.
+
+@item
+@i{Interfaces.}
+No mapping is currently provided from Ada interface types to Java interfaces.
+
+@item
+@i{Tasking features.}
+Tasks and protected objects/types are ignored.
+@end itemize
+
+
+@c ******************************
+@node Advanced ada2java Topics
+@chapter Advanced ada2java Topics
+@c ******************************
+
+@noindent
+This chapter discusses a number of issues that @command{ada2java} users
+should be aware of.
+
+@menu
+* Dealing with Name Clashes::
+* Memory Model::
+* Aliasing::
+* Thread Safety::
+* Proxies and Native Object Equality::
+* Clone and Copy Semantics::
+* Cross-Language Inheritance::
+* Managing Attachment to Java Proxies::
+* Exceptions propagation::
+@end menu
+
+@node Dealing with Name Clashes
+@section Dealing with Name Clashes
+@cindex Name clashes
+
+@noindent
+If Ada subprograms from the same package spec produce the same Java profile,
+the binding generator will detect the problem and generate only the first
+entity. Other entities of similar name will be ignored with a warning.
+To prevent this, you can use the @code{Rename} pragma to define
+the Java name corresponding to an Ada entity:
+
+@smallexample @c Ada
+pragma Annotate (AJIS, Rename, @i{identifier}, @i{static_string_expression});
+@end smallexample
+@cindex pragma @code{Annotate}
+
+@noindent
+The @i{identifier} argument denotes the Ada entity.
+The @i{static_string_expression} is the name that will be used for the
+corresponding Java entity generated by @code{ada2java}.
+
+Example:
+
+@smallexample @c ada
+package Example is
+@group
+  type I1 is new Integer;
+  type I2 is new Integer;
+
+  function F return I1;
+  pragma Annotate (AJIS, Rename, F, "F_I1");
+
+  function F return I2;
+  pragma Annotate (AJIS, Rename, F, "F_I2");
+end Example;
+@end group
+@end smallexample
+
+@noindent
+This will result in two Java functions:
+
+@smallexample
+@group
+int F_I1 ();
+int F_I2 ();
+@end group
+@end smallexample
+
+@noindent
+Adding a pragma to an Ada package specification is not always practical,
+and indeed may be impossible if the specification is from an external library.
+With GNAT-AJIS, you can provide the pragma in a separate Ada file,
+applying it to an Ada entity that is itself a renaming
+declaration.
+
+This entity must be marked by another @code{Annotate} pragma:
+
+@smallexample @c ada
+pragma Annotate (AJIS, Annotation_Renaming, @i{identifier}).
+@end smallexample
+
+@noindent
+where @i{identifier} denotes an entity defined by an Ada renaming declaration.
+The @code{Annotation_Renaming} pragma applies to all AJIS pragmas that are
+specified for @i{identifier}.
+
+@smallexample @c ada
+@group
+package Example is
+  type I1 is new Integer;
+  type I2 is new Integer;
+
+  function F return I1;
+  function F return I2;
+end Example;
+@end group
+
+@group
+with Example;
+package Renamings is
+  function F return Example.I1 renames Example.F;
+  pragma Annotate (AJIS, Annotation_Renaming, F);
+  pragma Annotate (AJIS, Rename, F, "F_I1");
+
+  function F return Example.I2 renames Example.F;
+  pragma Annotate (AJIS, Annotation_Renaming, F);
+  pragma Annotate (AJIS, Rename, F, "F_I2");
+end Renamings;
+@end group
+@end smallexample
+
+@noindent
+Entities annotated with @code{pragma Annotate(AJIS, Annotation_Renaming)}
+will not be mapped to Java entities;
+they are assumed to be used only to define annotations.
+
+@node Memory Model
+@section Memory Model
+@cindex Memory model
+
+@noindent
+An object on the Ada side -- a so-called @i{native object} -- is accessed
+in Java through a @i{proxy object}: an instance of a class (the @i{proxy}
+class) generated from the Ada object's type.
+@cindex Proxy object
+The proxy object
+contains a reference to the native object.  Invoking a member function
+on the proxy object results in a call of a native subprogram on the native
+object.  The native object may be either allocated or declared.
+
+This section explains the implications of this model on the usage of the
+generated binding.
+
+@menu
+* Requirements for Non-null Parameter Values::
+* Allocating Ada Objects from Java::
+* Automatic Creation of Native Objects::
+* Native Object Ownership::
+* Object Allocators::
+* Restrictions on Proxy-Owned Objects passed to Subprograms::
+* Parameter Mode Documentation::
+@end menu
+
+@node Requirements for Non-null Parameter Values
+@subsection Requirements for Non-null Parameter Values
+
+If an Ada subprogram's formal parameter is not an access parameter
+(i.e., it has @code{in}, @code{in out} or @code{out} mode), then invoking
+the corresponding Java method requires a non-null reference
+to a proxy object. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is null record;
+
+   procedure Proc (V : out T);
+end P;
+@end group
+@end smallexample
+
+@noindent
+results in the following Java classes:
+
+@smallexample
+@group
+public class T @{
+   ...
+@}
+@end group
+
+@group
+public final class P_Package @{
+   public static Proc (T V) @{
+      ...
+   @}
+   ...
+@}
+@end group
+@end smallexample
+
+@noindent
+You need to ensure that the @code{V} parameter passed to @code{Proc} is
+not @code{null}. Hence, the following will throw an exception, since
+@code{v} is implicitly initialized to @code{null}:
+
+@smallexample
+@group
+T v;
+P_Package.Proc (v);
+@end group
+@end smallexample
+
+@noindent
+A simple way to provide a non-null reference is to initialize it to an
+allocated object:
+
+@smallexample
+@group
+T v = new T ();
+P_Package.Proc (v);
+@end group
+@end smallexample
+
+@node Allocating Ada Objects from Java
+@subsection Allocating Ada Objects from Java
+
+@noindent
+If @code{A} is an Ada type that is mapped by @command{ada2java} to a
+Java class @code{J}, then the execution of a Java constructor @code{J()}
+will create two objects:
+
+@itemize @bullet
+@item
+A Java object (the ``proxy'' object) of class @code{J},
+allocated on the Java heap and subject to Garbage Collection by the JVM, and
+@item
+An Ada object of type @code{A}, allocated on the Ada heap, referenced from the
+proxy object.
+@end itemize
+
+@node Automatic Creation of Native Objects
+@subsection Automatic Creation of Native Objects
+
+Under certain circumstances, the generated Java code may construct extra
+native objects on the Ada heap. To help explain this, here is an example where
+such allocation is not needed, namely, a function returning an access value:
+
+@smallexample @c Ada
+@group
+package P is
+   type T is record ... end record;
+
+   type T_Acc is access all T;
+
+   function Create_T_Acc return T_Acc;
+end P;
+@end group
+@end smallexample
+
+@noindent
+The generated code will look like:
+
+@smallexample
+@group
+public class T @{ ...@}
+
+public final class P_Package @{
+   final public T Create_T_Acc () @{ ...@}
+   ...
+@}
+@end group
+@end smallexample
+
+@noindent
+On the Java side, the method @code{Create_T_Acc} returns a
+proxy object that contains the value of the pointer returned by
+the call of the Ada function. So the user can write:
+
+@smallexample
+T v = P_Package.Create_T_Acc ();
+@end smallexample
+
+@noindent
+and then access the data of @code{v}. Note that all the standard precautions
+that apply in using an Ada pointer have to be taken in
+this case as well. In particular, after the object has been freed on the
+Ada side, there
+should be no further references to it from Java. The
+Ada programmer needs to document how the returned value should or should not
+be used, and the Java programmer needs to adhere to these guidelines.
+
+However, a function returning a record rather than an access value raises
+additional issues:
+
+@smallexample @c ada
+@group
+package P is
+   type T is record ... end record;
+
+   function Create_T return T;
+end P;
+@end group
+@end smallexample
+
+@noindent
+results in a default class similar to the one in the previous example:
+
+@smallexample
+@group
+public final class P_Package @{
+   final public T Create_T () @{ ... @}
+   ...
+@}
+@end group
+@end smallexample
+
+@noindent
+The Java programmer can write:
+
+@smallexample
+T v = P_Package.Create_T ();
+@end smallexample
+
+@noindent
+But in this case, the value returned by the function is not a pointer.
+A new Ada native object is automatically allocated on the heap, initialized
+to a copy of the value returned by the Ada function,
+and is referenced through the proxy object constructed by the Java method
+@code{Create_T}.
+This is similar to the Ada situation where calling @code{Create_T_Acc} would
+not involve a copy of a @code{T} object, whereas @code{Create_T} would.
+
+Because of implementation constraints there may be more than one
+copy involved in the call of @code{Create_T} (but only one native object
+will be created on the heap). This will be discussed further in
+@ref{Clone and Copy Semantics}.
+
+@node Native Object Ownership
+@subsection Native Ownership
+@cindex Ownership (of native objects)
+
+As illustrated above, native objects may be created automatically by
+Java methods corresponding to Ada subprograms. This raises the issue of
+when/how such objects are to be deallocated.
+
+In general, the @code{ada2java} approach is based on the following
+principles:
+
+@itemize @bullet
+@item
+The environment (Java or Ada) that allocates an object is responsible for its
+deallocation;
+
+@item
+In Java, all deallocation is performed implicitly, by the Garbage Collector;
+
+@item
+In Ada, the programmer is responsible for manually deallocating the objects;
+
+@item
+Dangling references should be prevented; i.e., the Ada object should not
+be deallocated as long as there are still live references to the object.
+@end itemize
+
+@noindent
+A native object created from Java is said to be @i{owned} by its proxy object.
+It has been created by the Java program, and it must be freed
+by the Java environment.
+
+Such an object is tightly linked to its proxy -- when the proxy object doesn't
+exist (i.e. is garbage collected), the native object becomes
+inaccessible.@footnote{
+As will be described below, cloning the proxy object has special semantics
+so that the native object gets copied, not only its reference.}
+@cindex Proxy object
+The native object deallocation
+will occur automatically, when the Java proxy is garbage collected (more
+specifically through the implementation of the @code{finalize} method).
+
+A native object not owned by a proxy -- for example, one that has been
+obtained from the Ada API through an Ada pointer -- will not be deleted
+automatically.
+
+The ownership state of a native object may be queried through the
+@code{getOwner} method.
+@cindex @code{getOwner} method
+This function returns a value from the enumeration
+@code{com.adacore.ajis.IProxy.Owner}, either @code{NATIVE} or @code{PROXY},
+specifying who is responsible for managing the memory. For example after these
+assignments:
+@cindex @code{com.adacore.ajis.IProxy.Owner} type
+
+@smallexample
+@group
+T v1 = new T ();
+T v2 = P_Package.Create_T_Acc ();
+T v3 = P_Package.Create_T ();
+@end group
+@end smallexample
+
+@noindent
+the following relationships hold:
+
+@multitable {@code{v2.getOwner ()}}  {@code{false}}
+@item @code{v1.getOwner ()} @tab @code{PROXY}
+@item @code{v2.getOwner ()} @tab @code{NATIVE}
+@item @code{v3.getOwner ()} @tab @code{PROXY}
+@end multitable
+
+@noindent
+Native objects referenced by @code{v1} and
+@code{v2} will be deallocated when the corresponding Java proxy is
+garbage-collected.
+
+You may change the owning attribute of a referenced native object,
+through the @code{setOwner} method of proxy classes.
+@cindex @code{getOwner} method
+This should
+be used very carefully, as it may generate memory leaks or corruption. Doing
+the following:
+
+@smallexample
+T v1 = new T ();
+v1.setOwner (Owner.NATIVE);
+@end smallexample
+
+@noindent
+will deactivate the object deallocation on finalization. The Java programmer
+becomes responsible for explicitly deallocating the native object.
+
+Note that, while moving the owning from PROXY to NATIVE is a relatively safe
+operation, raising the possibility of memory leaks but not object corruption,
+moving in the opposite direction should be done with great care.
+A object managed by the NATIVE
+side may be deallocated by the Ada application at any moment, or be declared
+as the field of another object or even on the native stack in situations
+such as callbacks. If it's not clear where the object is coming from,
+cloning it (resulting automatically into an object managed by the proxy)
+is often the best solution.
+
+As will be described below, only objects that are known to be managed
+though pointers can have their ownership changed. An object obtained,
+for example, from a global variable or field will need to retain its
+known ownership.
+
+@node Object Allocators
+@subsection Object Allocators
+
+The generated code keeps track of how native objects have been obtained, and
+restricts their operations accordingly. Three possible
+allocators are recognized:
+
+@table @code
+@item DYNAMIC
+Such objects are created either through bound constructors, accessed from
+native access types, or through an automatic copy from the bound code.
+The ownership of dynamic objects can be changed.
+
+@item STATIC
+Such objects are accessed from global variables, fields, or callback
+parameters that are not access types. The ownership of these objects is
+always @code{NATIVE} and cannot be changed.
+
+@item UNKNOWN
+In some cases, for example on copying values of tagged types, it is not
+possible to determine whether the object has been allocated statically or
+dynamically. In such cases
+you can access the allocator through which an object is referenced using
+the @code{IProxy.getAllocator ()} function.
+@cindex @code{IProxy.getAllocator} function
+@end table
+
+
+@node Restrictions on Proxy-Owned Objects passed to Subprograms
+@subsection Restrictions on Proxy-Owned Objects Passed to Subprograms
+
+Passing a (reference to a) native object as an actual parameter to an Ada
+subprogram whose corresponding formal parameter is either an access parameter
+or of an access type
+could in some cases result in a dangling reference to the native object,
+whereas in other situations it might be harmless.
+In order to provide the desired safety while allowing the needed generality,
+@command{ada2java}'s approach is similar to the way that the Ada standard
+supplies both the @code{'Access} and @code{'Unchecked_Access} attributes
+for composing pointers to data objects.
+
+In summary, when the Java side is responsible for pointer memory management
+(i.e. the object is owned or it is accessed through @code{'Access} or
+@code{'Unrestricted_Access}), then
+an exception will be thrown in Java on an attempt
+to pass a reference to a native object as an actual parameter when the formal
+is of a named or anonymous access type.
+However, this check can be suppressed either locally (for a given formal
+parameter) or globally (for all calls).
+
+Here is a summary of the troublesome scenario:
+
+@enumerate
+@item A reference to a proxy object is passed as a parameter to a Java method,
+and the reference to the corresponding native object is then passed to a
+native Ada subprogram  whose formal is an access parameter or of an access
+type;
+@item The Ada subprogram copies the parameter to a global variable and
+ultimately returns;
+@item The proxy object ultimately becomes inaccessible and is garbage
+collected by the JVM;
+@item The native object is deallocated as an effect of the proxy object's
+finalization;
+@item The deallocated object is still designated by the global variable.
+@end enumerate
+
+@noindent
+To prevent this, an exception is thrown at step 1 above.
+
+Here is an example:
+
+@smallexample @c ada
+@group
+-- Original Ada package
+package P is
+   type T is
+      record
+         A, B : Integer;
+      end record;
+
+   type A_T is access all T;
+
+   G : A_T;
+
+   procedure Set_G (V : A_T);
+end P;
+@end group
+
+@group
+package body P is
+   procedure Set_G (V : A_T) is
+   begin
+      G := V;
+   end Set_G;
+end P;
+@end group
+@end smallexample
+
+@smallexample
+@group
+@i{// Java statements}
+T v = new T ();
+P_Package.Set_G (v); @i{// Throws an exception}
+@end group
+@end smallexample
+
+@noindent
+If the invocation of @code{Set_G} did not throw an exception,
+@code{G} would become a dangling pointer when the proxy object
+referenced by v is garbage collected.
+
+However, if the invocation of @code{Set_G} did not cause an assignment of its
+formal parameter @code{V} to a global variable, then passing @code{v} as an
+actual parameter would be harmless.
+@command{ada2java} allows the Ada API to enable such uses, and thus to
+deactivate the check:
+
+@smallexample
+pragma Annotate (AJIS, Assume_Escaped, @i{Condition}, @i{Subprog}, @i{Formal_Param})
+@end smallexample
+@cindex @code{Assume_Escaped} (argument to pragma @code{Annotate})
+
+@noindent
+where:
+
+@itemize @bullet
+@item @i{Condition} is either @code{True} or @code{False}
+
+@item @i{Subprog} is the name of the Ada subprogram
+
+@item @i{Formal_Param} is the affected formal parameter, expressed as a
+@code{String} literal
+@end itemize
+
+@noindent
+When @i{Condition} is @code{False}, the Ada subprogram is responsible for
+ensuring that the formal parameter is not copied to a global variable, or used
+to set a field of a structure that will be used outside of the scope of the
+subprogram.  When @i{Condition} is @code{True}, an exception is thrown when a
+proxy object is passed as an actual parameter to the  @i{Formal_Param}
+parameter of @i{Subprog}.
+
+Here is an example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is
+     record
+        A, B : Integer;
+     end record;
+
+   type A_T is access all T;
+
+   G : A_T;
+
+   procedure Safe_Set_G (V : A_T);
+   pragma Annotate (AJIS, Assume_Escaped, False, Safe_Set_G, "V");
+end P;
+@end group
+
+@group
+package body P is
+   procedure Safe_Set_G (V : A_T) is
+   begin
+      G := new T'(V.all);
+   end Safe_Set_G;
+end P;
+@end group
+@end smallexample
+
+@smallexample
+@group
+@i{// Java statements}
+T v = new T ();
+P_Package.Safe_Set_G (v); @i{// OK}
+@end group
+@end smallexample
+
+@noindent
+The invocation @code{Safe_Set_G (v)} is safe since the Ada subprogram does not
+let the formal parameter ``escape''.
+
+The ``escaped'' checks can be globally activated through the @command{ada2java}
+switch
+@option{--assume-escaped}, and globally deactivated through the switch
+@option{--no-assume-escaped}.
+@cindex @option{--assume-escaped} option (for ada2java)
+@cindex @option{--no-assume-escaped} option (for ada2java)
+The default is @option{--assume-escaped}. An explicit pragma overrides
+the global configuration switch.
+
+Note that canceling escape checks should be done with great care, as there
+is no way to ensure that no escaping has occurred. In many situations,
+the programmer's intent is to create an object on the Java
+side and then store the object on the native side. In such a case, canceling
+proxy ownership through the @code{IProxy.setOwner} method will have the
+desired effect, for example:
+
+@smallexample
+@group
+@i{// Java statements}
+T v = new T ();
+v.setOwner (Owner.NATIVE);
+P_Package.Set_G (v); @i{// OK}
+@end group
+@end smallexample
+
+
+@node Parameter Mode Documentation
+@subsection Parameter Mode Documentation
+
+ada2java documents the mode of the parameters generated by the binding. This
+mode is only documented for proxies, not scalar values. The following modes
+are possible:
+
+@table @code
+@item passed by value
+
+The object is passed by value. In calls from Java to Ada, it means that the
+proxy cannot be null. Proxy or native ownership doesn't matter. In callbacks
+implemented in Java, proxies for these parameters will be natively-owned
+and statically allocated. For returned value, the returned Ada object is
+copied to the returned proxy.
+
+@item passed by reference (escapable)
+
+The object is passed by reference, and potentially escaped by the Ada code.
+The object has to be natively owned and dynamically allocated.
+
+@item passed by reference (non escapable)
+
+The object is passed by reference, but is known not to be escaped by the
+native code. Any proxy can by passed to parameters of that type. When
+implementing a callback with a parameter of this type, or for returned values,
+the proxy will be natively owned and dynamically allocated.
+
+@item passed by reference (static)
+
+The object is passed by reference, but its reference is coming from a location
+place, typically a global variable or a field. This only applies to returned
+values. The returned proxy will be natively owned and statically allocated.
+
+@end table
+
+
+@node Aliasing
+@section Aliasing
+@cindex Aliasing
+
+@noindent
+As explained in the previous chapter, Ada object are managed through Java
+proxies. The creation of such proxies is obtained through an access type. For
+example, in the following code:
+
+@smallexample
+@group
+package P is
+   type T is
+     record
+        A, B : Integer;
+     end record;
+
+   V1 : aliased T;
+
+   type T2 is record
+      V2 : aliased T;
+   end record;
+
+   type A is array (Integer range <>) of aliased T;
+
+   V3 : aliased A (1 .. 10);
+end P;
+@end group
+@end smallexample
+
+@noindent
+the binding generator will generate accessors to V1, V2 and V3 so that fields
+of T can be modified directly. It's possible to write:
+
+@smallexample
+@group
+V1 ().A (1);
+
+T2 v = new T2 ();
+v.A (2);
+
+V3 ().Get_Element_At (10).A (3);
+@end group
+@end smallexample
+
+Accessing variables generate a proxy pointing directly to the address in
+memory. These proxies can be manipulated on their own, as any other, for
+example:
+
+@smallexample
+@group
+T ptr = V1 ();
+ptr.A(1);
+@end group
+@end smallexample
+
+In the above example, ptr is a Java proxy containing a pointer to the global
+variable V. Such a pointer would typically be obtained through a @code{'Access}
+applied on the Ada variable V1.
+
+It's sometimes unconvenient to declare aliased data just for the purpose of
+binding generation. GNAT offers a mechanism to retreive an access to any
+piece of data, @code{'Unrestricted_Access}. The use of such method is however
+dangerous. On certain architectures, e.g. @i{sparc-solaris}, forcing to
+retreive an access on a missaligned data will issue a program crash. In
+order to avoid that, by default, ada2java does not generate such accesses and
+create proxies only on aliased data.
+
+This behavior can be deactivated with the ada2java argument
+@option{--unaliased-access}, which will allow access to unaliased data.
+Making data aliased should always be prefered to the use of that option.
+
+@c *** Thread Safety ***
+@node Thread Safety
+@section Thread Safety
+@cindex Thread safety
+
+@noindent
+By default, the generated Java code is thread-safe, with locking logic
+that prevents multiple Java threads from accessing native methods
+at the same time.  In summary, a Java method in a proxy object acquires a
+lock (a binary semaphore) before invoking the corresponding native method,
+and releases
+the lock when the native method returns (either normally or abnormally).
+The semaphore is global versus per Ada package; e.g. different Java threads
+are not allowed to invoke native methods simultaneously even if the native
+methods correspond to subprograms from different packages.
+
+Even if the Java application does not explicitly create
+any threads, there are still two threads -- the main (user) thread and the
+garbage collector; thus locking is needed in this case also.
+
+The default locking behavior is not always appropriate, however.
+In particular, if the native
+code is using tasking, with mutual exclusion enforced on the Ada side, then
+there is no need for locking in the Java code (and indeed such locking could
+have undesirable consequences including deadlock).
+
+User control over the generation of locking code is obtained through the
+following pragma:
+
+@smallexample @c ada
+pragma Annotate (AJIS, Locking, @i{Subprogram}, @i{LockControl});
+@end smallexample
+@cindex @code{Locking} (argument to pragma @code{Annotate})
+
+@noindent
+where @i{Subprogram} is the subprogram name, and
+@i{LockControl} is one of @code{Disable}, @code{Check} and @code{Protect}.
+
+@table @code
+@item Protect
+Default setting.
+The generated code automatically brackets each invocation of the named native
+@i{Subprogram} within a @code{lock} ... @code{unlock} region.
+If a thread @code{t1} invokes @i{Subprogram} while some other thread @code{t2}
+holds the lock,
+then @code{t1} will be queued until the lock is released.
+Thus simultaneous calls of native methods are permitted but will entail
+queuing.
+
+@item Disable
+The generated code contains no locking around invocations of @i{Subprogram},
+and one thread may invoke @i{Subprogram} while some other thread is executing
+a native method (even one whose @code{LockControl} is @code{Protect}.
+
+@item Check
+The generated code contains no locking around invocations of @i{Subprogram},
+and the application must ensure that any such invocation is within a
+@code{lock} ... @code{unlock} region.
+An exception is thrown if a thread invokes @i{Subprogram} without holding
+the lock.
+@end table
+
+@noindent
+The following examples illustrate the multithreading behavior and the effects
+of the @i{LockControl} argument to the pragma.
+
+@smallexample @c Ada
+@group
+package P is
+   procedure P1 (I : Integer);
+   pragma Annotate (AJIS, Locking, P, Disable);
+
+   procedure P2 (I : Integer);
+   pragma Annotate (AJIS, Locking, P, Disable);
+end P;
+@end group
+@end smallexample
+
+@noindent
+Concurrent invocations of @code{P1} and @code{P2} are allowed (i.e.,
+locking code is not generated automatically).
+
+Code protected by the lock can be provided by hand by the
+Java developer. The lock is created in the library class generated for the
+binding, @i{base_package}.@code{Ada2Java.Library}, under the identifier
+@code{lock}. Thus:
+
+@smallexample
+@group
+import base.P_Package;
+import base.Ada2Java.Library;
+
+public class Main @{
+   public static void main (String [] args) @{
+      Library.lock.lock ();
+
+      try @{
+         P_Package.P1 (0);
+         P_Package.P2 (0);
+      @} finally @{
+         Library.lock.unlock ();
+      @}
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+Following standard Java coding style,
+the @code{lock} / @code{unlock} logic should always appear in a @code{try} ...
+@code{finally} block,
+in order to release the lock even if an unexpected exception is propagated.
+
+In certain cases, locking is required but the logic is more complex than
+simply protecting each native method invocation with a semaphore.
+For example, it may be necessary to invoke a sequence of native methods as
+an atomic action.
+This effect can be achieved through the @code{Check} setting for
+@i{LockControl}:
+
+@smallexample @c ada
+@group
+package P is
+   procedure P1 (I : Integer);
+   pragma Annotate (AJIS, Locking, P1, Check);
+
+   procedure P2 (I : Integer);
+   pragma Annotate (AJIS, Locking, P2, Check);
+end P;
+@end group
+@end smallexample
+
+@noindent
+The Java program has to acquire the library lock before attempting any native
+call. Invoking @code{P1} or @code{P2} outside of a section protected by the
+lock will throw a Java exception.
+
+The locking behavior can be changed globally through the @code{ada2java}
+@option{--[no-]locking} switch. More specifically,
+here are the permitted values for this switch:
+@cindex @option{locking} option (for ada2java)
+@cindex @option{no-locking} option (for ada2java)
+
+@table @code
+@item --locking-protect
+Default setting; globally sets @i{LockControl} as @code{Protect} for all
+subprograms.
+@item --locking-check
+Globally sets @i{LockControl} as @code{Check} for all subprograms.
+@item --no-locking
+Globally disables locking (i.e., sets @i{LockControl} as @code{Disable}
+for all subprograms).
+@end table
+
+@noindent
+Note that an AJIS @code{Locking} pragma takes precedence over the global
+switch.
+
+The @code{finalize} method invoked during garbage collection does not
+correspond to a subprogram from the Ada package that is input to
+@code{ada2java}, and it is not affected by the @option{--[no-]locking} switch.
+Instead, the locking logic used for the @code{finalize} call of Java
+proxies during garbage collection is determined by the
+@option{--[no-]locking-finalize} switch:
+@cindex @option{locking-finalize} option (for ada2java)
+@cindex @option{no-locking-finalize} option (for ada2java)
+
+@table @code
+@item --locking-finalize-protect
+Default setting; sets @i{LockControl} as @code{Protect} for @code{finalize}.
+@item --locking-finalize-check
+Sets @i{LockControl} as @code{Check} for @code{finalize}.
+@item --no-locking-finalize
+Disables locking (i.e., sets @i{LockControl} as @code{Disable}
+for @code{finalize})
+@end table
+
+@noindent
+A typical usage of these two switches would be to set @code{Check} as the
+@i{LockControl} for all subprograms, and @code{Protect} as the
+@i{LockControl} for @code{finalize} methods:
+
+@smallexample
+ada2java --locking-check --locking-finalize-protect p.ads
+@end smallexample
+
+
+
+@node Proxies and Native Object Equality
+@section Proxies and Native Object Equality
+@cindex Native object equality
+@cindex Equality
+
+Proxy classes are generated with an @code{equals} implementation that calls the
+corresponding Ada @code{"="} operation. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is
+      record
+         F : Integer;
+      end record;
+end P;
+@end group
+@end smallexample
+
+@noindent
+The proxy class can be used as follows:
+
+@smallexample
+@group
+T v1 = new T ();
+T v2 = new T ();
+v1.F (0);  @i{"setter" method for field F}
+v2.F (0);  @i{"setter" method for field F}
+@end group
+@end smallexample
+
+@noindent
+and now the result of @code{v1.equals (v2)} is @code{true}.
+This corresponds to ``shallow'' equality, in contrast with ``@code{==}'' which
+tests pointer identity.
+
+A new proxy is created each time a native function
+returns a pointer. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is null record;
+   type A_T is access all T;
+   G : A_T := new T;
+   function Return_G return A_T;
+end P;
+@end group
+
+@group
+package body P is
+   function Return_G return A_T is
+   begin
+      return G;
+   end Return_G;
+end P;
+@end group
+@end smallexample
+
+@smallexample
+@group
+AT p1 = P_Package.Return_G ();
+AT p2 = P_Package.Return_G ();
+@end group
+@end smallexample
+
+@noindent
+Now @code{p1 == p2} is @code{false},
+since a new proxy is created by each function return,
+but @code{p1.equals (p2)} is @code{true},
+
+The association between a proxy and its native object is lost when the
+proxy is passed to a native method. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is null record;
+   type A_T is access all T;
+   function Return_This (This : A_T) return A_T;
+end P;
+@end group
+
+@group
+package body P is
+   function Return_This (This : A_T) return A_T is
+   begin
+      return This;
+   end Return_G;
+end P;
+@end group
+@end smallexample
+
+@smallexample
+T v = new T ();
+@end smallexample
+
+@noindent
+Now the result of @code{(v == P_Package.Return_This (v))} is @code{false}
+
+Java reference equality has special semantics in the case of
+cross-language inheritance, due to the use of a shadow native object -- see
+@ref{Shadow Object Equality} for more details.
+
+
+@node Clone and Copy Semantics
+@section Clone and Copy Semantics
+@cindex Clone and copy semantics
+
+A proxy class generated from a non-limited Ada type includes a @code{clone}
+method. The base class for all proxies, @code{AdaProxy}, implements the
+@code{Cloneable} interface, and defines a public method @code{clone}.
+@cindex @code{AdaProxy} class
+@cindex @code{clone} method (in @code{AdaProxy} class)
+The @code{clone} method performs a ``shallow copy'' of all the fields, except
+for the native object reference.
+The native object reference in the cloned proxy
+is a pointer to a newly allocated Ada object.
+This new native object is itself a shallow copy of the original native object.
+
+Thus cloning a proxy does not result in the sharing of the native object by
+the original proxy and the cloned proxy.
+The latter points to a new native object.
+This behavior is needed to avoid a dangling reference (to the native object)
+when the original
+proxy is garbage collected.
+
+If the proxy class corresponds to a limited type, then the generated
+clone method
+will throw an exception.
+
+Additional semantics for clone and copy, in connection with
+cross-language inheritance,
+are covered below (see @ref{Shadow Object Cloning}).
+
+@node Cross-Language Inheritance
+@section Cross-Language Inheritance
+@cindex Inheritance (cross-language)
+
+This section discusses a number of issues related to cross-language
+inheritance; i.e., defining a Java class as an extension of a proxy
+class for an Ada tagged type.
+
+@menu
+* Inheriting from a Java Proxy::
+* Cross Language Dispatching from Ada::
+* The Shadow Native Object::
+* Controlled Types::
+@end menu
+
+@node Inheriting from a Java Proxy
+@subsection Inheriting from a Java Proxy
+
+As explained in @ref{Tagged Types}, @code{ada2java} maps an Ada tagged type
+to a non-final Java proxy class. You can extend this class in Java.
+For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is tagged null record;
+
+   procedure Prim (V : T);
+end P;
+@end group
+@end smallexample
+
+@noindent
+results in the following Java class:
+
+@smallexample
+@group
+public class T @{
+   public void Prim () @{
+      ...
+   @}
+   ...
+@}
+@end group
+@end smallexample
+
+@noindent
+which may be extended, with the instance method overridden:
+
+@smallexample
+@group
+public class T_Child extends T @{
+   public void Prim () @{
+      ...
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+An object of the subclass @code{T_Child} is also a proxy; constructing such an
+object allocates a native object, referred to as a ``shadow native object''.
+Its properties will be
+described below (@ref{The Shadow Native Object}).
+
+The Java program can then invoke the @code{Prim} method, with
+standard Java dispatching behavior.  For example:
+
+@smallexample
+@group
+T v1 = new T ();
+T v2 = new T_Child ();
+
+v1.Prim (); @i{// Will call the native Prim}
+v2.Prim (); @i{// Will call the overridden Java Prim}
+@end group
+@end smallexample
+
+
+@node Cross Language Dispatching from Ada
+@subsection Cross Language Dispatching from Ada
+
+A method overridden in Java can be called in Ada using the usual Ada
+dispatching mechanism. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is tagged null record;
+
+   procedure Prim (V : T);
+
+   procedure Call_Prim (V : T'Class);
+end P;
+@end group
+
+@group
+package body P is
+
+   procedure Prim (V : T) is
+   begin
+      --  Native Prim implementation;
+   end Prim;
+
+   procedure Call_Prim (V : T'Class) is
+   begin
+      Prim (V); -- Dispatching call.
+   end Call_Prim;
+
+end P;
+@end group
+@end smallexample
+
+@noindent
+The invocation of @code{Prim} in @code{Call_Prim} is dispatching, and
+the @code{Prim} for the type of the actual parameter
+will be called. In Java, this procedure can be used in conjunction with
+a cross-language extension of T, e.g.:
+
+@smallexample
+@group
+class T_Child extends T @{
+   public Prim () @{
+      ...
+   @}
+@}
+
+T v = new T_Child ();
+P_Package.Call_Prim (v);
+@end group
+@end smallexample
+
+@noindent
+The Java program is invoking the native Ada @code{Call_Prim} procedure, which
+in turn dispatches to the Java method @code{Prim} in @code{T_Child}.
+
+
+@node The Shadow Native Object
+@subsection The Shadow Native Object
+@cindex Shadow native object
+
+This section describes in more detail the semantics of the shadow native
+object.
+
+@menu
+* Basic Properties::
+* Memory Management::
+* Shadow Object Equality::
+* Shadow Object Cloning::
+@end menu
+
+@node Basic Properties
+@subsubsection Basic Properties
+
+As seen above,
+cross-language dispatching is supported; an Ada dispatching call may result
+in the invocation of a Java method on a proxy object.
+This is possible because of the @i{shadow native object} concept.
+
+For any tagged type @code{T} declared in a package spec that is input to
+@code{ada2java}, a new type is automatically generated that extends @code{T}
+with a component that references a proxy object.  The Ada declaration is:
+
+@smallexample @c ada
+@group
+type Shadow_T is new T with
+   record
+      Link_To_Proxy : Java_Object;
+   end record;
+@end group
+@end smallexample
+
+@noindent
+If @code{T_Child} is a Java class that extends @code{T}, then
+constructing an instance of @code{T_Child} will create
+a native @code{Shadow_T} object instead of a regular @code{T} object.
+This type overrides every controlling primitive of T, and delegates the
+dispatching to the
+Java side. If a method corresponding to an Ada primitive operation is not
+overridden in Java, then the subprogram from
+the parent Ada type will be automatically called.
+
+The use of a shadow object introduces a tight relationship between a Java
+proxy and its Ada native object. Basically, there is a roundtrip dependency
+between the two, so that a Java proxy object is associated with a unique Ada
+shadow native object and vice versa.
+
+This has several non-trivial implications that are described in the sections
+below.
+
+@node Memory Management
+@subsubsection Memory Management
+@cindex Memory management
+
+The reference from the shadow native object to the Java object is called
+a @i{global reference}.@footnote{An explanation of global references may
+be found in Liang's @cite{The Java Native Interface Programmer's Guide and
+Specification}, Chapter 5.}
+@cindex Global reference
+There are two kinds of global references: regular (usually simply
+referred to as global references) and weak. A regular global reference
+prevents the object from being garbage collected, whereas a weak global
+reference does not.
+@cindex Regular global reference
+@cindex Weak global reference
+
+When a native object is owned by its proxy, the proxy is responsible for
+releasing the native memory. In this case, the reference from the native
+object to the proxy is a weak global reference: garbage collection will not be
+prevented, and both the proxy and then the native object will be released upon
+collection.
+
+However, when the native object is owned by the native side, then the native
+object may continue to exist even if the proxy has become inaccessible from
+Java. In such a case, a global reference is used, so that the garbage collector
+is prevented from collecting the Java object. Such a global reference will be
+automatically released when the Ada object is actually deallocated.
+
+Forcing the deallocation of the native object through
+@code{IProxy.deallocateNativeObject} will release the global reference as well.
+
+Switching the owner of the native object between
+NATIVE and PROXY will switch the reference from a regular global reference to
+a weak one.
+
+In order to avoid a potential memory leak, the link between the shadow native
+object and the Java proxy has to be broken manually when the shadow native
+object is no longer needed on the Ada side.  This may be done in two ways:
+
+@itemize @bullet
+@item Deallocating the native shadow object, from Ada.
+@item Invoking the @code{unlink} method on the proxy, from Java
+@end itemize
+
+@node Shadow Object Equality
+@subsubsection Shadow Object Equality
+
+Java reference equality (@code{==}) is not consistent with native pointer
+equality, but Java object equality (@code{equals}) is.
+That is, if @code{A} and @code{B} are two native pointers where @code{A = B},
+then on the Java side @code{A.equals(B)} is @code{true} but @code{a==b} is
+@code{false}.
+
+However, since the association between shadow object and proxy is one-to-one,
+proxy equality is meaningful. For example:
+
+@smallexample @c ada
+@group
+package P is
+   type T is tagged null record;
+   type T_Access is access all T'Class
+
+   procedure Identity (Item : T_Access) return T_Access;
+   -- Returns Item as its result
+end P;
+@end group
+@end smallexample
+
+@noindent
+On return from @code{Identity}, the ``glue code'' between Java and Ada will
+check if the returned value is a shadow native object and, if so, will return
+the corresponding Java proxy instead of creating a new one. Hence the
+following fragment
+
+@smallexample
+@group
+public class T_Child extends T @{
+@}
+
+T v = new T_Child ();
+@end group
+@end smallexample
+
+@noindent
+will result in the expression @code{P_Package.Return_This (v) == v}
+delivering @code{true}.
+
+
+@node Shadow Object Cloning
+@subsubsection Shadow Object Cloning
+
+Cloning from Java will result in copying a native object. In the case of
+a shadow native object, there will be a new shadow object as well, referencing
+the newly created java proxy, thus preserving the one-to-one relationship
+between the shadow native object and the proxy.
+
+However, there are cases where copies are made from Ada as well:
+
+@smallexample @c ada
+@group
+package P is
+   type T is tagged null record;
+   type T_Access is access all T'Class
+
+   procedure Duplicate (Item : T_Access) return T_Access;
+end P;
+@end group
+
+@group
+package body P is
+
+   procedure Duplicate (Item : T_Access) return T_Access is
+   begin
+      First_Copy  : T'Class  := Item.all;
+      Second_Copy : T_Access := new T'Class'(Item.all);
+   begin
+      return Second_Copy;
+   end Duplicate;
+
+end P;
+@end group
+@end smallexample
+
+Calling @code{Duplicate} from Java will lead to two shadow object copies,
+one on the stack (@code{First_Copy}) and one on the heap
+(@code{Second_Copy.all}).  As explained earlier, the
+link between the shadow native object and the proxy will be deleted when
+the Ada object is deallocated, at the exit of @code{Duplicate} for the
+@code{First_Copy} variable.
+
+The @code{Second_Copy} proxy created in the copy process will be returned by
+the Java method corresponding to the @code{Duplicate} procedure.
+
+Note that a proxy created by such a copy does not own its Ada native object.
+
+Proxy cloning from Ada does not involve a @code{clone} invocation from the Java
+extended object. If the Java code needs to perform a deep copy in the
+Java proxy, the method @code{void proxyCloned (IProxy initialObject)} should
+be overridden instead. The default @code{clone} implementation of the generated
+Java classes will call this method as well.
+
+@emph{Limitation:} when @code{proxyCloned} is called from Ada, the link
+between proxy and native object
+is not yet established.  Thus @code{proxyCloned} is not allowed to invoke
+any native methods.
+The Ada type may be derived from @code{Finalization.Controlled}, and
+@code{Adjust} may be overridden, to work around this limitation.
+
+Note that multiple copies -- and thus repeated proxy creation -- may be
+involved when a (non-access) shadow object is returned. For example:
+
+@smallexample @c ada
+@group
+package body P is
+
+   function Identity (Item : T_Access) return T'Class is
+   begin
+      return Item.all;
+   end Identity;
+
+end P;
+@end group
+@end smallexample
+
+@noindent
+Due to internal machinery, three copies may be needed in the implementation
+of the return from this function when called from Java. If it is necessary to
+ensure that only one copy is performed, then the Ada function should be written
+as a wrapper for an Ada access-returning function.
+
+@node Controlled Types
+@subsection Controlled Types
+@cindex Controlled types
+
+A class that is generated from an Ada controlled type may be extended
+in Java, with overriding versions of the @code{Adjust}, @code{Finalize},
+and/or @code{Initialize} methods.
+
+A current limitation is that @code{Initialize} cannot be called on a shadow
+object, e.g.:
+
+@smallexample @c ada
+@group
+package P is
+
+   type T is new Controlled with null record;
+
+   procedure Initialize (This : in out T);
+
+end P;
+@end group
+@end smallexample
+
+@noindent
+can be used in:
+
+@smallexample
+@group
+class T_Child extends T @{
+
+   void Initialize () @{
+
+   @}
+
+@}
+
+T v = new T_Child ();
+@end group
+@end smallexample
+
+@noindent
+But the overridden @code{Initialize} will not be called by the constructor.
+
+This limitation will be removed in a future release.
+
+
+@node Managing Attachment to Java Proxies
+@section Managing Attachment to Java Proxies
+
+By default, subprograms (except controlling primitives) are not attached --
+they are placed in the default class @i{Ada_Package_Name}.@code{_Package}.
+@cindex Default class
+However, when all of the following conditions are met, a subprogram is
+attachable to the class corresponding to its first parameter:
+
+@itemize @bullet
+@item
+The first parameter of the subprogram has one of the following forms:
+@itemize @minus
+@item A private type or a record type,
+@item An access type (of mode @code{in}) designating a private or record
+type, or
+@item An access parameter designating a private or record type.
+@end itemize
+
+@item
+The type of this parameter -- or of the designated type if an access
+parameter -- is declared in the same package spec as the subprogram.
+@end itemize
+
+@noindent
+A subprogram that meets these criteria can be mapped to a method
+defined in the class corresponding to the first parameter's type, and
+the value of this first parameter will come from the hidden parameter
+@code{this}.
+
+This attachment is activated by the annotation pragma @code{Attached}:
+
+@smallexample
+pragma Annotate (AJIS, Attached, @i{Condition}, @i{Subprogram});
+@end smallexample
+
+Example:
+
+@smallexample @c ada
+@group
+package Example is
+   type Rec is null record;
+   procedure Proc (V : Rec; I : Integer);
+   pragma Annotate (AJIS, Attached, True, Proc);
+end Example;
+@end group
+@end smallexample
+
+@noindent
+will map to the class
+
+@smallexample
+@group
+public class Rec extends com.adacore.ajis.internal.ada.AdaProxy @{
+  ...
+  public void Proc (int I)@{...@}
+@}
+@end group
+@end smallexample
+
+@noindent
+Attachment policies may be globally turned on / off using the following
+switches:
+
+@table @code
+@item --[no-]attach-parameter
+@cindex @option{--attach-parameter} option (for @code{ada2java})
+@cindex @option{--no-attach-parameter} option (for @code{ada2java})
+Activates or deactivates ``best-effort'' attachment to the class corresponding
+to the first parameter. When this is set,
+@code{ada2java} will try to perform subprogram attachment whenever
+possible. Default is @code{@w{--no-attach-parameter}}
+
+@item --[no-]attach-access
+@cindex @option{--attach-access} option (for @code{ada2java})
+@cindex @option{--no-attach-access} option (for @code{ada2java})
+Activates or deactivates attachment for
+access type. When activated, subprograms with an access type (named or
+anonymous) for their first parameter
+will be attached. (Note, however, that such attachment prevents
+passing a @code{null} value, since @code{this} is always the implicit
+parameter.) Default is @code{@w{--no-attach-access}}.
+
+@item --[no-]attach-controlling
+@cindex @option{--attach-controlling} option (for @code{ada2java})
+@cindex @option{--no-attach-controlling} option (for @code{ada2java})
+Activates or deactivates attachment
+of controlling primitives. This is required for cross language inheritance.
+Default is @code{@w{--attach-controlling}}.
+
+@item --[no-]attach-ada2005
+@cindex @option{--attach-ada2005} option (for @code{ada2java})
+@cindex @option{--no-attach-ada2005} option (for @code{ada2java})
+Activates or deactivates attachment based on applicability of Ada 2005 prefix
+notation.
+With the @option{@w{--attach-ada2005}} switch, @command{ada2java} will attempt
+to attach a subprogram (define it in the class corresponding to the initial
+parameter) that would otherwise be placed in the default package,
+if it can be invoked via Ada 2005 prefix notation.
+Default is @code{@w{--no-attach-ada2005}}.
+@end table
+
+@noindent
+In the example below, attachment is requested for everything except
+noncontrolling initial access parameters:
+
+@smallexample
+   ada2java --attach-parameter --no-attach-access p.ads
+@end smallexample
+
+@noindent
+Pragma @code{Attached} takes precedence over the global switch.
+
+@node Exceptions propagation
+@section Exceptions propagation
+@cindex Exception propagation
+
+Exceptions raised from Ada are translated into instances of the relevant
+descendant of class @code{com.adacore.ajis.NativeException}
+(see @ref{Exceptions}) and propagated to Java.
+@cindex @code{com.adacore.ajis.NativeException}
+Exceptions raised from a Java
+callback are translated back to the original Ada exception - or to
+Java_Exception declared in the AJIS.Java package, and propagated to Ada.
+
+@c ******************************
+@node Using javastub to Generate Ada Package Specifications
+@chapter Using @code{javastub} to Generate Ada Package Specifications
+@c ******************************
+@cindex @command{javastub} command
+
+The @command{javastub} utility program generates an Ada package specification
+from a Java class file that has native methods.
+
+It is invoked as follows
+
+@smallexample
+$ javastub [@i{filename}.class] @{@i{filename}.class@}
+@end smallexample
+
+@noindent
+where each @file{@i{filename}.class} is a class file
+for a Java class that has native methods.
+
+For each class file argument, @command{javastub} generates an
+Ada package specification with subprograms corresponding to the native
+methods.  The name of the generated file is @file{@i{filename}_jni.ads}.
+
+The @command{javastub} utility is the Ada analog to the
+@command{javah -jni} command in the Java Development Kit, which takes
+a class file as input and produces a C header file with the
+correct function prototypes.
+
+You can use @command{javastub} if you intend to use Ada, rather than C,
+to implement the native methods in a Java class.  You will then be
+responsible for doing the necessary JNI programming, using the Ada binding
+to the C JNI library.
+
+As an example, here is a simple Java class with a native method:
+
+@smallexample
+@group
+@i{// Foo.java}
+class Foo@{
+    native void bar(int i);
+@}
+@end group
+@end smallexample
+
+@noindent
+Compile the Java source file and then invoke @command{javastub}
+on the class file:
+
+@smallexample
+@group
+$ javac Foo.java
+$ javastub Foo.class
+@end group
+@end smallexample
+
+@noindent
+The following file @file{foo_jni.ads} is generated by @command{javastub}:
+
+@smallexample @c ada
+@group
+--  Stub for class Foo
+with Interfaces.Java.JNI; use Interfaces.Java.JNI;
+package Foo_JNI is
+   --  Class:     Foo
+   --  Method:    bar
+   --  Signature: (I)V
+   procedure bar (Env : JNI_Env_Access; Obj : J_Object; P1 : J_Int);
+   pragma Export (C, bar, "Java_Foo_bar__I");
+end Foo_JNI;
+@end group
+@end smallexample
+
+
+@ignore
+@c ******************************
+@node Using jvm2ada to Interface Ada with Java
+@chapter Using @code{jvm2ada} to Interface Ada with Java
+@c ******************************
+@cindex @command{jvm2ada} command
+
+The @command{jvm2ada} tool is under development and is not supported
+in the current GNAT-AJIS release.
+
+@menu
+* Running JVM2Ada::
+* Running a Simple Ada/Java Program::
+@end menu
+
+@node Running JVM2Ada
+@section Running JVM2Ada
+
+Several steps are needed to create an executable file from a set of Ada
+sources and Java sources:
+
+@itemize @bullet
+@item The Java sources must be compiled into bytecode
+@item The mapping Ada packages must be generated from those bytecode files
+ using JVM2Ada
+@item The Ada source file(s) must be compiled.
+@item The Ada file(s) must be bound using the GNAT binder.
+@item All appropriate object files must be linked with a JVM library to produce
+ an executable
+@end itemize
+
+The last three steps are most commonly handled by using the `gnatmake' utility
+program that, given the name of the main program, automatically performs the
+necessary compilation, binding and linking steps.
+
+@node Running a Simple Ada/Java Program
+@section Running a Simple Ada/Java Program
+
+
+We will suppose in our initial example that you are using the source files
+provided in the examples/simple directory. At the same level than the examples
+directory, you should also have a `jni' directory and a `jre' directory. The
+first step is to generate all the Ada package mappings for the Java runtime
+library in the jre directory. First, go in the `jre' directory (`$' is used as
+the command prompt in the examples in this document):
+
+@smallexample
+   $ cd jre
+@end smallexample
+
+This directory is currently empty. To fill it, you must have a Java Development
+Toolkit (JDK) on your computer. Let's suppose that it is installed in
+`/usr/local/java/jdk'. You have to copy the jar file(s) containing the Java
+runtime library. For instance, with the JDK 1.2, you only have to copy the
+file named rt.jar:
+
+@smallexample
+   $ cp /usr/local/java/jdk/jre/lib/rt.jar ./
+@end smallexample
+
+If you are using the JDK 1.5, you have to copy several files:
+
+@smallexample
+   $ cp /usr/local/java/jdk/jre/lib/charsets.jar ./
+   $ cp /usr/local/java/jdk/jre/lib/jce.jar ./
+   $ cp /usr/local/java/jdk/jre/lib/jsse.jar ./
+   $ cp /usr/local/java/jdk/jre/lib/rt.jar ./
+@end smallexample
+
+Then, you just have to generate the corresponding Ada mapping packages.
+
+For the JDK 1.2:
+
+@smallexample
+   $ jvm2ada rt.jar
+@end smallexample
+
+For the JDK 1.5, you first have to create an uncompressed version of the
+jce.jar file since JVM2Ada does not currently support compressed jar files
+and you can then generate the Ada packages:
+
+@smallexample
+   $ jar -xf jce.jar
+@end smallexample
+
+This creates 2 directories: javax and META-INF
+
+@smallexample
+   $ jar -0cf uncompressed_jce.jar javax META-INF
+   $ rm -r javax META-INF
+   $ jvm2ada rt.jar -Luncompressed_jce.jar -Lcharsets.jar -Ljsse.jar
+@end smallexample
+
+The first setup steps are now completed. You can switch into the directory
+containing the simple example:
+
+@smallexample
+   $ cd ../examples/simple
+@end smallexample
+
+This directory contains two files. Th first one is named `simple.adb':
+
+@smallexample
+   with JNI.Init;
+
+   with Ada.Text_IO;
+   with Counter;
+   with Java_Primitives;
+
+   procedure Simple is
+      Counter1 : Counter.Counter := Counter.New_Counter;
+      Counter2 : Counter.Counter := Counter.New_Counter (10);
+      I        : Java_Primitives.Int;
+   begin
+      Counter1.Increment;
+      I := Counter1.GetValue;
+      Ada.Text_IO.Put_Line ("From Ada: " & Java_Primitives.Int'Image (I));
+      Counter1.PrintValue;
+
+      Counter2.Decrement;
+      I := Counter2.GetValue;
+      Ada.Text_IO.Put_Line ("From Ada: " & Java_Primitives.Int'Image (I));
+      Counter2.PrintValue;
+   end Simple;
+@end smallexample
+
+The second one is named `Counter.class':
+
+@smallexample
+   public class Counter @{
+
+       //  Instance Fields
+
+       private int counter = 0;
+
+       //  Constructors
+
+       public Counter() @{
+       @}
+
+       public Counter(int counter) @{
+          this.counter = counter;
+       @}
+
+       //  Methods
+
+       public void increment() @{
+          this.counter++;
+       @}
+
+       public void decrement() @{
+          this.counter--;
+       @}
+
+       public void printValue() @{
+          System.out.println ("From Java: " + String.valueOf(counter));
+       @}
+
+       public int getValue() @{
+          return this.counter;
+       @}
+   @}
+@end smallexample
+
+In the Sun Java Development Toolkit (JDK), the Java compiler is named javac.
+You can compile the Java program into bytecode using the following command:
+
+@smallexample
+   $ javac Counter.java
+@end smallexample
+
+This compile command generates a file `Counter.class', which is the bytecode
+file corresponding to your Java program. From this bytecode file, you can
+generate the Ada package mapping using the JVM2Ada utility program:
+
+@smallexample
+   $ jvm2ada Counter.class
+@end smallexample
+
+This command generates two files named `counter.ads' and `counter.adb'. With
+these files, it is possible to use the features provided by Java code in Ada
+code. You can then compile all the Ada files into an executable with the
+following commmand (for JDK 1.5):
+
+@smallexample
+   $ gnatmake -gnat05 \
+              -I../../jni -I../../jre \
+              -L/usr/local/java/jdk/jre/lib/i386/client \
+              simple.adb \
+              -largs -ljvm
+@end smallexample
+
+JVM2Ada generates Ada packages that use features introduced in Ada 2005 so
+the `-gnat05' switch must be used. The -I option specifies a source files
+search path. The Ada files in the jni directory are common sources needed
+for each Ada-Java mixed application using the JNI technology. The generated
+counter.ads and counter.adb files have on files from the Java Runtime so we
+must also add the jre directory. Finally, in order to complete the link phase,
+we must give the path to the `jvm' library which is in that example found in
+`/usr/local/java/jdk/jre/lib/i386/client' and named `libjvm.so'. This
+command gives use the final executable: `simple'.
+
+Before being able to launch this executable, you must ensure that the needed
+library are accessible. For the JDK 1.5, this can be done with this command:
+
+@smallexample
+   $ export LD_LIBRARY_PATH=/usr/local/java/jdk/jre/lib/i386/client:/usr/local/java/jdk/jre/lib/i386/:$LD_LIBRARY_PATH
+@end smallexample
+
+and you can execute `simple':
+
+@smallexample
+   $ ./simple
+@end smallexample
+
+and, if all has gone well, you will see:
+
+@smallexample
+From Ada:  1
+From Java: 1
+From Ada:  9
+From Java: 9
+@end smallexample
+
+appear in response to this command.
+@end ignore
+
+
+
+@c ******************************
+@node Using JNI Directly
+@appendix Using JNI Directly
+@c ******************************
+
+@noindent
+This Appendix explains how to use the JNI services with Ada in the
+same style as with C or C++ (i.e., with the program
+making explicit calls to the JNI functions).
+
+@menu
+* JNI Introduction::
+* Implementing a Native Method in Ada::
+* Interfacing to an Existing Ada API::
+* Calling a Java Method from Ada::
+* Using Ada Objects from Java::
+* Using Java Objects from Ada::
+@end menu
+
+@node JNI Introduction
+@section Introduction
+
+Interfacing Ada with other languages is fairly straightforward when all
+languages run in the same environment and use the same memory model.
+For example, C code can use Ada entities provided that these
+entities have the proper convention. Likewise, Ada can access C
+entities just as easily.
+
+However, the situation is not so simple with Java. Since Java programs
+are running in a completely different environment, the Java Virtual Machine,
+it is not possible to access Java directly from natively compiled Ada,
+or vice versa.
+All communication -- method invocation, parameter passing, data referencing --
+has to go through an intermediate layer, the Java Native
+Interface (JNI).
+
+JNI -- a collection of C types and functions --
+has been used since Java's inception to interface Java with
+C and C++. It offers several capabilities:
+@itemize @bullet
+@item Implementing native Java methods in C or C++
+@item Invoking Java methods (both instance and static) from C or C++
+@item Referencing Java fields (both instance and static) from C or C++
+@end itemize
+
+@noindent
+This Appendix describes how to obtain these capabilities in Ada,
+using an Ada binding to JNI.
+This is a low-level interface and is generally not as preferable as
+using the GNAT-AJIS tools, but may sometimes be useful.
+
+The Ada binding, supplied by GNAT-AJIS in the package @code{JNI},
+is a ``thin'' binding to the C types and functions from @file{jni.h},
+and thus the documentation provided, for example, by
+@url{http://java.sun.com/j2se/1.4.2/docs/guide/jni/}
+is applicable to Ada / Java interfacing.
+This Appendix is mainly an introduction to using JNI in an Ada context.
+For further details please refer to the above website or to texts such as
+@cite{The Java Native Interface - Programmer's Guide and Specification}, by
+Sheng Liang (Addison-Wesley, 1999).
+
+
+@node Implementing a Native Method in Ada
+@section Implementing a Native Method in Ada
+
+This section illustrates how to build a Java application where a native method
+is written in Ada.  The build process consists of the following steps:
+
+@enumerate
+@item
+Write the Java class with the native method, and compile it
+
+@item
+Generate an Ada specification corresponding to the native method
+
+@item
+Write the body of the native method and compile it to a shared library
+or DLL.
+
+@item
+Run the Java application
+@end enumerate
+
+@noindent
+These steps will now be described in more detail.
+
+@menu
+* A Java class with a native method::
+* Generating an Ada specification::
+* Implementing the native method::
+* Compiling to a shared library or DLL::
+* Running the program::
+@end menu
+
+@node A Java class with a native method
+@subsection A Java class with a native method
+
+@noindent
+The following example contains a native method that is to be implemented
+in Ada:
+
+@smallexample
+@group
+public class Example1 @{
+   native static int sum (int a, int b);
+   public static void main (String[] args) @{
+      System.out.println (sum (10, 20));
+   @}
+   static @{
+      System.loadLibrary ("Example1_Pkg");
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+The library containing the native method needs to be loaded before
+the method is invoked; this is conventionally accomplished by
+enclosing an invocation of the @code{loadLibrary} method in a
+static initializer.
+The designated library, @file{Example1_Pkg}, will be created at a later step.
+
+You can compile this Java file to a class file in the usual way; e.g.:
+
+@smallexample
+$ javac Example1.java
+@end smallexample
+
+@noindent
+which will generate the file @file{Example1.class}
+
+
+@node Generating an Ada specification
+@subsection Generating an Ada specification
+
+Although a native method can be implemented as a library-level
+subprogram, for consistency it is probably simplest to declare
+it in a package:
+
+@smallexample @c ada
+@group
+with Interfaces.Java.JNI; use Interfaces.Java.JNI;
+package Example1_Pkg is
+  function Sum (Env : JNI_Env_Access; Class : J_Class; A, B : J_Int)
+    return J_Int;
+  pragma Export (C, Sum, "Java_Example1_sum__II");
+end Example1_Pkg;
+@end group
+@end smallexample
+
+@noindent
+The @code{Sum} function in Ada has two parameters that are not present
+in the native method signature: @code{Env}, a handle on the JNI environment,
+and @code{Class}, a handle on the class (@code{Example1}) in which the
+native method is defined.  These parameters are mandated by the JNI
+standard (although for an instance method the 2nd parameter would be an object
+handle and not a class handle).
+
+The @code{A} and @code{B} parameters correspond to the original method
+profile, using the appropriate mapping of types across the two languages.
+
+The @code{Export} pragma must include as an argument the symbol name for the
+native method, here @code{Java_Example1_sum__II}, derived from its signature.
+More generally, the symbol name has one of the
+following forms, depending on whether the method takes parameters:
+
+@noindent
+@code{Java_}@i{PackageName}@code{_}@i{ClassName}@code{_}@i{MethodName}@*
+@code{Java_}@i{PackageName}@code{_}@i{ClassName}@code{_}@i{MethodName}@code{__}@i{ParamsSignature}
+
+@noindent
+Please note the following:
+@itemize @bullet
+@item
+Two consecutive @code{_} (underscore) characters
+precede the @i{ParamsSignature} component of the name.
+
+@item
+The @i{PackageName}@code{_} component is absent if the Java class is defined
+in the default (anonymous) package.
+
+@item
+The @i{ParamsSignature} is derived from the JNI method descriptor
+-- @code{(II)I} in this example --
+by removing the parentheses and dropping the result type.
+Since Java does not allow overloading based on result type, there is no
+risk of different native methods in the same class yielding the
+same symbol name.
+
+@item
+Since Java is case sensitive, the symbol name string needs to mirror the
+case of the Java identifiers.
+The casing of the Ada subprogram identifier does not need to be the same
+as the corresponding Java method name, although it will general assist
+readability if you use the same casing.
+
+@item
+Java's case sensitivity means that you can have different native methods,
+say @code{foo()} and @code{Foo()}, with the same parameter profile.
+Since Ada is not case sensitive, you will need to declare different
+names for these subprograms, e.g. @code{foo_1} and @code{Foo_2}.
+@end itemize
+
+@noindent
+The last part of the exported symbol, the parameters
+signature, is optional here, since there is only one method named @code{sum}
+in the Java class.
+It is recommended style, however, to include the parameters signature
+explicitly.
+
+Each primitive Java type has a corresponding Ada type defined in the
+package @code{JNI} supplied with GNAT-AJIS:
+
+@table @code
+@item boolean
+@code{Interfaces.Java.JNI.J_Boolean}
+@item byte
+@code{Interfaces.Java.JNI.J_Byte}
+@item char
+@code{Interfaces.Java.JNI.J_Char}
+@item short
+@code{Interfaces.Java.JNI.J_Short}
+@item int
+@code{Interfaces.Java.JNI.J_Int}
+@item long
+@code{Interfaces.Java.JNI.J_Long}
+@item float
+@code{Interfaces.Java.JNI.J_Float}
+@item double
+@code{Interfaces.Java.JNI.J_Double}
+@end table
+
+@noindent
+Writing the JNI-compliant Ada specification manually is tedious;
+GNAT-AJIS includes the @command{javastub} tool to automate this step
+by generating an appropriate Ada spec from a Java class file
+containing a native method to be implemented in Ada:
+
+@smallexample
+$ javastub Example1.class
+@end smallexample
+
+@noindent
+This command, the Ada analog to @command{javah -jni} for C, will generate the
+package spec shown above.
+
+@node Implementing the native method
+@subsection Implementing the native method
+
+@noindent
+The Ada implementation of the native method is straightforward:
+
+@smallexample @c ada
+@group
+package body Example1_Pkg is
+  function Sum (Env : JNI_Env_Access; Class : J_Class; A, B : J_Int)
+    return J_Int is
+  begin
+    return A + B;
+  end Sum;
+end Example1_Pkg;
+@end group
+@end smallexample
+
+@noindent
+Since the @code{Sum} implementation does not need to access any entities
+from the Java environment, it ignores the @code{Env} and @code{Class}
+parameters.
+
+Ada semantics apply to the execution of the function.
+For example, if @code{A+B} overflows, the @code{Constraint_Error}
+exception is raised in the
+native code. Unless it is handled locally, the exception is either lost or
+results in a JVM failure. Thus, reliable Ada code called from Java should always
+contain an exception handler.
+
+
+@node Compiling to a shared library or DLL
+@subsection Compiling to a shared library or DLL
+
+@noindent
+The standard way to compile the Ada code is to use the gprbuild capabilities
+for compilation of shared libraries. Assuming that the source files for the
+code are located in a directory named @file{src}, the project file will look
+like:
+
+@smallexample
+@group
+with "jni";
+with "ajis";
+
+project Test is
+
+   for Object_Dir use "obj";
+
+   for Source_Dirs use ("src");
+
+   for Library_Name use "test";
+   for Library_Kind use "dynamic";
+   for Library_Dir use "lib";
+   for Library_Auto_Init use "false";
+   for Library_Interface use ("Example1_Pkg");
+@end group
+
+@group
+   package Compiler is
+      for Default_Switches use AJIS.Compiler'Default_Switches;
+   end Compiler;
+
+   case AJIS.OS is
+      when "Windows_NT" =>
+         for Shared_Library_Prefix use "";
+      when others =>
+         null;
+   end case;
+end Test;
+@end group
+@end smallexample
+
+@noindent
+Note that we're reusing the flags provided by the AJIS installation directly,
+rather than defining them ourselves. In addition to the usual libraries option
+described in the GNAT User's Guide, we need to say that, on Windows, the
+library prefix is empty, as opposed to @code{lib}.
+@code{lib} is the default behavior, but it would complicate the load of the
+library here.
+
+Compiling the library with gprbuild is now straightforward:
+
+@smallexample
+$ gprbuild -P test.gpr
+@end smallexample
+
+@node Running the program
+@subsection Running the program
+
+@noindent
+Once you have all of the components in place -- the Java class file and the
+native library -- you can run the application:
+
+@smallexample
+$ java Example1
+@end smallexample
+
+@noindent
+results in execution of the Java statement
+
+@smallexample
+System.out.println (Example1.sum (10, 20));
+@end smallexample
+
+@noindent
+which displays @code{30} on the screen.
+
+
+
+@node Interfacing to an Existing Ada API
+@section Interfacing to an Existing Ada API
+
+The style of interfacing illustrated in the previous section
+is the most direct way of using JNI to call Ada
+subprograms from Java. However,
+when interfacing to an existing API, you will need to supply Ada ``wrappers''
+that satisfy the JNI requirements for the parameters in the
+C function prototypes corresponding to native methods.
+
+For example, suppose you would like to invoke the following Ada
+subprogram from Java:
+
+@smallexample @c ada
+function Addition (A, B : Positive) return Positive;
+@end smallexample
+
+@noindent
+A corresponding Java native method declaration is:
+
+@smallexample
+@group
+class Example2 @{
+   static native int addition (int a, int b);
+@}
+@end group
+@end smallexample
+
+@noindent
+and then a ``wrapper'' in Ada is necessary, corresponding to the subprogram
+that is actually called when the native method is invoked:
+
+@smallexample @c ada
+@group
+function Addition_Wrapper (Env   : JNI_Env_Access;
+                           Class : J_Class;
+                           A, B  : J_Int)
+   return J_Int;
+pragma Export (C, Addition_Wrapper, "Java_Example2_addition__II");
+@end group
+
+@group
+function Addition_Wrapper (Env   : JNI_Env_Access;
+                           Class : J_Class;
+                           A, B  : J_Int)
+   return J_Int is
+begin
+   return J_Int (Addition (Positive (A), Positive (B)));
+end Addition_Wrapper;
+@end group
+@end smallexample
+
+@noindent
+As a point of style, when invoking a native Ada method whose formal
+parameters are constrained (here of subtype @code{Positive}) you should
+ensure that the actual parameters satisfy the constraints.
+Otherwise the resulting constraint violation will either fail silently or
+crash the JVM.
+
+In the above example, the wrapper function is ignoring the @code{Env} and
+@code{Class} parameters.  Later examples will show how these parameters
+can be used, when the Ada subprogram needs to access entities from
+the Java side.
+
+
+@node Calling a Java Method from Ada
+@section Calling a Java Method from Ada
+
+@noindent
+The @code{JNI} package allows you to
+invoke Java methods from Ada. For example:
+
+@smallexample
+@group
+class Example3 @{
+   static int addition (int a, int b) @{
+      return a + b;
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+The natural corresponding Ada subprogram has the profile:
+
+@smallexample @c ada
+function Addition (A, B : J_Int) return J_Int;
+@end smallexample
+
+@noindent
+Implementing this subprogram to invoke the Java method requires
+dealing with several issues.
+
+First, the code has to execute properly in the
+context of the current Java thread, and for this to happen a call to
+@code{Attach_Current_Thread} is needed if it hasn't been done yet. This
+call also requires a handle on the virtual machine itself that is
+represented by the variable @code{Main_VM}:
+
+@smallexample @c ada
+   Attach_Current_Thread (Main_VM, Env'Access, System.Null_Address);
+@end smallexample
+
+@noindent
+Second, you need to obtain a handle on the Java method and then
+invoke the method through the handle.
+A method handle is of type @code{J_Method_ID}. It is initialized through
+the function @code{Get_Method_ID}, declared as follows:
+
+@smallexample @c ada
+@group
+function Get_Method_ID
+   (Env     : JNI_Env_Access;
+    Class   : J_Class;
+    Name    : String;
+    Profile : String) return J_Method_ID;
+@end group
+@end smallexample
+
+@noindent
+A handle to the class is needed as well. It can be obtained
+via @code{Find_Class}, declared as follows:
+
+@smallexample @c ada
+@group
+function Find_Class
+   (Env : JNI_Env_Access; Name : String) return J_Class;
+@end group
+@end smallexample
+
+@noindent
+Thus, the call sequence starts with:
+
+@smallexample @c ada
+@group
+   Class := Find_Class (Env, "LExample3;");
+   Addition_ID := Get_Method_ID (Env, Class, "Addition", "(II)I");
+@end group
+@end smallexample
+
+@noindent
+Note the differences between the class name above and the relevant
+part of the Linker_Name in the export Pragma for procedure
+@code{Addition_Wrapper} in the previous section. @code{Example3} appears as
+@code{Example3} in one case and @code{LExample3;} in the other.
+Similarly, the profile
+appears as @code{II} in one case and @code{(II)I} in the other.
+Those differences are
+explained in the official JNI documentation.
+
+The final step is to invoke one of the JNI functions for calling Java
+methods. There are a several of these, each of them handling a special kind
+of return type. Here, we are interested in
+@code{Call_Static_Int_Method_A}, which returns a @code{J_Int} and
+works on static subprograms. Its profile is:
+
+@smallexample @c ada
+@group
+function Call_Static_Int_Method_A
+   (Env        : JNI_Env_Access;
+    Object     : J_Class;
+    Method_ID  : J_Method_ID;
+    Args       : J_Value_Array) return J_Int;
+@end group
+@end smallexample
+
+@noindent
+Parameters are passed to the method using a
+@code{J_Value_Array}, which is an array of @code{J_Value} elements. A
+@code{J_Value} is a discriminated record that can hold any of the
+@code{J_} types. Two integers can be passed with the following code:
+
+@smallexample @c ada
+@group
+    Result := Call_Static_Int_Method_A
+      (Env, Class, Addition_ID, J_Value_Array'((Jint, 23), (Jint, 42)));
+@end group
+@end smallexample
+
+@noindent
+Here is the complete code for the Ada wrapper function:
+
+@smallexample @c ada
+@group
+   function Addition (A, B : Integer) return Integer is
+      Env : aliased JNI_Env_Access;
+      Class : J_Class;
+      Addition_ID : J_Method_ID;
+      Result : J_Int;
+   begin
+      Result      := Attach_Current_Thread
+                       (Main_VM, Env'Access, System.Null_Address);
+      Class       := Find_Class (Env, String'("LExample3;"));
+      Addition_ID := Get_Method_ID (Env, Class, "addition", "(II)I");
+      Result      := Call_Static_Int_Method_A
+                       (Env,
+                        Class,
+                        Addition_ID,
+                        ((Jint, J_Int (A)), (Jint, J_Int (B))));
+      return Integer (Result);
+   end Addition;
+@end group
+@end smallexample
+
+@node Using Ada Objects from Java
+@section Using Ada Objects from Java
+
+@noindent
+Consider the following Ada record:
+
+@smallexample @c ada
+@group
+type Storage is record
+   A, B, C : Integer;
+end record;
+@end group
+@end smallexample
+
+@noindent
+Suppose we would like to manipulate objects of this type in Java. Let's
+consider the following API:
+
+@smallexample @c ada
+@group
+function Create return Storage;
+--  Return an object of type Storage.
+@end group
+
+@group
+function Compute (S : Storage) return Integer;
+--  Return the sum of the elements stored in Storage.
+@end group
+@end smallexample
+
+@noindent
+The first issue is how to pass an Ada object to Java.
+Given the fundamental difference in execution environments, objects
+cannot simply be passed by reference as is commonly done in Ada/C
+interfacing. There are two possible approaches:
+either marshall/unmarshall values using
+an intermediate form, such as a string, each time the language boundary is
+crossed, or else manipulate the object in its native language while
+the other language accesses it through a handle. Since the first possibility
+is both complex and costly, let's look at the second alternative.
+
+On the Ada side, a handle is represented as an access value pointing to a
+heap-allocated object. On the Java side, it cannot be represented as a
+Java reference, because the Java heap is managed differently from
+the Ada heap -- most importantly, the Java heap is garbage collected.
+Therefore, unchecked conversion is used to convert in both directions between
+the Ada access value and a Java @code{int} (@code{J_Int}).
+
+(Note: in this example, we assume that access values are 32 bits,
+which is not always the case. A real example would need to deal
+with this issue.)
+
+Here is the Java interface corresponding to the above API:
+
+@smallexample
+@group
+class Storage @{
+   public native static int Create ();
+   public native static int Compute (int S);
+@}
+@end group
+@end smallexample
+
+@noindent
+This can be used naturally as:
+
+@smallexample
+@group
+int myStorageObject = Storage.Create ();
+int result = Storage.Compute (myStorageObject);
+@end group
+@end smallexample
+
+@noindent
+Let's see the glue code needed to make this work. First, let's create the Ada
+analogs of the Java routines above using the methods shown in previous
+sections:
+
+@smallexample @c ada
+@group
+function Create (Env : JNI_Env_Access; Class : J_Class) return J_Int;
+pragma Export (C, Create, "Java_Storage_Create__");
+@end group
+
+@group
+function Compute
+   (Env : JNI_Env_Access; Class : J_Class; S : J_Int) return J_Int;
+pragma Export (C, Compute, "Java_Storage_Compute__I");
+@end group
+@end smallexample
+
+@noindent
+Since the original Ada function @code{Create} directly returns a
+value as opposed to a handle on this value, the wrapper function has
+to create an instance of this object that can be referenced. Here is a
+possible implementation:
+
+@smallexample @c ada
+@group
+type Storage_Access is access all Storage;
+procedure Convert is new Ada.Unchecked_Conversion (Storage_Access, J_Int);
+@end group
+
+@group
+function Create (Env : JNI_Env_Access; Class : J_Class) return J_Int is
+   Obj : Storage_Access := new Storage'(Create);
+begin
+   return Convert (Obj);
+end Create;
+@end group
+@end smallexample
+
+@noindent
+The code allocates the object on the heap, initialized with the result of the
+original @code{Create} function. In a real application, the API
+would need to be augmented with a routine that reclaims the
+memory when the object is no longer used.
+
+The implementation of the @code{Compute} wrapper illustrates
+how the handle can be converted back and used in its native context:
+
+@smallexample @c ada
+@group
+procedure Convert is new Ada.Unchecked_Conversion (J_Int, Storage_Access);
+
+function Compute
+  (Env : JNI_Env_Access; Class : J_Class; S : J_Int) return J_Int is
+   Obj : Storage_Access := Convert (S);
+ begin
+   return J_Int (Compute);
+end Compute;
+@end group
+@end smallexample
+
+@noindent
+One issue with this approach is that type safety is not preserved
+when crossing the language boundary. The @code{Compute} function accepts any
+parameter of type @code{int}, but it can only process properly
+those @code{int}s that are returned by @code{Create}. The
+situation can be slightly improved, at least on the Java side, by providing
+the following overloadings of @code{Create} and @code{Compute}:
+
+@smallexample
+@group
+class Storage @{
+   private int addr;
+
+   public void Create () @{
+      addr = Create;
+   @}
+@end group
+
+@group
+   public int Compute () @{
+      return Compute (addr);
+   @}
+
+   private native static int Create;
+   private native static int Compute (int S);
+@}
+@end group
+@end smallexample
+
+@noindent
+which can be used as follows:
+
+@smallexample
+@group
+Storage myStorageObject = new Storage ();
+myStorageObject.Create ();
+int result = myStorageObject.Compute ();
+@end group
+@end smallexample
+
+@noindent
+Now it is guaranteed that @code{Compute} will be used only with
+objects created by @code{Create}.
+
+@node Using Java Objects from Ada
+@section Using Java Objects from Ada
+
+@noindent
+Let's examine the opposite direction, where a Java class is used from Ada:
+
+@smallexample
+@group
+class Storage @{
+   int A, B, C;
+@end group
+
+@group
+   public static Storage Create () @{
+      Storage obj = new Storage;
+
+      obj.A = 1;
+      obj.B = 2;
+      obj.C = 3;
+
+      return obj;
+   @}
+@end group
+
+@group
+   public int Compute () @{
+      return A + B + C;
+   @}
+@}
+@end group
+@end smallexample
+
+@noindent
+We would like to create an object of this type in Ada and
+call its primitives such as the @code{Compute} subprogram.
+
+Let's first create Ada wrappers around @code{Create} and @code{Compute}.
+Once again,
+we need to find the proper representation for the handle to the actual object.
+Conveniently, JNI offers a build-in type, @code{J_Object}, which  represents
+references to any Java objects. Therefore, here is what
+@code{Create} would look like:
+
+@smallexample @c ada
+@group
+function Create return J_Object is
+   Env         : aliased JNI_Env_Access;
+   Class       : J_Class;
+   Create_ID   : J_Method_ID;
+   Parameters  : J_Value_Array (1 .. 0);
+   Result      : J_Object;
+begin
+   Attach_Current_Thread (Main_VM, Env'Access, System.Null_Address);
+   Class  := Find_Class (Env, "LStorage;");
+   Create_ID
+          := Get_Method_ID (Env, Class, "Create", "()LStorage;");
+   Result := Call_Static_Object_Method_A
+     (Env, Class, Addition_ID, Parameters);
+   return Result;
+end Addition;
+@end group
+@end smallexample
+
+@noindent
+The structure of this subprogram is very close to the one shown in the
+previous section. Here it directly returns an object reference
+instead of an integer representing the address. This is
+why the parameter profile is a bit different: the returned type is a
+@code{Storage} instance. Furthermore, the calling method is
+@code{Call_Static_Object_Method_A} instead of
+@code{Call_Static_Int_Method_A}.
+
+Similarly, the wrapper for the @code{Compute} function looks like:
+
+@smallexample @c ada
+@group
+function Compute (This : J_Object) return J_Int is
+   Env          : aliased JNI_Env_Access;
+   Class        : J_Class;
+   Compute_ID   : J_Method_ID;
+   Parameters   : J_Value_Array (1 .. 0);
+   Result       : J_Int;
+begin
+   Attach_Current_Thread (Main_VM, Env'Access, System.Null_Address);
+   Class  := Find_Class (Env, "LStorage;");
+   Compute_ID
+          := Get_Method_ID (Env, Class, "Compute", "()I");
+   Result := Call_Integer_Method_A (Env, This, Compute_ID, Parameters);
+   return Result;
+end Addition;
+@end group
+@end smallexample
+
+@noindent
+Here is how this API can be used on the Ada side:
+
+@smallexample @c ada
+@group
+declare
+   My_Storage_Object : J_Object;
+   Result : J_Int;
+begin
+   My_Storage_Object := Create;
+   Result := Compute (My_Storage_Object);
+end;
+@end group
+@end smallexample
+
+@noindent
+Note once again the loss of type safety in crossing the language boundary.
+There is no static check ensuring that a @code{Storage} object is
+indeed passed to @code{Compute}. Here is a possible way to reintroduce
+partial type safety:
+
+@smallexample @c ada
+@group
+type Storage is new J_Object;
+
+function Create return Storage;
+function Compute (S : Storage) return J_Int
+@end group
+@end smallexample
+
+
+@node Index
+@unnumbered Index
+
+@printindex cp
+
+@contents
+
+@bye

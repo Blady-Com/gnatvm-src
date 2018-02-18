@@ -1,0 +1,61 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>Hello</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{979fec1d-1f49-46a2-bd0e-a69956017cea}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>hello</RootNamespace>
+    <AssemblyName>hello</AssemblyName>
+    <TargetPlatform>v2compact</TargetPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <BuildOptions>
+    </BuildOptions>
+    <CompilerOptions>
+    </CompilerOptions>
+    <BinderOptions>
+    </BinderOptions>
+    <LinkerOptions>
+    </LinkerOptions>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>cd $(MSBuildProjectDirectory)
+doinclude.bat</PreBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="mgnat">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="hello.gpr" />
+    <Compile Include="hello.adb" />
+    <Compile Include="my_form.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="my_form.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Content Include="assemblyinfo" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\AdaCore\DotGnat.targets" />
+  <Target Name="BeforeBuild">
+    <MakeDir Directories="bin\$(Configuration)" />
+    <MakeDir Directories="obj\$(Configuration)" />
+    <Copy SourceFiles="assemblyinfo" DestinationFolder="obj\$(Configuration)" />
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="bin\$(Configuration)" />
+    <RemoveDir Directories="obj\$(Configuration)" />
+  </Target>
+</Project>

@@ -1,0 +1,149 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"AdaLib"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{c5e636b5-f081-4952-a0d5-81f6aadb29e4}</ProjectGuid>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AdaLib</RootNamespace>
+    <AssemblyName>AdaLib</AssemblyName>
+    <TargetPlatform>v2compact</TargetPlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <BuildOptions>-j2</BuildOptions>
+    <CompilerOptions>
+    </CompilerOptions>
+    <BinderOptions>
+    </BinderOptions>
+    <LinkerOptions>
+    </LinkerOptions>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>cd $(MSBuildProjectDirectory)
+prebuild.bat</PreBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="mgnat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdaLib.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="AdaLib.gpr" />
+    <Compile Include="AdaLib.ads" />
+    <Compile Include="chop.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="chop.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="my_form.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="my_form.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="phil.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="phil.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="philpicture.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="philpicture.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="random_generic.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="random_generic.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resources\resources.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resources\resources.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="room.adb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="room.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="society.ads">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="assemblyinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\thinking.bmp">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\comar.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\dewar.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\gasperoni.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\kenner.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\meal1.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\meal2.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\meal3.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\RIP.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\schonberg.bmp">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Resources\table.bmp">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\AdaCore\DotGnat.targets" />
+  <Target Name="BeforeBuild">
+    <MakeDir Directories="bin\$(Configuration)" />
+    <MakeDir Directories="obj\$(Configuration)" />
+    <Copy SourceFiles="assemblyinfo" DestinationFolder="obj\$(Configuration)" />
+  </Target>
+  <Target Name="Clean">
+    <RemoveDir Directories="bin\$(Configuration)" />
+    <RemoveDir Directories="obj\$(Configuration)" />
+  </Target>
+</Project>

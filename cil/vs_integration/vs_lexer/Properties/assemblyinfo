@@ -1,0 +1,24 @@
+.assembly extern mscorlib
+{
+  .publickeytoken = (B7 7A 5C 56 19 34 E0 89)
+  .ver 2:0:0:0
+}
+.assembly extern mgnat
+{
+  .publickeytoken = (0c 73 3c d3 2e 50 e7 60)
+  .ver 3:2:0:0
+}
+.assembly vs_lexer {
+  .custom instance void [mscorlib]System.Reflection.AssemblyFileVersionAttribute::.ctor(string) = ( 01 00 07 31 2E 30 2E 30 2E 30 00 00 ) // ...1.0.0.0..
+  .publickey = (00 24 00 00 04 80 00 00 94 00 00 00 06 02 00 00   // .$..............
+                00 24 00 00 52 53 41 31 00 04 00 00 01 00 01 00   // .$..RSA1........
+                83 D2 97 BA 72 8E 94 26 38 C5 7D C6 04 6F BA 67   // ....r..&8.}..o.g
+                4E A9 83 08 01 7B 80 71 21 E6 72 BE 73 74 C1 8F   // N....{.q!.r.st..
+                C6 32 CD F1 AB CD 84 25 37 CF 24 9B 22 B3 36 AE   // .2.....%7.$.".6.
+                8E 8B 42 CB B0 79 62 CF 25 C6 E2 29 47 5D 53 A9   // ..B..yb.%..)G]S.
+                41 05 0C 6F A2 A8 47 CA 3E C8 7F 83 B6 6D 80 B9   // A..o..G.>....m..
+                5B CB 19 06 6E 4E CB 89 DC 2F 37 85 8B 84 54 9A   // [...nN.../7...T.
+                91 DA F1 48 4F FB B9 86 55 43 72 17 17 8C 7B F0   // ...HO...UCr...{.
+                94 1B 21 70 D6 54 4C 7D 97 BB C6 FB 38 0B 18 91 ) // ..!p.TL}....8...
+  .ver 1:0:0:0
+ }

@@ -1,0 +1,5 @@
+.assembly extern mgnat
+{
+  .publickeytoken = (f8 c1 2b 4f 75 c4 d0 4a)
+  .ver @GNATLIB_VER@
+}

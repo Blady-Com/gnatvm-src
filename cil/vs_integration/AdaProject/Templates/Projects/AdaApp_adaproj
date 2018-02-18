@@ -1,0 +1,45 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>"$safeprojectname$"</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>$guid1$</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+    <AssemblyName>$safeprojectname$</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <IncludeDebugInformation>true</IncludeDebugInformation>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="mgnat" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$safeprojectname$.gpr" />
+    <Compile Include="$safeprojectname$.adb" />
+    <Content Include="assemblyinfo" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildExtensionsPath)\AdaCore\DotGnat.targets" />
+
+  <Target Name="BeforeBuild">
+    <MakeDir Directories="bin\$(Configuration)" />
+    <MakeDir Directories="obj\$(Configuration)" />
+    <Copy SourceFiles="assemblyinfo" DestinationFolder="obj\$(Configuration)" />
+  </Target>
+  <Target Name = "Clean">
+    <RemoveDir Directories="bin\$(Configuration)" />
+    <RemoveDir Directories="obj\$(Configuration)" />
+  </Target>
+
+</Project>

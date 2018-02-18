@@ -1,0 +1,12 @@
+project Hello is
+
+   for Main use ("hello.adb");
+
+   package IDE is
+      for Compiler_Command ("ada") use "jvm-gnatmake";
+      for Gnatlist use "jvm-gnatls";
+      for Gnat use "jvm-gnat";
+   end IDE;
+
+end Hello;
+

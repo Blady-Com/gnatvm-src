@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diners", "Diners.csproj", "{9B3D8256-4270-48EA-A279-0093B70D69E9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C5E636B5-F081-4952-A0D5-81F6AADB29E4} = {C5E636B5-F081-4952-A0D5-81F6AADB29E4}
+	EndProjectSection
+EndProject
+Project("{100EBF5E-DC65-4100-8574-7E950E755C1C}") = "AdaLib", "AdaLib\AdaLib.adaproj", "{C5E636B5-F081-4952-A0D5-81F6AADB29E4}"
+EndProject
+Global
+	GlobalSection(TextTemplating) = postSolution
+		TextTemplating = 1
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B3D8256-4270-48EA-A279-0093B70D69E9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{C5E636B5-F081-4952-A0D5-81F6AADB29E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5E636B5-F081-4952-A0D5-81F6AADB29E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5E636B5-F081-4952-A0D5-81F6AADB29E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5E636B5-F081-4952-A0D5-81F6AADB29E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

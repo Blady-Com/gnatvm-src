@@ -1,0 +1,306 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--                         GNAT RUN-TIME COMPONENTS                         --
+--                                                                          --
+--                       A D A . E X C E P T I O N S                        --
+--                                                                          --
+--                                 B o d y                                  --
+--                                                                          --
+--                     Copyright (C) 1999-2012, AdaCore                     --
+--                                                                          --
+-- GNAT is free software;  you can  redistribute it  and/or modify it under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 2,  or (at your option) any later ver- --
+-- sion.  GNAT is distributed in the hope that it will be useful, but WITH- --
+-- OUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY --
+-- or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License --
+-- for  more details.  You should have  received  a copy of the GNU General --
+-- Public License  distributed with GNAT;  see file COPYING.  If not, write --
+-- to  the Free Software Foundation,  59 Temple Place - Suite 330,  Boston, --
+-- MA 02111-1307, USA.                                                      --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+--                                                                          --
+-- The GNAT Ada tool chain for the JVM and .NET platforms is  maintained by --
+-- AdaCore - http://www.adacore.com                                         --
+--                                                                          --
+------------------------------------------------------------------------------
+
+--  This is the JGNAT specific version of Ada.Exceptions body
+with System.Soft_Links; use System.Soft_Links;
+
+package body Ada.Exceptions is
+
+   subtype EO  is Exception_Occurrence;
+   subtype EOA is Exception_Occurrence_Access;
+
+   type String_Access is access all String;
+
+   ---------------------------
+   -- Exception_Information --
+   ---------------------------
+
+   function Exception_Information (X : EO) return String is
+      function E_Info (X : EO) return String_Access;
+      pragma Import (CIL, E_Info, "mgnat.adalib.GNAT_libc.e_information");
+
+   begin
+      return E_Info (X).all;
+   end Exception_Information;
+
+   -----------------------
+   -- Exception_Message --
+   -----------------------
+
+   function Exception_Message (X : EO) return String is
+      function E_Message (X : EO) return String_Access;
+      pragma Import (CIL, E_Message, "mgnat.adalib.GNAT_libc.e_message");
+
+   begin
+      return E_Message (X).all;
+   end Exception_Message;
+
+   --------------------
+   -- Exception_Name --
+   --------------------
+
+   function Exception_Name (Id : Exception_Id) return String is
+      function Ada_Name (Id : Exception_Id) return String_Access;
+      pragma Import (CIL, Ada_Name, "mgnat.adalib.GNAT_libc.ada_name");
+
+      Name  : constant String := Ada_Name (Id).all;
+      First : Natural := Name'First;
+   begin
+      --  Remove prefix MGNAT.ADALIB. as those exceptions are standard
+      --  exceptions.
+      if Name (Name'First .. Name'First + 12) = "MGNAT.ADALIB." then
+         First := Name'First + 13;
+      end if;
+
+      return Name (First .. Name'Last);
+   end Exception_Name;
+
+   function Exception_Name (X : EO) return String is
+   begin
+      return Exception_Name (Exception_Identity (X));
+   end Exception_Name;
+
+   ---------------------------
+   -- Exception_Name_Simple --
+   ---------------------------
+
+   function Exception_Name_Simple (X : Exception_Occurrence) return String is
+      Name : constant String := Exception_Name (X);
+      P    : Natural;
+
+   begin
+      P := Name'Last;
+      while P > Name'First loop
+         exit when Name (P - 1) = '.';
+         P := P - 1;
+      end loop;
+
+      --  Return result making sure lower bound is 1
+
+      declare
+         subtype Rname is String (1 .. Name'Last - P + 1);
+      begin
+         return Rname (Name (P .. Name'Last));
+      end;
+   end Exception_Name_Simple;
+
+   ----------
+   -- Poll --
+   ----------
+
+   procedure Poll is separate;
+
+   ---------------------
+   -- Raise_Exception --
+   ---------------------
+
+   procedure Raise_Exception
+     (E       : Exception_Id;
+      Message : String := "")
+   is
+      function Create_EO (E : Exception_Id; M : String) return EO;
+      pragma Import (CIL, Create_EO, "mgnat.adalib.GNAT_libc.create_EO");
+      --  Creates an EO corresponding to E containing Message
+
+   begin
+      if E /= Null_Id then
+         Reraise_Occurrence_Always (Create_EO (E, Message));
+      end if;
+   end Raise_Exception;
+
+   ----------------------------
+   -- Raise_Exception_Always --
+   ----------------------------
+
+   procedure Raise_Exception_Always
+     (E       : Exception_Id;
+      Message : String := "")
+   is
+      function Create_EO (E : Exception_Id; M : String) return EO;
+      pragma Import (CIL, Create_EO, "mgnat.adalib.GNAT_libc.create_EO");
+      --  Creates an EO corresponding to E containing Message
+
+   begin
+      Reraise_Occurrence_Always (Create_EO (E, Message));
+   end Raise_Exception_Always;
+
+   -------------------------------------
+   -- Raise_From_Controlled_Operation --
+   -------------------------------------
+
+   procedure Raise_From_Controlled_Operation
+     (X : Ada.Exceptions.Exception_Occurrence)
+   is
+      Prefix             : constant String := "adjust/finalize raised ";
+      Orig_Msg           : constant String := Exception_Message (X);
+      Orig_Prefix_Length : constant Natural :=
+                             Integer'Min (Prefix'Length, Orig_Msg'Length);
+      Orig_Prefix        : String renames Orig_Msg
+                             (Orig_Msg'First ..
+                              Orig_Msg'First + Orig_Prefix_Length - 1);
+   begin
+      if Orig_Prefix = Prefix then
+         Raise_Exception
+           (E       => Program_Error'Identity,
+            Message => Orig_Msg);
+
+      else
+         declare
+            New_Msg  : constant String := Prefix & Exception_Name (X);
+
+         begin
+            --  No message present, just provide our own
+
+            if Orig_Msg = "" then
+               Raise_Exception
+                 (E       => Program_Error'Identity,
+                  Message => New_Msg);
+
+            --  Message present, add informational prefix
+
+            else
+               Raise_Exception
+                 (E       => Program_Error'Identity,
+                  Message => New_Msg & ": " & Orig_Msg);
+            end if;
+         end;
+      end if;
+   end Raise_From_Controlled_Operation;
+
+   ------------------------
+   -- Reraise_Occurrence --
+   ------------------------
+
+   procedure Reraise_Occurrence (X : EO) is
+   begin
+      if X /= Null_Occurrence then
+         Reraise_Occurrence_No_Defer (X);
+      end if;
+   end Reraise_Occurrence;
+
+   -------------------------------
+   -- Reraise_Occurrence_Always --
+   -------------------------------
+
+   procedure Reraise_Occurrence_Always (X : EO) is
+   begin
+      Reraise_Occurrence_No_Defer (X);
+   end Reraise_Occurrence_Always;
+
+   ---------------------
+   -- Save_Occurrence --
+   ---------------------
+
+   procedure Save_Occurrence (Target : out EO; Source : EO) is
+   begin
+      Target := Source;
+   end Save_Occurrence;
+
+   function Save_Occurrence (Source : EO) return EOA is
+      Target : constant EOA := new EO;
+   begin
+      Save_Occurrence (Target.all, Source);
+      return Target;
+   end Save_Occurrence;
+
+   --  Gnat_Raise_With_Msg and Gnat_Reraise are marked unreferenced as they
+   --  are used only indirectly via the run-time calls to
+   --  pragma Import (C, __gnat_reraise*) that are redirected here by the
+   --  .NET backend
+
+   procedure Gnat_Raise_With_Msg (X : Ada.Exceptions.Exception_Id);
+   pragma Unreferenced (Gnat_Raise_With_Msg);
+   --  Raise exception X with message of the current exception
+   --  equivalent to __gnat_raise_with_msg C function.
+
+   procedure Gnat_Reraise;
+   pragma Unreferenced (Gnat_Reraise);
+   --  Reraise the current exception
+   --  equivalent to __gnat_reraise C function.
+
+   function Create_EO
+     (E : Exception_Id; M : String)
+      return Exception_Occurrence;
+   pragma Import (CIL, Create_EO, "mgnat.adalib.GNAT_libc.create_EO");
+   --  Creates an EO corresponding to E containing Message
+
+   -------------------------
+   -- Gnat_Raise_With_Msg --
+   -------------------------
+
+   procedure Gnat_Raise_With_Msg (X : Ada.Exceptions.Exception_Id) is
+      E : constant Ada.Exceptions.Exception_Occurrence_Access :=
+            Get_Current_Excep.all;
+
+   begin
+      if E.all = Ada.Exceptions.Null_Occurrence then
+         Ada.Exceptions.Reraise_Occurrence (Create_EO (X, ""));
+      else
+         Ada.Exceptions.Reraise_Occurrence
+           (Create_EO (X, Ada.Exceptions.Exception_Message (E.all)));
+      end if;
+   end Gnat_Raise_With_Msg;
+
+   ------------------
+   -- Gnat_Reraise --
+   ------------------
+
+   procedure Gnat_Reraise is
+      E : constant Ada.Exceptions.Exception_Occurrence :=
+            Get_Current_Excep.all.all;
+   begin
+      Ada.Exceptions.Reraise_Occurrence (E);
+   end Gnat_Reraise;
+
+   -------------------------
+   -- Raise_XXX_Error_Msg --
+   -------------------------
+
+   procedure Raise_Constraint_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma Import (C, Raise_Constraint_Error_Msg,
+                  "__gnat_raise_constraint_error_msg");
+   pragma No_Return (Raise_Constraint_Error_Msg);
+
+   procedure Raise_Program_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma Import (C, Raise_Program_Error_Msg,
+                  "__gnat_raise_program_error_msg");
+   pragma No_Return (Raise_Program_Error_Msg);
+
+   procedure Raise_Storage_Error_Msg
+     (File : System.Address; Line : Integer; Msg : String);
+   pragma Import (C, Raise_Storage_Error_Msg,
+                  "__gnat_raise_storage_error_msg");
+   pragma No_Return (Raise_Storage_Error_Msg);
+

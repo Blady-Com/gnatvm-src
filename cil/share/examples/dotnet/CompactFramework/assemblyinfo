@@ -1,0 +1,4 @@
+.assembly hello {
+  .ver 1:0:0:0
+}
+.subsystem 0x0002       // WINDOWS_GUI

@@ -1,0 +1,27 @@
+In order to build JGNAT from sources, you need to follow these steps:
+
+- You need a unix-like environment (e.g. cygwin under Windows)
+
+- Make sure you have installed J2SDK (version 1.5 or above) and have
+  j2sdk/bin in your PATH
+
+- Then copy/move the src/ada directory from GNAT sources under this directory:
+  $ gzip -dc [...]/gnat-xxx-src.tgz | tar xf -
+  $ mv gnat*src/src/ada gnat_src
+  $ rm -rf gnat-*src
+
+- Then apply the following patch:
+
+  $ (cd gnat_src && patch < ../cil/frontend.difs)
+
+- Make sure you have a native version of GNAT which matches this package in
+  your PATH
+
+- Finally build:
+  $ make -C jvm
+
+  This will create a "ready to use" set of directories "bin" and "lib" under    
+  jvm which you can put in your PATH:
+
+  PATH=`pwd`/jvm/bin:$PATH
+
