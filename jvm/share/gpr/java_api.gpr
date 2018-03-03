@@ -1,0 +1,7 @@
+library project Java_API is
+   for Languages use ("Ada");
+   for Source_Dirs use ("../../lib/jreinclude");
+   for Library_Name use "java_api";
+   for Library_Dir use "../../lib/jrelib";
+   for Externally_Built use "True";
+end Java_API;
