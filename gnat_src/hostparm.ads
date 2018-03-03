@@ -41,8 +41,9 @@ package Hostparm is
    -- HOST Parameters --
    ---------------------
 
-   Gnat_VMSp : Integer;
-   pragma Import (C, Gnat_VMSp, "__gnat_vmsp");
+   Gnat_VMSp : constant Integer := 0; --  Host is not a VMS system
+   --  __gnat_vmsp in adaint.c not available at jvm-gnatcompile build time
+   --  pragma Import (C, Gnat_VMSp, "__gnat_vmsp");
 
    OpenVMS : Boolean := Gnat_VMSp /= 0;
    --  Set True for OpenVMS host. See also OpenVMS target boolean in

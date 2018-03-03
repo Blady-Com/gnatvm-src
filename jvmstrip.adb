@@ -251,7 +251,8 @@ begin
                            Arc);
 
                      elsif Ada.Strings.Fixed.Tail (Name, 6) /= ".class"
-                       or  Dir (K).Encrypted  then
+                       or  Dir (K).Encrypted
+                     then
                         if Verbose_Mode then
                            Ada.Text_IO.Put_Line ("  skipping : " & Name);
                         end if;

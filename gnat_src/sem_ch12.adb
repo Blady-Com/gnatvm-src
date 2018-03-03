@@ -10613,7 +10613,8 @@ package body Sem_Ch12 is
          end if;
 
          if not Subtypes_Match
-           (Desig_Type, Desig_Act) then
+           (Desig_Type, Desig_Act)
+         then
             Error_Msg_NE
               ("designated type of actual does not match that of formal &",
                  Actual, Gen_T);

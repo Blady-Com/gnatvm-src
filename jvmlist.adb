@@ -171,7 +171,9 @@ procedure Jvmlist is
                begin
 
                   if not    Is_Set (Method.Access_Flags, ACC_Abstract)
-                    and not Is_Set (Method.Access_Flags, ACC_Native) then
+
+                    and not Is_Set (Method.Access_Flags, ACC_Native)
+                  then
 
                      New_Line;
                      JVM_View.Print_Code

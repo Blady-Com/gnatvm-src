@@ -1185,9 +1185,9 @@ package body MLib.Prj is
 
                   Delete_File (Get_Name_String (Path), Succ);
 
-                  if not Succ then
-                     null;
-                  end if;
+--                    if not Succ then
+--                       null;
+--                    end if;
                end;
             end if;
 

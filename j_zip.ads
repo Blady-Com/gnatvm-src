@@ -94,19 +94,19 @@ private
 
    subtype String_Length is Int_32 range 0 .. 511;
    type Zip_List_Info (Name_Length : String_Length := 511) is record
-      Name          : Stream_Of_U1 (1 .. Name_Length);
       Stream_Length : U4;
       Crc_32        : U4;
       Offset_Start  : U4;
       Offset_End    : U4;
+      Name          : Stream_Of_U1 (1 .. Name_Length);
    end record;
    type Zip_List_Info_Array is array (Natural range <>) of Zip_List_Info;
 
    type Zip_Archive (Max_Num_Files : Natural) is record
       File      : GNAT.OS_Lib.File_Descriptor;
-      File_List : Zip_List_Info_Array (1 .. Max_Num_Files);
       Num_Files : Natural := 0;
       Is_Closed : Boolean := True;
+      File_List : Zip_List_Info_Array (1 .. Max_Num_Files);
    end record;
 
 end J_Zip;

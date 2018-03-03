@@ -64,7 +64,7 @@ endif
 
 # JVM internal section
 
-JAVAC=javac -deprecation -classpath $(target)/lib
+JAVAC=javac -source 1.5 -target 1.5 -deprecation -classpath $(target)/lib
 JAR=jar c0f
 JGNAT_JAR=jgnat.jar
 

@@ -5473,7 +5473,7 @@ package VMS_Data is
                                               "CYCLOMATIC "                &
                                               "--complexity-cyclomatic "   &
                                               "NOCYCLOMATIC "              &
-                                              "--no-complexity-cyclomatic "&
+                                              "--no-complexity-cyclomatic " &
                                               "ESSENTIAL "                 &
                                               "--complexity-essential "    &
                                               "NOESSENTIAL "               &

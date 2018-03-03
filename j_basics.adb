@@ -133,7 +133,7 @@ package body J_Basics is
       Read_The_Stream : declare
          Lo     : constant Nat_32  := 1;
          Hi     : Nat_32           := Nat_32 (File_Len);
-         Stream : Stream_Of_U1_Ptr := new Stream_Of_U1 (Lo .. Hi);
+         Stream : constant Stream_Of_U1_Ptr := new Stream_Of_U1 (Lo .. Hi);
 
          Actual_Len : Integer;
 

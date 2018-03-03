@@ -294,12 +294,13 @@ package Xr_Tabls is
 
 private
    type Project_File (Src_Dir_Length, Obj_Dir_Length : Natural) is record
-      Src_Dir : String (1 .. Src_Dir_Length);
       Src_Dir_Index : Integer;
 
-      Obj_Dir            : String (1 .. Obj_Dir_Length);
       Obj_Dir_Index      : Integer;
       Last_Obj_Dir_Start : Natural;
+
+      Src_Dir : String (1 .. Src_Dir_Length);
+      Obj_Dir            : String (1 .. Obj_Dir_Length);
    end record;
 
    type Project_File_Ptr is access all Project_File;
@@ -366,7 +367,6 @@ private
 
    type Declaration_Record (Symbol_Length : Natural) is record
       Key          : Cst_String_Access;
-      Symbol       : String (1 .. Symbol_Length);
       Decl         : Reference;
       Is_Parameter : Boolean := False; -- True if entity is subprog param
       Decl_Type    : Character;
@@ -376,6 +376,7 @@ private
       Match        : Boolean := False;
       Par_Symbol   : Declaration_Reference := null;
       Next         : Declaration_Reference := null;
+      Symbol       : String (1 .. Symbol_Length);
    end record;
    --  The lists of referenced (Body_Ref, Ref_Ref and Modif_Ref) are
    --  kept unsorted until the results needs to be printed. This saves

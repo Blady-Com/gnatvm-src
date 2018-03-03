@@ -86,9 +86,6 @@ package Prj.Attr is
      Positive range 1 .. Max_Attribute_Name_Length;
 
    type Attribute_Data (Name_Length : Attribute_Name_Length := 1) is record
-      Name : String (1 .. Name_Length);
-      --  The name of the attribute
-
       Attr_Kind  : Defined_Attribute_Kind;
       --  The type of the attribute
 
@@ -106,6 +103,9 @@ package Prj.Attr is
 
       Var_Kind : Defined_Variable_Kind;
       --  The attribute value kind: single or list
+
+      Name : String (1 .. Name_Length);
+      --  The name of the attribute
 
    end record;
    --  Name and characteristics of an attribute in a package registered

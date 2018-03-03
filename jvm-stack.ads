@@ -143,9 +143,9 @@ private
       Curr_Depth : Depth_Range := 0;
       Max_Depth  : Depth_Range := 0;
       Mark_Level : Stack_Range := Empty_Stack_Index;
+      Method     : Method_Id   := Null_Method;
       Stack      : Stack_Buffer (Empty_Stack_Index .. Max) :=
                      (others => (Null_Type, 0));
-      Method     : Method_Id   := Null_Method;
    end record;
 
    type Op_Stack_Id is access Operand_Stack;

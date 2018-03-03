@@ -1160,7 +1160,8 @@ package body Inline is
 
          elsif Ekind (Scop) = E_Task_Type
            or else Ekind (Scop) = E_Entry
-           or else Ekind (Scop) = E_Entry_Family then
+           or else Ekind (Scop) = E_Entry_Family
+         then
             return True;
          end if;
 
