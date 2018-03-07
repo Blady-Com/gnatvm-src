@@ -1,0 +1,11 @@
+project JVM is
+
+   for Source_Dirs use (".", "..", "../gnat_src", "/usr/local/gnat-2017/lib/gcc/x86_64-apple-darwin14.5.0/6.3.1/rts-native/adainclude", "obj");
+   for Object_Dir use "obj";
+   for Main use ("gnat1drv.adb");
+
+   package Compiler is
+      for Switches ("ada") use ("-gnatpg", "-gnata");
+   end Compiler;
+
+end JVM;

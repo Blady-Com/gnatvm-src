@@ -31,6 +31,7 @@ else
   SYSTEMLIB:=$(strip $(shell reg query HKLM\\SOFTWARE\\Microsoft\\Microsoft\ SDKs\\Silverlight\\v3.0\\ReferenceAssemblies /v SLRuntimeInstallPath | grep REG_SZ | sed -e 's/.*REG_SZ *//'))
 endif
 endif
+SYSTEMLIB=$(HOME)/.wine/drive_c/windows/mono/mono-2.0/lib/mono/4.5-api/
 
 EXTRA_GNATRTL_OBJS=i-cil$(objext) i-cilobj$(objext) i-cilthr$(objext) \
   i-cithpr$(objext) i-cithth$(objext) cil_types$(objext)
@@ -71,7 +72,8 @@ ifeq ($(OS),Windows_NT)
   ILDASMOUTPUT=/out:
   GACUTIL_I=gacutil /nologo /if
 else
-  CSC=gmcs /D:MONO
+#  CSC=gmcs /D:MONO
+  CSC=wine $(HOME)/.wine/drive_c/windows/mono/mono-2.0/lib/mono/4.5/csc.exe /D:MONO
   ILASM=ilasm /debug /quiet
   ILDASM=monodis
   ILDASMOUTPUT=--output=

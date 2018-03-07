@@ -4194,7 +4194,8 @@ package body JVM is
       Gen_Zero (Type_Kind (Top (Active_Stack)));
 
       if Next_To_Top (Active_Stack) = UInt_Type or
-         Next_To_Top (Active_Stack) = ULong_Type then
+        Next_To_Top (Active_Stack) = ULong_Type
+      then
          Gen_Instr (BLT_UN, Label);
       else
          Gen_Instr (BLT, Label);
@@ -4216,7 +4217,8 @@ package body JVM is
       case Type_Kind (Top (Active_Stack)) is
          when Int_Kind | Long_Kind =>
             if Next_To_Top (Active_Stack) = UInt_Type or
-               Next_To_Top (Active_Stack) = ULong_Type then
+              Next_To_Top (Active_Stack) = ULong_Type
+            then
                Gen_Instr (BLE_UN, Label);
             else
                Gen_Instr (BLE, Label);
@@ -4243,7 +4245,8 @@ package body JVM is
       Gen_Zero (Type_Kind (Top (Active_Stack)));
 
       if Next_To_Top (Active_Stack) = UInt_Type or
-         Next_To_Top (Active_Stack) = ULong_Type then
+        Next_To_Top (Active_Stack) = ULong_Type
+      then
          Gen_Instr (BGT_UN, Label);
       else
          Gen_Instr (BGT, Label);
@@ -4264,7 +4267,8 @@ package body JVM is
       case Type_Kind (Top (Active_Stack)) is
          when Int_Kind | Long_Kind =>
             if Next_To_Top (Active_Stack) = UInt_Type or
-               Next_To_Top (Active_Stack) = ULong_Type then
+              Next_To_Top (Active_Stack) = ULong_Type
+            then
                Gen_Instr (BGE_UN, Label);
             else
                Gen_Instr (BGE, Label);
@@ -4424,7 +4428,8 @@ package body JVM is
       case Type_Kind (Top (Active_Stack)) is
          when Int_Kind | Long_Kind =>
             if Next_To_Top (Active_Stack) = UInt_Type or
-               Next_To_Top (Active_Stack) = ULong_Type then
+              Next_To_Top (Active_Stack) = ULong_Type
+            then
                Gen_Instr (BLE_UN, Label);
             else
                Gen_Instr (BLE, Label);
@@ -4472,7 +4477,8 @@ package body JVM is
       case Type_Kind (Top (Active_Stack)) is
          when Int_Kind | Long_Kind =>
             if Next_To_Top (Active_Stack) = UInt_Type or
-               Next_To_Top (Active_Stack) = ULong_Type then
+              Next_To_Top (Active_Stack) = ULong_Type
+            then
                Gen_Instr (BGT_UN, Label);
             else
                Gen_Instr (BGT, Label);
@@ -4521,7 +4527,8 @@ package body JVM is
       case Type_Kind (Top (Active_Stack)) is
          when Int_Kind | Long_Kind =>
             if Next_To_Top (Active_Stack) = UInt_Type or
-               Next_To_Top (Active_Stack) = ULong_Type then
+              Next_To_Top (Active_Stack) = ULong_Type
+            then
                Gen_Instr (BGE_UN, Label);
             else
                Gen_Instr (BGE, Label);
@@ -4970,7 +4977,8 @@ package body JVM is
    begin
       if Inside_Try_Catch_Finally then
          if not Is_Empty (Active_Stack) and
-            Result_Type (Active_Method) /= Void_Type then
+           Result_Type (Active_Method) /= Void_Type
+         then
             Gen_Store_Local (Local_Var (Active_Method, "_retval"));
          end if;
 
