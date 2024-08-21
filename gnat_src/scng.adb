@@ -1796,7 +1796,7 @@ package body Scng is
                --  If the SPARK restriction is set for this unit, then generate
                --  a token Tok_SPARK_Hide for a SPARK HIDE directive.
 
-               if Restriction_Check_Required (SPARK)
+               if Restriction_Check_Required (SPARK_05)
                  and then Source (Start_Of_Comment) = '#'
                then
                   declare

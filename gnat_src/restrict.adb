@@ -166,7 +166,7 @@ package body Restrict is
    begin
       if Force or else Comes_From_Source (Original_Node (N)) then
 
-         if Restriction_Check_Required (SPARK)
+         if Restriction_Check_Required (SPARK_05)
            and then Is_In_Hidden_Part_In_SPARK (Sloc (N))
          then
             return;
@@ -177,7 +177,7 @@ package body Restrict is
          --  restore the previous value of the global variable around the call.
 
          Save_Error_Msg_Sloc := Error_Msg_Sloc;
-         Check_Restriction (Msg_Issued, SPARK, First_Node (N));
+         Check_Restriction (Msg_Issued, SPARK_05, First_Node (N));
          Error_Msg_Sloc := Save_Error_Msg_Sloc;
 
          if Msg_Issued then
@@ -194,7 +194,7 @@ package body Restrict is
 
       if Comes_From_Source (Original_Node (N)) then
 
-         if Restriction_Check_Required (SPARK)
+         if Restriction_Check_Required (SPARK_05)
            and then Is_In_Hidden_Part_In_SPARK (Sloc (N))
          then
             return;
@@ -205,7 +205,7 @@ package body Restrict is
          --  restore the previous value of the global variable around the call.
 
          Save_Error_Msg_Sloc := Error_Msg_Sloc;
-         Check_Restriction (Msg_Issued, SPARK, First_Node (N));
+         Check_Restriction (Msg_Issued, SPARK_05, First_Node (N));
          Error_Msg_Sloc := Save_Error_Msg_Sloc;
 
          if Msg_Issued then
@@ -1017,7 +1017,7 @@ package body Restrict is
          Name_Buffer (1 .. S'Last) := S;
          Name_Len := S'Length;
 
-         if R = SPARK then
+         if R = SPARK_05 then
             Set_All_Upper_Case;
          else
             Set_Casing (Identifier_Casing (Get_Source_File_Index (Sloc (N))));

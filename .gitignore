@@ -1,6 +1,9 @@
+*~
 /jvm/bin/
 /jvm/lib/
 /jvm/obj/
 /cil/bin/
 /cil/lib/
 /cil/obj/
+*.ali
+*.class

@@ -836,7 +836,8 @@ package body Prj.Makr is
       if File_Names_Case_Sensitive then
          Path_Name (1 .. Path_Last) := File_Path;
       else
-         Path_Name (1 .. Path_Last) := To_Lower (File_Path);
+         Path_Name (1 .. Path_Last) :=
+           Ada.Characters.Handling.To_Lower (File_Path);
       end if;
 
       Path_Name (Path_Last + 1 .. Path_Name'Last) :=
@@ -860,7 +861,9 @@ package body Prj.Makr is
             Path_Last := Path_Name'Last;
          end if;
 
-         Output_Name := new String'(To_Lower (Path_Name (1 .. Path_Last)));
+         Output_Name :=
+           new String'(Ada.Characters.Handling.To_Lower
+                         (Path_Name (1 .. Path_Last)));
          Output_Name_Last := Output_Name'Last - 4;
 
          --  If there is already a project file with the specified name, parse

@@ -1397,7 +1397,8 @@ package body Prj is
    function Value (Image : String) return Casing_Type is
    begin
       for Casing in The_Casing_Images'Range loop
-         if To_Lower (Image) = To_Lower (The_Casing_Images (Casing).all) then
+         if Ada.Characters.Handling.To_Lower (Image) =
+           Ada.Characters.Handling.To_Lower (The_Casing_Images (Casing).all) then
             return Casing;
          end if;
       end loop;

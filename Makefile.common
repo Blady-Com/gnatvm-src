@@ -11,11 +11,13 @@ endif
 
 CC=gcc
 GNATMAKE=gnatmake
-CFLAGS=-g -O2
-ADAFLAGS=-gnatpg -gnata -gnatyI
-LIBFLAGS=-gnatpg -gnatyI
+## CFLAGS=-g -O2
+## CFLAGS=-g -Og
+CFLAGS=-g -O0
+ADAFLAGS=-gnatpg -gnata -gnatws
+LIBFLAGS=-gnatpg -gnatws
 MARGS=-m -j0
-LARGS=-largs jmissing.o jtargext.o
+LARGS=-largs jmissing.o jtargext.o -bargs -Es
 
 MKDIR=mkdir -p
 RMDIR=rm -rf

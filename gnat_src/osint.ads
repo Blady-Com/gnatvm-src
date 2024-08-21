@@ -271,9 +271,12 @@ package Osint is
    --  along with other values).
 
    type File_Attributes is private;
-   Unknown_Attributes : constant File_Attributes;
    --  A cache for various attributes for a file (length, accessibility,...)
    --  This must be initialized to Unknown_Attributes prior to the first call.
+
+   --  Unknown_Attributes : constant File_Attributes;
+   function Unknown_Attributes return File_Attributes;
+   pragma Inline (Unknown_Attributes);
 
    function Is_Directory
      (Name : C_File_Name;
@@ -758,6 +761,10 @@ private
    --  detected, the file being written is deleted, and a fatal error is
    --  signalled.
 
+   --  type File_Attributes is
+   --  array (1 .. File_Attributes_Size)
+   --  of System.Storage_Elements.Storage_Element;
+
    File_Attributes_Size : constant Natural := 32;
    --  This should be big enough to fit a "struct file_attributes" on any
    --  system. It doesn't cause any malfunction if it is too big (which avoids
@@ -766,13 +773,15 @@ private
    --  space (e.g. when a component of this type appears in a record, if it is
    --  unnecessarily large).
 
-   type File_Attributes is
-     array (1 .. File_Attributes_Size)
-       of System.Storage_Elements.Storage_Element;
-   for File_Attributes'Alignment use Standard'Maximum_Alignment;
+   type File_Attributes is null record;
 
-   Unknown_Attributes : constant File_Attributes := (others => 0);
-   --  Will be initialized properly at elaboration (for efficiency later on,
-   --  avoid function calls every time we want to reset the attributes).
+   for File_Attributes'Alignment use Standard'Maximum_Alignment;
+   for File_Attributes'Size use File_Attributes_Size * 8;
+
+   Unknown_Attribute_Value : aliased File_Attributes;
+
+   --  Will be initialized properly {-at elaboration-} at the C side
+   --  (for efficiency later on, avoid function calls every time we
+   --  want to reset the attributes).
 
 end Osint;

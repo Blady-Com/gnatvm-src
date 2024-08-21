@@ -247,7 +247,7 @@ package body Osint is
    end record;
 
    No_File_Info_Cache : constant File_Info_Cache :=
-                          (No_File, Unknown_Attributes);
+                          (No_File, Unknown_Attribute_Value);
 
    package File_Name_Hash_Table is new GNAT.HTable.Simple_HTable (
      Header_Num => File_Hash_Num,
@@ -1073,13 +1073,16 @@ package body Osint is
      (Name : C_File_Name;
       Attr : access File_Attributes) return Long_Integer
    is
-      function Internal
-        (F : Integer;
-         N : C_File_Name;
-         A : System.Address) return Long_Integer;
-      pragma Import (C, Internal, "__gnat_file_length_attr");
+      --  function Internal
+      --    (F : Integer;
+      --     N : C_File_Name;
+      --     A : System.Address) return Long_Integer;
+      --  pragma Import (C, Internal, "__gnat_file_length_attr");
+      function Internal (N : C_File_Name) return Long_Integer;
+      pragma Import (C, Internal, "__gnat_named_file_length");
    begin
-      return Internal (-1, Name, Attr.all'Address);
+      --  return Internal (-1, Name, Attr.all'Address);
+      return Internal (Name);
    end File_Length;
 
    ---------------------
@@ -1740,10 +1743,13 @@ package body Osint is
    function Is_Readable_File
      (Name : C_File_Name; Attr : access File_Attributes) return Boolean
    is
-      function Internal (N : C_File_Name; A : System.Address) return Integer;
-      pragma Import (C, Internal, "__gnat_is_readable_file_attr");
+      --  function Internal (N : C_File_Name; A : System.Address) return Integer;
+      --  pragma Import (C, Internal, "__gnat_is_readable_file_attr");
+      function Internal (N : C_File_Name) return Integer;
+      pragma Import (C, Internal, "__gnat_is_readable_file");
    begin
-      return Internal (Name, Attr.all'Address) /= 0;
+      --  return Internal (Name, Attr.all'Address) /= 0;
+      return Internal (Name) /= 0;
    end Is_Readable_File;
 
    ---------------------
@@ -1753,10 +1759,13 @@ package body Osint is
    function Is_Regular_File
      (Name : C_File_Name; Attr : access File_Attributes) return Boolean
    is
-      function Internal (N : C_File_Name; A : System.Address) return Integer;
-      pragma Import (C, Internal, "__gnat_is_regular_file_attr");
+      --  function Internal (N : C_File_Name; A : System.Address) return Integer;
+      --  pragma Import (C, Internal, "__gnat_is_regular_file_attr");
+      function Internal (N : C_File_Name) return Integer;
+      pragma Import (C, Internal, "__gnat_is_regular_file");
    begin
-      return Internal (Name, Attr.all'Address) /= 0;
+      --  return Internal (Name, Attr.all'Address) /= 0;
+      return Internal (Name) /= 0;
    end Is_Regular_File;
 
    ----------------------
@@ -3294,6 +3303,11 @@ package body Osint is
       end if;
    end Write_With_Check;
 
+   function Unknown_Attributes return File_Attributes is
+   begin
+      return Unknown_Attribute_Value;
+   end Unknown_Attributes;
+
 ----------------------------
 -- Package Initialization --
 ----------------------------
@@ -3321,9 +3335,10 @@ begin
                      "__gnat_size_of_file_attributes");
 
    begin
+
       pragma Assert (Sizeof_File_Attributes <= File_Attributes_Size);
 
-      Reset_File_Attributes (Unknown_Attributes'Address);
+      Reset_File_Attributes (Unknown_Attribute_Value'Address);
 
       Identifier_Character_Set := Get_Default_Identifier_Character_Set;
       Maximum_File_Name_Length := Get_Maximum_File_Name_Length;

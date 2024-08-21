@@ -449,7 +449,7 @@ procedure Gnat1drv is
       --  problems with subtypes of type Ada.Tags.Dispatch_Table_Wrapper. ???
 
       if Debug_Flag_Dot_T or else Frontend_Layout_On_Target then
-         Static_Dispatch_Tables := False;
+         Opt.Static_Dispatch_Tables := False;
       end if;
 
       --  Flip endian mode if -gnatd8 set

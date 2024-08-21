@@ -241,9 +241,9 @@ function Prag (Pragma_Node : Node_Id; Semi : Source_Ptr) return Node_Id is
                   Restriction_Warnings (No_Obsolescent_Features) :=
                     Prag_Id = Pragma_Restriction_Warnings;
 
-               when SPARK =>
-                  Set_Restriction (SPARK, Pragma_Node);
-                  Restriction_Warnings (SPARK) :=
+               when SPARK_05 =>
+                  Set_Restriction (SPARK_05, Pragma_Node);
+                  Restriction_Warnings (SPARK_05) :=
                     Prag_Id = Pragma_Restriction_Warnings;
 
                when others =>

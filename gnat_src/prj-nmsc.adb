@@ -1858,7 +1858,7 @@ package body Prj.Nmsc is
 
                      begin
                         Get_Name_String (Attribute.Value.Value);
-                        To_Lower (Name_Buffer (1 .. Name_Len));
+                        GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
                         Name := Name_Find;
 
                         if Name = Name_None then
@@ -2606,7 +2606,7 @@ package body Prj.Nmsc is
    begin
       if not Externally_Built.Default then
          Get_Name_String (Externally_Built.Value);
-         To_Lower (Name_Buffer (1 .. Name_Len));
+         GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
 
          if Name_Buffer (1 .. Name_Len) = "true" then
             Project.Externally_Built := True;
@@ -2795,7 +2795,7 @@ package body Prj.Nmsc is
          while List /= Nil_String loop
             Element := Shared.String_Elements.Table (List);
             Get_Name_String (Element.Value);
-            To_Lower (Name_Buffer (1 .. Name_Len));
+            GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
             Name := Name_Find;
             Unit_Found := False;
 
@@ -3487,7 +3487,8 @@ package body Prj.Nmsc is
 
                declare
                   Kind_Name : constant String :=
-                                To_Lower (Name_Buffer (1 .. Name_Len));
+                    Ada.Characters.Handling.To_Lower
+                        (Name_Buffer (1 .. Name_Len));
 
                   OK : Boolean := True;
 
@@ -4020,7 +4021,7 @@ package body Prj.Nmsc is
             File_Name := Canonical_Case_File_Name (Element.Value.Value);
 
             Get_Name_String (Element.Index);
-            To_Lower (Name_Buffer (1 .. Name_Len));
+            GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
             Index := Element.Value.Index;
 
             --  Check if it is a valid unit name
@@ -4435,7 +4436,7 @@ package body Prj.Nmsc is
 
             else
                Get_Name_String (Def_Lang.Value);
-               To_Lower (Name_Buffer (1 .. Name_Len));
+               GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
                Def_Lang_Id := Name_Find;
             end if;
 
@@ -4472,7 +4473,7 @@ package body Prj.Nmsc is
                   while Current /= Nil_String loop
                      Element := Shared.String_Elements.Table (Current);
                      Get_Name_String (Element.Value);
-                     To_Lower (Name_Buffer (1 .. Name_Len));
+                     GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
 
                      Add_Language
                        (Name         => Name_Find,
@@ -4606,7 +4607,7 @@ package body Prj.Nmsc is
 
          else
             Get_Name_String (Lib_Standalone.Value);
-            To_Lower (Name_Buffer (1 .. Name_Len));
+            GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
 
             if Name_Buffer (1 .. Name_Len) = "standard" then
                Project.Standalone_Library := Standard;
@@ -4642,7 +4643,7 @@ package body Prj.Nmsc is
 
          else
             Get_Name_String (Lib_Auto_Init.Value);
-            To_Lower (Name_Buffer (1 .. Name_Len));
+            GNAT.Case_Util.To_Lower (Name_Buffer (1 .. Name_Len));
 
             if Name_Buffer (1 .. Name_Len) = "false" then
                Project.Lib_Auto_Init := False;
@@ -4812,8 +4813,8 @@ package body Prj.Nmsc is
          if not Lib_Symbol_Policy.Default then
             declare
                Value : constant String :=
-                         To_Lower
-                           (Get_Name_String (Lib_Symbol_Policy.Value));
+                 Ada.Characters.Handling.To_Lower
+                     (Get_Name_String (Lib_Symbol_Policy.Value));
 
             begin
                --  Symbol policy must have one of a limited number of values
@@ -5058,7 +5059,7 @@ package body Prj.Nmsc is
    --  Start of processing for Check_Unit_Name
 
    begin
-      To_Lower (The_Name);
+      GNAT.Case_Util.To_Lower (The_Name);
 
       Name_Len := The_Name'Length;
       Name_Buffer (1 .. Name_Len) := The_Name;

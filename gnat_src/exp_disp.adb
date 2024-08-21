@@ -295,7 +295,7 @@ package body Exp_Disp is
          Root_Typ := Full_View (Root_Typ);
       end if;
 
-      return Static_Dispatch_Tables
+      return Opt.Static_Dispatch_Tables
         and then Is_Library_Level_Tagged_Type (Typ)
         and then VM_Target = No_VM
 
